@@ -1,0 +1,53 @@
+<?php
+
+/*
+Webduo_Quicksale_Block_View
+*/
+?>
+
+<?php
+$ordered_items = $this->getOrdereditems();
+
+$p_helper = $this->helper('catalog/image');
+?>
+
+<?php if(count($ordered_items)>0){?>
+<div class="quick_sale_block">
+	<h5>Buy these products and get 7% discount.</h5>
+	<br />
+	<ul class="quick_sale">
+	<?php foreach($ordered_items as $item){?>
+		<li>
+			<?php $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId())?>
+			
+			<div class="quick_sale_container">
+				<div class="action">
+					<input type="checkbox" name="quick_sale[<?php echo $product->getId()?>]" value="<?php echo $product->getId()?>" />
+				</div>
+				<a href="<?php echo $product->getProductUrl()?>"><img src="<?php echo $p_helper->init($product, 'image', $product->getImage())->resize(50, 50)?>" /></a>
+				<div class="quick_sale_details">
+					<a href="<?php echo $product->getProductUrl()?>"><?php echo $product->getName()?></a>
+					<?php
+					$product_block = new Mage_Catalog_Block_Product;
+					echo $product_block->getPriceHtml($product);
+					unset($product_block);
+					?>
+				</div>
+			</div>
+		</li>
+	<?php }?>
+	</ul>
+	<br clear="all" />
+</div>	
+<?php }?>
+
+<style>
+.quick_sale_block{padding:5px; border:1px solid #ddd;}
+.quick_sale{}
+.quick_sale li{clear:both;}
+.quick_sale li .quick_sale_container{}
+.quick_sale li .quick_sale_container .action{float:left; margin:5px;}
+.quick_sale li .quick_sale_container .quick_sale_details{float:left; margin-left:15px;}
+.quick_sale li .quick_sale_container img{float:left;}
+.quick_sale li .quick_sale_container{}
+</style>

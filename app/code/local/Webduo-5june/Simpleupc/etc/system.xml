@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <simpleupc translate="label" module="simpleupc">
+            <label>Presto Config</label>
+            <tab>general</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>0</show_in_store>
+            <groups>
+                <options translate="label">
+                    <label>General Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <zipcodes translate="label">
+                            <label>Zipcodes</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Please enter every new zipcode in next line.</comment>
+                        </zipcodes>
+                    </fields>
+                </options>
+                
+				<delivery_window translate="label">
+                    <label>Delivery Window Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <flexible_delivery_discount translate="label">
+                            <label>Flexible Delivery Discount</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<!--<comment>Please enter every new zipcode in next line.</comment>-->
+                        </flexible_delivery_discount>
+						<same_delivery_window_discount translate="label">
+                            <label>Ordered Delivery Window Discount</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<!--<comment>Please enter every new zipcode in next line.</comment>-->
+                        </same_delivery_window_discount>
+						<day_starting_time translate="label">
+                            <label>Day Stating Time</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>simpleupc/system_config_source_daystart</source_model>
+							<sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<!--<comment>Please enter every new zipcode in next line.</comment>-->
+                        </day_starting_time>
+						<day_ending_time translate="label">
+                            <label>Day Ending Time</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>simpleupc/system_config_source_daystart</source_model>
+							<sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<!--<comment>Please enter every new zipcode in next line.</comment>-->
+                        </day_ending_time>
+						<number_of_windows translate="label">
+                            <label>Number of Windows</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Number of delivery windows to be appreared per day.</comment>
+                        </number_of_windows>
+						<number_of_days translate="label">
+                            <label>Number of Days</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Number of days. Please dont keep it empty. Default is 5.</comment>
+                        </number_of_days>
+						<number_of_orders translate="label">
+                            <label>Number of Orders/Delivery per window</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Number of orders/deliveries per window. Please dont keep it empty. Default is 10.</comment>
+                        </number_of_orders>
+						<hide_sunday translate="label">
+                            <label>Delivery on Sunday</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Enable sunday delivery.</comment>
+                        </hide_sunday>
+						<hide_monday translate="label">
+                            <label>Delivery on Monday</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Enable monday delivery.</comment>
+                        </hide_monday>
+						<flexible_delivery_message translate="label">
+                            <label>Flexible Delivery Message</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Message to display on flexible delivery popup.</comment>
+                        </flexible_delivery_message>
+						<unattended_delivery_message translate="label">
+                            <label>Unattended Delivery Message</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Message to display on unattended delivery popup.</comment>
+                        </unattended_delivery_message>
+						<holidays translate="label">
+                            <label>Holidays</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Please enter every new date in next line. Format YYYY-MM-DD. eg. 25Dec, 2013 will be 2013-12-25</comment>
+                        </holidays>
+                    </fields>
+                </delivery_window>
+            </groups>
+        </simpleupc>
+    </sections>
+</config>

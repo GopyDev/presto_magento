@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <menu>
+        <report>
+            <children>
+			   <sales_orders>
+					<children>
+					   <flexible_discount translate="title" module="flexible_discount">
+							<sort_order>30</sort_order>
+							<title>Flexible Delivery Report</title>
+							<action>adminhtml/discount/</action>
+						</flexible_discount>
+					</children>
+				</sales_orders>
+             </children>
+        </report>
+    </menu>
+</config>

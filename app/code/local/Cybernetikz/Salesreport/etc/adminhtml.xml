@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento admin config
+ *
+ * @author Magento
+ */
+-->
+<config>
+	<menu>
+		<report>
+			<children>
+				<salesreport translate="title" module="salesreport">
+					<title>Delivery Calendar</title>
+					<sort_order>10</sort_order>
+					<action>salesreport/adminhtml_sales/reportmanage</action>
+				</salesreport>
+			</children>
+		</report>	
+	</menu>
+
+    <acl>
+        <resources>
+            <admin>
+                    <children>
+                        <report>
+                            <children>
+							
+							<salesreport translate="title" module="salesreport">
+					<title>Delivery Calendar</title>
+					<sort_order>10</sort_order>
+					<action>salesreport/adminhtml_sales/reportmanage</action>
+				</salesreport>
+					
+                            </children>
+                        </report>
+                    </children>
+                </admin>
+        </resources>
+    </acl>
+</config>

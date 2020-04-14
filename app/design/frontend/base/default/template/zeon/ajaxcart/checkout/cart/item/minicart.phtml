@@ -1,0 +1,73 @@
+<?php
+/**
+* zeonsolutions inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.zeonsolutions.com/shop/license-community.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * This package designed for Magento Community edition
+ * =================================================================
+ * zeonsolutions does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * zeonsolutions does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   design
+ * @package    base_default
+ * @version    0.0.1
+ * @copyright  @copyright Copyright (c) 2013 zeonsolutions.Inc. (http://www.zeonsolutions.com)
+ * @license    http://www.zeonsolutions.com/shop/license-community.txt
+ */
+?>
+<?php
+$cart  = Mage::getSingleton('checkout/session');
+$cartProducts = $cart->getQuote();
+$subTotal  = $cartProducts->getGrandTotal();
+Mage::getSingleton('core/session', array('name'=>'frontend'));
+$lastadded = $cart->getData("last_added_product_id");
+$product = Mage::getModel('catalog/product')->load($lastadded);
+$lastAddedProduct = $cartProducts->getItemByProduct($product);
+
+if(!$lastAddedProduct) {
+    foreach($cartProducts->getAllItems() as $item)
+    {
+        if ($lastadded == $item->getProductId()) {
+            $lastAddedProduct = $item;
+            break;
+        } else {
+            continue;
+        }
+    }
+}
+
+?>
+<div class="product-img-box"><p class="product-image">
+<?php
+     $_productNameStripped = preg_replace('#<[^>]+>#', ' ', $product->getName());
+     $_productNameStripped = preg_replace('/\s\s+/', ' ', $_productNameStripped);
+?>
+<img src="<?php echo Mage::helper('catalog/image')->init($product, 'image')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->resize(100); ?>" alt="<?php echo $_productNameStripped;?>"/>
+ <?php if($product->getOnSale() > 0){ ?>
+                <img alt="On Sale" src="<?php echo $this->helper('fqs_catalog')->getOnSaleImageLabel();?>" class="i-onsale" width="50" height="25"/>
+    <?php } else if($product->getIsNew() > 0){ ?>
+                <img alt="New" src="<?php echo $this->helper('fqs_catalog')->getNewProductImageLabel();?>" class="i-product" width="50" height="25"/>
+                <?php } ?>
+
+</p></div>
+<div class="product-shop"><?php echo '<h2 class="product-name">'.$product->getName()."</h2>";
+echo "<p>SKU:  ".$product->getSku()."<br/>";
+if ($product->getTypeId()=='simple') {
+    echo "Quantity:  ".$lastAddedProduct->getQty()."<br/>";
+}
+if ($lastAddedProduct) {
+echo "Price:  ".Mage::helper('core')->currency($lastAddedProduct->getPrice())."<br/>";
+}
+?>
+</div>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <modules>
+        <Discount_Orders>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Discount_Orders>
+    </modules>
+</config>

@@ -1,0 +1,89 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_product = $this->getProduct(); 
+      $proid = $_product->getId();
+?>
+<?php $buttonTitle = $this->__('Add to Cart'); ?>
+<?php if($_product->isSaleable()): ?>
+    <div class="add-to-cart">
+        <?php if(!$_product->isGrouped()): ?>
+		
+		<?php if($proid!='25265') { ?>
+			<div class="qty-block">
+				<label for="qty"><?php echo $this->__('Qty:') ?></label>
+				<input  type="text" name="qty" id="qty" maxlength="12" value="<?php echo $this->getProductDefaultQty() * 1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty required" />
+                 <input name="cart[<?php echo $_product->getId() ?>][qty]"  id="orignalqty_<?php echo $_product->getId()?>" value="<?php echo $this->getQty() ?>" size="4" title="<?php echo $this->__('Qty') ?>" class="input-text qty" maxlength="12" type="hidden" />
+      <div class="qty_grid" style="width: 20px; float:right;">
+      
+        <input type="hidden" name="orignalqty" id="orignalqty_<?php echo $_product->getId()?>" value="" />
+            	<div class="controls">
+                	<a class="up" onclick="incrment('<?php echo $_product->getId()?>');"></a>
+                    <label id="incrvalue_<?php echo $_product->getId()?>"></label><label id="decrvalue_<?php echo $_product->getId()?>"></label>
+                    <a class="down" onclick="decrement('<?php echo $_product->getId()?>');"></a>
+                </div>
+                
+       </div>
+			</div>
+		<?php } ?>	
+        <?php endif; ?>
+		<?php 
+		    $checkl = Mage::getSingleton('customer/session')->isLoggedIn();
+		    if($proid=='25265' && $checkl!=1)
+			{
+		?>
+			
+        <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="location.href='http://www.prestofreshgrocery.com/customer/account/login/'"><span><span><?php echo $buttonTitle ?></span></span></button>
+		
+		<?php } else { ?>
+		
+		<button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+		
+		<?php } ?>
+        <?php echo $this->getChildHtml('', true, true) ?>
+    </div>
+<?php endif; ?>
+<script type="text/javascript">
+  function incrment(id){
+	var qtyval =  id
+	qty = document.getElementById('qty').value;
+	var res = parseInt(qty) + 1;
+	
+	document.getElementById('qty').value = res;
+	//alert(document.getElementById('qty_'+id).value);
+	document.getElementById('orignalqty_'+id).value = res;
+	
+	}
+	 function decrement(id){ 
+		qtyde = document.getElementById('qty').value;
+		if(qtyde == 1){}else{
+		var resde = parseInt(qtyde) - 1;
+		document.getElementById('qty').value = resde;
+		document.getElementById('orignalqty_'+id).value = resde;}
+	 }
+
+</script>
+

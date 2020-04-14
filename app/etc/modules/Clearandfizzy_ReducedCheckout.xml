@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <Clearandfizzy_Reducedcheckout>
+            <active>false</active>
+            <codePool>community</codePool>
+        </Clearandfizzy_Reducedcheckout>
+    </modules>
+</config> 

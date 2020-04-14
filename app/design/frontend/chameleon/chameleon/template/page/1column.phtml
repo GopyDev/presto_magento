@@ -1,0 +1,47 @@
+<?php
+/**
+ * BelVG
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ 
+ * @category   Belvg
+ * @package    Chameleon Mobile Theme
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+?>
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <?php echo $this->getChildHtml('head') ?>
+</head>
+<body class="<?php echo $this->getBodyClass() ? $this->getBodyClass() . ' ' : '' ?><?php echo $this->helper('chameleoncolorchanger')->getColorTheme() ?>" onunload="">
+    <?php echo $this->getChildHtml('after_body_start') ?>
+<div class="wrapper">
+	<header class="main-header" role="banner">
+		<?php echo $this->getChildHtml('global_notices') ?>
+		<?php echo $this->getChildHtml('header') ?>
+	</header>
+	<div class="belvg">
+		<div class="main-wrapper">
+			<section class="main-content">
+				<?php echo $this->getChildHtml('breadcrumbs') ?>
+				<?php echo $this->getChildHtml('global_messages') ?>
+				<?php echo $this->getChildHtml('homepage.banner') ?>
+				<?php echo $this->getChildHtml('content') ?>
+			</section>
+		</div>
+	<footer class="main-footer" role="contentinfo">
+	    <?php echo $this->getChildHtml('footer') ?>
+        <?php echo $this->getChildHtml('before_body_end') ?>
+		<?php echo $this->getAbsoluteFooter() ?>
+	</footer>
+	</div>
+</div>
+</body>
+</html>

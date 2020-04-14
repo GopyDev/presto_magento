@@ -1,0 +1,90 @@
+<?php
+/**
+* zeonsolutions inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.zeonsolutions.com/shop/license-community.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * This package designed for Magento Community edition
+ * =================================================================
+ * zeonsolutions does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * zeonsolutions does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   design
+ * @package    base_default
+ * @version    0.0.1
+ * @copyright  @copyright Copyright (c) 2013 zeonsolutions.Inc. (http://www.zeonsolutions.com)
+ * @license    http://www.zeonsolutions.com/shop/license-community.txt
+ */
+?>
+
+<?php
+$isCartPage = 0;
+$isProductPage = 0;
+$hasFileOption = 0;
+$isCartConfigurePage = 0;
+$isWishlistPage = 0;
+
+if (Mage::app()->getStore()->isCurrentlySecure()) {
+    $cartUrl = Mage::getUrl('checkout/cart', array('_secure' => true));
+} else {
+    $cartUrl = Mage::getUrl('checkout/cart');
+}
+
+$moduleName = $this->getRequest()->getModuleName();
+$controllerName = $this->getRequest()->getControllerName();
+$actionName = $this->getRequest()->getActionName();
+
+if ($moduleName == 'checkout' && $controllerName == 'cart') {
+    $isCartPage = 1;
+    if ($actionName == 'configure') {
+        $isCartConfigurePage = 1;
+    }
+}
+
+if ($moduleName == 'wishlist' && $controllerName == 'index') {
+    $isWishlistPage = 1;
+}
+
+if ($_product = Mage::registry('current_product')) {
+    $isProductPage = 1;
+    foreach ($_product->getOptions() as $option) {
+        if ($option->getType() == Mage_Catalog_Model_Product_Option::OPTION_TYPE_FILE) {
+            $hasFileOption = 1;
+            break;
+        }
+    }
+}
+?>
+<?php if (!$isProductPage): ?>
+    <script type="text/javascript" src="<?php echo $this->getJsUrl('varien/product.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->getJsUrl('varien/configurable.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->getJsUrl('calendar/calendar.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->getJsUrl('calendar/calendar-setup.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->getSkinUrl('js/bundle.js') ?>"></script>
+<?php endif; ?>
+<script type="text/javascript">
+    //<![CDATA[
+    var BASE_URL = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>';
+    AJAX_CART = {
+        cartURL : '<?php echo $cartUrl ?>',
+        isCartPage : <?php echo $isCartPage ?>,
+        isWishlistPage : <?php echo $isWishlistPage ?>,
+        isProductPage: <?php echo $isProductPage ?>,
+        hasFileOption : <?php echo $hasFileOption ?>,
+        isAutoHidePopup :<?php echo $this->helper('zeon_ajaxcart')->getIsAutoHidePopup() ?>,
+        secureUrlOnFrontend: <?php echo Mage::getStoreConfig('web/secure/use_in_frontend'); ?>,
+        disabled: <?php echo $this->helper('zeon_ajaxcart')->getIsEnabled() ?>,
+        isCartConfigurePage: <?php echo $isCartConfigurePage ?>
+    }
+    //]]>
+</script>

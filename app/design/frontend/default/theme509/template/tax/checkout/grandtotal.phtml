@@ -1,0 +1,139 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var $this Mage_Tax_Block_Checkout_Grandtotal
+ * @see Mage_Tax_Block_Checkout_Grandtotal
+ */
+ //echo "total excl tax ".$this->getTotalExclTax();
+	//echo "<pre>";
+	//print_r($this->helper('checkout')->formatPrice());
+	
+?>
+
+<?php if ($this->includeTax() && $this->getTotalExclTax()>=0):?>
+<!-- <tr>
+    <td style="<?php echo $this->getStyle() ?>" class="a-left" colspan="<?php echo $this->getColspan(); ?>">
+        <strong><?php echo $this->helper('tax')->__('Grand Total Excl. Tax')?></strong>
+    </td>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+        <strong><?php echo $this->helper('checkout')->formatPrice($this->getTotalExclTax()) ?></strong>
+    </td>
+</tr> -->
+<?php echo $this->renderTotals('taxes', $this->getColspan()); ?>
+<tr>
+    <td style="<?php echo $this->getStyle() ?>" class="a-left" colspan="<?php echo $this->getColspan(); ?>">
+        <strong><?php echo $this->helper('tax')->__('Grand Total Incl. Tax')?></strong>
+    </td>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+	<?php
+			//echo "<pre>";
+			//print_r($_SESSION);
+			//exit;
+			if(isset($_SESSION['delivery_window']))
+			{
+				//echo "Delivery type is ".$_SESSION['flexible_shipping'];
+				/*if( $_SESSION['delivery_type'] != 'flexible_delivery' ){
+					
+				}*/
+				$tempShipCharge = $_SESSION['ship_charge'];
+		?>
+        <strong>
+			<?php
+				if( $_SESSION['flexible_shipping'] == 'yes' ){
+				//echo "Go in  If condition..";
+				echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue());
+			}
+			else{
+				if($_SESSION['flatrate'] == '0.0000'){
+					//echo "Go in condition";
+					//echo "<pre>";
+					//print_r($this->helper('checkout')->formatPrice());
+					/*echo "<pre>";
+					print_r($_SESSION);*/
+					//echo "User ID is ".Mage::getSingleton('customer/session')->getId();
+					echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue());
+				}else{
+					//echo "Go in else condition.";
+					/*echo "Ship session is ".$_SESSION['ship_charge'];*/
+					$roleId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+					$role = Mage::getSingleton('customer/group')->load($roleId)->getData('customer_group_code');
+					$role = strtolower($role);
+					if($roleId != 0){
+						echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()  - $tempShipCharge);
+					}else{
+						/*echo "Role is ".$roleId;*/ 
+						
+						echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()+$tempShipCharge );
+					}
+				}
+			}
+				//echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue());
+				?>
+			</strong>
+		<?php
+			}else{ 
+			?>
+			 <strong>
+				<?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()); ?>
+			 </strong>
+			<?php
+			}
+		?>
+    </td>
+</tr>
+<?php else:?>
+<tr>
+    <td style="<?php echo $this->getStyle() ?>" class="a-left" colspan="<?php echo $this->getColspan(); ?>">
+        <strong><?php echo $this->getTotal()->getTitle() ?></strong>
+    </td>
+   <!-- comment by xoom <td style="<?php echo $this->getStyle() ?>" class="a-right">
+        <strong><?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?></strong>
+    </td> -->
+	<?php
+	// Add by xoom for premier subscription grandtotal issue
+	$cart = Mage::getModel('checkout/cart')->getQuote()->getItemsCollection();
+			$my_val = $cart->getData();
+			//echo $my_val[0]['product_id'];
+			//echo $my_val[0]['product_id'] ; 
+			if($my_val[0]['product_id'] == '25265')
+			{
+				?>
+				 <td style="<?php echo $this->getStyle() ?>" class="a-right">
+				<strong><?php echo $this->helper('checkout')->formatPrice($my_val[0]['price']) ?>
+				</td>
+				<?php
+			}
+			else
+			{
+				?>
+				 <td style="<?php echo $this->getStyle() ?>" class="a-right">
+					<strong><?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?></strong>
+				</td>
+				<?php
+			}
+	?>
+</tr>
+<?php endif;?>

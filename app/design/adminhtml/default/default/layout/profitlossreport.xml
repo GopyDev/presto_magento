@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!-- 
+/************************************************************************
+ * 
+ * jtechextensions @ J-Tech LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.jtechextensions.com/LICENSE-M1.txt
+ *
+ * @package    Inventory Report
+ * @copyright  Copyright (c) 2012-2013 jtechextensions @ J-Tech LLC. (http://www.jtechextensions.com)
+ * @license    http://www.jtechextensions.com/LICENSE-M1.txt
+************************************************************************/
+-->
+
+<layout>
+    <profitlossreport_manage_viewall>
+    	<update handle="profitlossreport_manage"/>
+    	<reference name="content">
+    		<block type="profitlossreport/manager" name="profitlossreport.manage" />
+    	</reference>
+    </profitlossreport_manage_viewall>
+    
+    <profitlossreport_manage_edit>
+    	<reference name="content">
+    		<block type="profitlossreport/manager_edit" name="profitlossreport.manage_edit" >
+    			<block type="profitlossreport/manager_edit_tabs_filterform" name="profitlossreport.manager_edit_tabs_filterform" template="profitlossreport/filterform.phtml" />
+    			<block type="profitlossreport/manager_edit_tabs_revexpform" name="profitlossreport.manager_edit_tabs_revexpform" template="profitlossreport/revexpform.phtml" />
+    		</block>
+    	</reference>
+    </profitlossreport_manage_edit>
+    
+    <profitlossreport_manage_viewattribute>
+    	<reference name="content">
+    		<block type="profitlossreport/manager_revexp" name="profitlossreport.manage_revexp" />
+    	</reference>
+    </profitlossreport_manage_viewattribute>
+    
+    <profitlossreport_manage_view>
+    	<reference name="content">
+ 			<block type="profitlossreport/manager_view" name="profitlossreport.manager_view" template="profitlossreport/viewcontainer.phtml" >
+ 				<block type="profitlossreport/manager_view_grid" name="profitlossreport.manager_view_grid" template="profitlossreport/viewreport.phtml" />
+ 			</block>
+    	</reference>
+    </profitlossreport_manage_view>
+</layout>

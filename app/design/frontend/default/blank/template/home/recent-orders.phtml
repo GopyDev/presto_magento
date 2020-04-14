@@ -1,0 +1,14 @@
+<?php $orders = $this->getOrders();?>
+<?php if($orders){?>
+	<div class="col-sidebar recent-order">
+		<h1>Recent Order</h1>
+    	<?php foreach($orders as $order){?>
+        	<div class="recent-dat">
+    			<a style="text-decoration:none" href="<?php echo $this->getViewUrl($order)?>">
+                	<span class="date"><?php echo $order->getIncrementId()?></span>
+    		    	<span class="price"><?php echo $order->getGrandTotal()?></span>
+    			</a>
+            </div>
+        <?php }?>
+	</div>
+<?php }?>    

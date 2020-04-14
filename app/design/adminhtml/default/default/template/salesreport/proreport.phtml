@@ -1,0 +1,270 @@
+<?php
+    if(isset($_GET["ggid"]) && $_GET["ggid"] > 0)
+	{
+	   $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+	   $update="update rchange set cmp=1 where id='".$_GET["ggid"]."'";
+       $connection->query($update);
+	}
+	
+	if(isset($_GET["tnote"]) && $_GET["tnote"]!="" )
+	{
+	   $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+	   
+	   $sel_check="select id from `rchange` where tnote='".$_GET["tnote"]."'";
+	   $check=$connection->fetchOne($sel_check);
+	   
+	   if($check=="")
+	   {
+	   $insert="insert into `rchange` set cmp=0,tnote='".$_GET["tnote"]."',ttype=1,scemail='Admin',rpc='".date("d_m_Y")."'";
+       $connection->query($insert);
+	   }
+	}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+<?php 
+    $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+	
+	if(!empty($_REQUEST['from']) ){
+		/*====================== Start Code for Magento Orders Product =====================*/
+		//echo "<pre>";
+		$orders_row = array();
+		
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+	    
+		$rr=explode("/",$from);
+		$adate=$rr[1]."_".$rr[0]."_".$rr[2];
+		$adate3=$rr[2]."-".$rr[0]."-".$rr[1];
+		
+		$rr2=explode("/",$to);
+		$adate2=$rr2[1]."_".$rr2[0]."_".$rr2[2];
+		
+		$adate22=$rr2[1]."-".$rr2[0]."-".$rr2[2];
+	
+		$to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		$from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+		
+		$datetime1 = new DateTime($from);
+		$datetime2 = new DateTime($to);
+		
+	function getWeekDates($date, $start_date, $end_date)
+    {
+    $week =  date('W', strtotime($date));
+    $year =  date('Y', strtotime($date));
+    $from12 = date("Y-m-d", strtotime("{$year}-W{$week}+1")); //Returns the date of monday in week
+    if($from12 < $start_date) $from = $start_date;
+    $to12 = date("Y-m-d", strtotime("{$year}-W{$week}-6"));   //Returns the date of sunday in week
+    if($to12 > $end_date) $to12 = $end_date;
+    return "SD:".$from12.",ED:".$to12;
+    }
+
+	$start_date = $from_date;
+	$end_date = $to_date;
+    $end_date1 = date('Y-m-d',strtotime($adate22 . " +6 day"));
+
+		$interval = $datetime1->diff($datetime2);
+		$kdf =  $interval->format('%R%a');
+  }
+?>
+<div id="anchor-content" class="middle">
+  <div id="page:main-container">
+    <div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Request a product change");?></h3></td>
+            <td class="form-buttons">
+			
+			<!-- <button style="" onclick="document.getElementById('filter_form').submit();" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Show Report</span></button> -->
+			
+			</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+	
+     <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <?php /*?><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><?php */?>
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Status <span class="required">*</span></label></td>
+                    <td class="value"><select name="cmp" id="cmp" onchange="this.form.submit()" >
+					<option value="2"  <?php if($_GET["cmp"]==2) { ?> selected <?php } ?> > Any </option>
+					<option value="0" <?php if($_GET["cmp"]==0) { ?> selected <?php } ?> > Incomplete </option>
+					<option value="1" <?php if($_GET["cmp"]==1) { ?> selected <?php } ?> > Complete </option>
+					</select>
+					</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	
+	 <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form_new">
+          <?php /*?><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><?php */?>
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Add New Request</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Request Note <span class="required">*</span></label></td>
+                    <td class="value"><textarea name="tnote" id="tnote" style="border:1px solid #000;height:30px;width:870px;" ></textarea></td>
+                  </tr>
+				  <tr>
+                    <td colspan="2"><button style="" onclick="document.getElementById('filter_form_new').submit();" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Add Request</span></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	
+	<style>
+	.page
+	{
+	   width:90%;
+	}
+	
+	td, th 
+	{
+	   padding-top:5px !important;
+	   padding-left:5px !important;
+	   padding-right:5px !important;
+	   padding-bottom:5px !important;
+	}
+	
+	table
+	{
+	   border-collapse:collapse;
+	}
+	</style>
+       <div>
+		  <table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;width:100%;" >
+				   <tr>
+				   <th>Date(dd/mm/yy)</th>
+				   <th>Item</th>
+				   <th>Reason</th>
+				   <th>Note</th>
+				   <th> Supervisor Email</th>
+				  <th> Status </th>
+     			   </tr>
+				   
+			<?php	   
+			if(!isset($_GET["cmp"])) {
+			$sel_data="select * from rchange where cmp=0 order by id desc";
+			}
+			else
+			{
+			   if($_GET["cmp"]==1)
+			   {
+			      $sel_data="select * from rchange where cmp=1 order by id desc";
+			   }
+			   
+			   else if($_GET["cmp"]==0)
+			   {
+			      $sel_data="select * from rchange where cmp=0 order by id desc";
+			   }
+			   
+			   else if($_GET["cmp"]==2)
+			   {
+			      $sel_data="select * from rchange order by id desc";
+			   }
+			}
+		  $rs_data=$connection->fetchAll($sel_data);
+		  foreach ($rs_data as $value3) {
+		     $sql33="select msi.name FROM `mg_sales_flat_order_item` msi where msi.item_id='".$value3["item_id"]."' ";
+		     $rows274pro = $connection->fetchOne($sql33);
+			 if($value3["ttype"]==1)
+			 {
+		    ?>
+		   <tr>
+		           <td><?php echo $value3["rpc"]; ?></td>
+				   <td colspan="3"><?php echo $value3["tnote"]; ?></td>
+				   <td><?php echo $value3["scemail"]; ?></td>
+				   <td><?php if( $value3["cmp"]==0) { ?> <a href="?ggid=<?php echo $value3["id"]; ?>" onClick="return confirm('Are you sure you want to mark it complete ?');"> Complete </a>  <?php } else { ?> Completed <?php } ?></td>
+		   </tr>	
+		  <?php
+		    }
+			else
+			{
+		  ?>
+		  
+		  
+		  <tr>
+		   <td><?php echo $value3["rpc"]; ?></td>
+				   <td><?php echo  $rows274pro; ?></td>
+				   <td>
+				   <?php if($value3["chk1"]!="") { ?>
+				   <?php echo $value3["chk1"]; ?>
+				   <br/>
+				   <?php } ?>
+				   <?php if($value3["chk2"]!="") { ?>
+				   <?php echo $value3["chk2"]; ?>
+				   <br/>
+				   <?php } ?>
+				   <?php if($value3["chk3"]!="") { ?>
+				   <?php echo $value3["chk3"]; ?>
+				   <br/>
+				   <?php } ?>
+				   <?php echo $value3["chk4"]; ?>
+				   </td>
+				   <td><?php echo $value3["rnote"]; ?></td>
+				   <td><?php echo $value3["scemail"]; ?></td>
+				   <td><?php if( $value3["cmp"]==0) { ?> <a href="?ggid=<?php echo $value3["id"]; ?>" onClick="return confirm('Are you sure you want to mark it complete ?');"> Complete </a>  <?php } else { ?> Completed <?php } ?></td>
+		   </tr>
+		  <?php	
+		   }
+		  }
+		  ?>
+		  </table>
+		  </div>
+		  <br/>
+	<script type="text/javascript">
+       	 //<![CDATA[
+        	var filterFormSubmit  = new varienForm('filter_form');
+         //]]>
+        </script> 
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script> 
+</body>
+</html>

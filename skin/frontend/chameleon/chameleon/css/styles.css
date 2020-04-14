@@ -1,0 +1,51 @@
+/**
+ * BelVG
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ 
+ * @category   Belvg
+ * @package    Chameleon Mobile Theme
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+@import url( 'global/reset.css' );
+@import url( 'main/style.css' );
+@import url( 'main/forms.css' );
+@import url( 'main/flags.css' );
+@import url( 'main/media-queries.css' );
+
+#opc_checkout{display:none;}
+
+.flexible-timing{width:100%; margin:5px 0 25px 0; text-align:center}
+.flexible-timing li{display:inline-block; margin-top:3px; text-align:center; width:232px; position:relative}
+.flexible-timing li strong{background-color:#EFEFEF; border:1px solid #CCCCCC; color:#666666; padding:8px 0; display:block; cursor:pointer;}
+.flexible-timing li strong:hover{background-color:#accf6a; color:#FFFFFF;}
+.flexible-timing li strong.selected{background-color:#79a623; color:#fff; border:1px solid #79a623;}
+
+.flexible-timing strong.ordered_window{background-color:#FFFFCC;}
+
+.flexible-timing-disabled{float:left; width:100%; margin:5px 0 25px 0;}
+.flexible-timing-disabled li{display:inline-block; float:left; margin-right:3px; text-align:center; width:232px; position:relative}
+.flexible-timing-disabled li strong{background-color:#F9F9F9; border:1px solid #EFEFEF; color:#ccc; cursor:default; padding:8px 0; display:block;}
+.flexible-timing-disabled li strong:hover{background-color:#F9F9F9; border:1px solid #EFEFEF; color:#ccc; cursor:default;}
+.flexible-timing-disabled li:last-child{margin:0px;}
+.s_m_time-disabled{color:#999999;}
+
+.opc .sp-methods > dt{text-align:center;}
+
+.s_m_time{font-weight:bold; margin-bottom:5px; display:block;}
+.s_m_time_c{margin-right:5px;}
+#unattended_shipping{color:#000000;}
+#unattended_shipping input{}
+#unattended_shipping label{}
+
+.popup-flexi{display:none; background-color:#FFFFFF; border:3px solid #F49D0C; padding:20px; text-align:left; width:80%; margin:0 auto; z-index:33333;}
+.popup-flexi h4{}
+.popup-flexi p{margin:5px 0 10px 0; font-size:12px;}
+.popup-flexi .popup-action{font-size:12px;}
+.popup-flexi .popup-action input{margin-right:5px;}

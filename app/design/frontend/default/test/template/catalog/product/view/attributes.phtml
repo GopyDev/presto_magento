@@ -1,0 +1,214 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product additional attributes template
+ *
+ * @see Mage_Catalog_Block_Product_View_Attributes
+ */
+?>
+<?php
+    $_helper = $this->helper('catalog/output');
+    $_product = $this->getProduct()
+?>
+<?php if($_additional = $this->getAdditionalData()){ ?>
+	<?php
+    $dp = array();
+	$fats_data = array();
+    $total_fat = 0;
+	$calories = 0;
+	$cholesterol = 0;
+	$sodium = 0;
+	$potassium = 0; 
+	$carbohydrate = 0;
+	$fiber = 0;
+	$protein = 0;
+	$calories_i = 'G';
+	$cholesterol_i = 'G';
+	$sodium_i = 'G';
+	$potassium_i = 'G';
+	$carbohydrate_i = 'G';
+	$fiber_i = 'G';
+	$protein_i = 'G';
+	?>
+	<?php foreach($_additional as $_data){ ?>
+    	<?php
+        {//fat calculator 
+        	if((stristr($_data['label'], 'saturate')) && (!stristr($_data['label'], 'polyunsaturate')) && (!stristr($_data['label'], 'monounsaturate'))){//Saturated Fat
+				$fats_data[$_data['label']] = array('label'=>$_helper->productAttribute($_product, $_data['value'], $_data['code']), 'percentage'=>number_format(($_helper->productAttribute($_product, $_data['value'], $_data['code'])/20), 2) * 100);
+				$total_fat = $fat + intval($_helper->productAttribute($_product, $_data['value'], $_data['code']));
+			}
+			if(stristr($_data['label'], 'polyunsaturate')){//Polyunsaturated Fat
+				$fats_data[$_data['label']] = array('label'=>$_helper->productAttribute($_product, $_data['value'], $_data['code']), 'percentage'=>'');
+				$total_fat = $fat + intval($_helper->productAttribute($_product, $_data['value'], $_data['code']) * 100);
+			}
+			if(stristr($_data['label'], 'monounsaturate')){//Monounsaturated Fat
+				$fats_data[$_data['label']] = array('label'=>$_helper->productAttribute($_product, $_data['value'], $_data['code']), 'percentage'=>'');
+				$total_fat = $fat + intval($_helper->productAttribute($_product, $_data['value'], $_data['code']) * 100);
+			}
+		}
+		
+		{//calories
+			if(stristr(strtolower($_data['label']), 'calories')){//all calories
+				$calories = $calories + intval(($_helper->productAttribute($_product, $_data['value'], $_data['code'])));
+				$val = strtolower($_helper->productAttribute($_product, $_data['value'], $_data['code']));
+				if(!is_numeric($val) && is_string($val) && $val!='no' &&  $val!='n/a'){
+					$calories_i = $val;
+				}
+				unset($val);
+			}
+		}
+		
+		{//cholesterol
+			if(stristr(strtolower($_data['label']), 'cholesterol')){//all calories
+				$cholesterol = $cholesterol + intval(($_helper->productAttribute($_product, $_data['value'], $_data['code'])));
+				$val = strtolower($_helper->productAttribute($_product, $_data['value'], $_data['code']));
+				if(!is_numeric($val) && is_string($val) && $val!='no' &&  $val!='n/a'){
+					$cholesterol_i = $val;
+				}
+				unset($val);
+			}
+		}
+		
+		{//sodium
+			if(stristr(strtolower($_data['label']), 'sodium')){//all calories
+				$sodium = $sodium + intval(($_helper->productAttribute($_product, $_data['value'], $_data['code'])));
+				$val = strtolower($_helper->productAttribute($_product, $_data['value'], $_data['code']));
+				if(!is_numeric($val) && is_string($val) && $val!='no' &&  $val!='n/a'){
+					$sodium_i = $val;
+				}
+				unset($val);
+			}
+		}
+		
+		{//potassium
+			if(stristr(strtolower($_data['label']), 'potassium')){//all calories
+				$potassium = $potassium + intval(($_helper->productAttribute($_product, $_data['value'], $_data['code'])));
+				$val = strtolower($_helper->productAttribute($_product, $_data['value'], $_data['code']));
+				if(!is_numeric($val) && is_string($val) && $val!='no' &&  $val!='n/a'){
+					$potassium_i = $val;
+				}
+				unset($val);
+			}
+		}
+		
+		{//carbohydrate
+			if(stristr(strtolower($_data['label']), 'carbo')){//all calories
+				$carbohydrate = $carbohydrate + intval(($_helper->productAttribute($_product, $_data['value'], $_data['code'])));
+				$val = strtolower($_helper->productAttribute($_product, $_data['value'], $_data['code']));
+				if(!is_numeric($val) && is_string($val) && $val!='no' &&  $val!='n/a'){
+					$carbohydrate_i = $val;
+				}
+				unset($val);
+			}
+		}
+		{//fiber
+			if(stristr(strtolower($_data['label']), 'fiber')){//all calories
+				$fiber = $fiber + intval(($_helper->productAttribute($_product, $_data['value'], $_data['code'])));
+				$val = strtolower($_helper->productAttribute($_product, $_data['value'], $_data['code']));
+				if(!is_numeric($val) && is_string($val) && $val!='no' &&  $val!='n/a'){
+					$fiber_i = $val;
+				}
+				unset($val);
+			}
+		}
+		{//protein
+			if(stristr(strtolower($_data['label']), 'protein')){//all calories
+				$protein = $protein + intval(($_helper->productAttribute($_product, $_data['value'], $_data['code'])));
+				$val = strtolower($_helper->productAttribute($_product, $_data['value'], $_data['code']));
+				if(!is_numeric($val) && is_string($val) && $val!='no' &&  $val!='n/a'){
+					$fiber_i = $val;
+				}
+				unset($val);
+			}
+		}
+		?>
+    <?php }?>
+<?php }?>
+
+<table class="attr-table" id="product-attribute-specs-table">
+	<?php if($calories){?>
+    	<tr>
+    		<th colspan="2" align="left"><?php echo $this->__('Calories '.$calories)?></th>
+    	</tr>
+    <?php }?>
+    <tr>
+    	<th colspan="2" align="right" style="text-align:right"><?php echo $this->__('% Daily Value')?></th>
+    </tr>
+    <tr>
+    	<th><?php echo $this->__('Total Fat')?> <span class="low"><?php echo $total_fat.' g'?></span></th>
+        <td><?php echo number_format(($total_fat/65), 2) * 100?> %</td>
+    </tr>
+    <?php foreach($fats_data as $f_label => $fat){?>
+    	<tr>
+        	<th><span class="sub"><?php echo $this->__($f_label)?> <?php echo $fat['label'].' g'?></span></th>
+            <td><?php echo ($fat['percentage']) ? $fat['percentage'] . '%' : ''?></td>
+        </tr>
+    <?php }?>
+    <tr>
+    	<th><?php echo $this->__('Cholesterol')?> <span class="low"><?php echo $cholesterol.' '.$cholesterol_i?></span></th>
+        <td><?php echo number_format(($cholesterol/300), 2) * 100?>%</td>
+    </tr>
+    <tr>
+    	<th><?php echo $this->__('Sodium')?> <span class="low"><?php echo $sodium.' '.$sodium_i?></span></th>
+        <td><?php echo number_format(($sodium/2400), 2) * 100?>%</td>
+    </tr>
+    <tr>
+    	<th><?php echo $this->__('Potassium')?> <span class="low"><?php echo $potassium.' '.$potassium_i?></span></th>
+        <td><?php echo number_format(($potassium/3500), 2) * 100?>%</td>
+    </tr>
+    <tr>
+    	<th><?php echo $this->__('Total Carbohydrate')?> <span class="low"><?php echo $carbohydrate.' '.$carbohydrate_i?></span></th>
+        <td><?php echo number_format(($carbohydrate/300), 2) * 100?>%</td>
+    </tr>
+    	<tr>
+        	<th><span class="sub"><?php echo $this->__('Dietary Fiber')?> <?php echo $fiber.' '.$fiber_i?></span></th>
+            <td><?php echo number_format(($fiber/25), 2) * 100?>%</td>
+        </tr>
+    <tr>
+    	<th><?php echo $this->__('Protein')?> <span class="low"><?php echo $protein.' '.$protein_i?></span></th>
+        <td><?php echo number_format(($protein/50), 2) * 100?>%</td>
+    </tr>    
+</table>
+
+<?php /*?><?php if($_additional = $this->getAdditionalData()): ?>
+    <h2><?php echo $this->__('Additional Information') ?></h2>
+    <table class="attr-table"> 
+        <col width="25%" />
+        <col />
+        <tbody>
+        <?php foreach ($_additional as $_data): ?>
+            <?php if($_data['value'] != '' && strtolower($_data['value']) != 'n/a' && strtolower($_data['label']) != 'ingredients' && strtolower($_data['label']) != 'container' && strtolower($_data['label']) != 'upc category' && strtolower($_data['label']) != 'units' && strtolower($_data['label']) != 'size'){?>
+            <tr>
+                <th class="label"><?php echo $this->htmlEscape($this->__($_data['label'])) ?></th>
+                <td class="data"><?php echo $_helper->productAttribute($_product, $_data['value'], $_data['code']) ?></td>
+            </tr>
+        	<?php }?>
+		<?php endforeach; ?>
+        </tbody>
+    </table>
+    <script type="text/javascript">decorateTable('product-attribute-specs-table')</script>
+<?php endif;?><?php */?>

@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Free_Subscription>
+      <version>0.0.9</version>
+    </Free_Subscription>
+  </modules>
+  <global>
+    <helpers>
+      <subscription>
+        <class>Free_Subscription_Helper</class>
+      </subscription>
+    </helpers>
+	<blocks>
+	  <subscription>
+		<class>Free_Subscription_Block</class>
+	  </subscription>
+	</blocks>
+	<models>
+	  <subscription>
+		<class>Free_Subscription_Model</class>
+		<resourceModel>subscription_mysql4</resourceModel>
+	  </subscription>
+	  <subscription_mysql4>
+		<class>Free_Subscription_Model_Mysql4</class>
+		<entities>		  
+			  <free>
+				<table>customer_subsciption</table>
+			  </free>
+        </entities>
+	  </subscription_mysql4>
+	</models>
+	<resources>
+	  <subscription_setup>
+		<setup>
+		  <module>Free_Subscription</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </subscription_setup>
+	  <subscription_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </subscription_write>
+	  <subscription_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </subscription_read>
+	</resources>
+  </global>
+  <admin>
+	<routers>
+	  <subscription>
+	    <use>admin</use>
+		<args>
+		  <module>Free_Subscription</module>
+		  <frontName>admin_subscription</frontName>
+		</args>
+	  </subscription>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <subscription module="subscription">
+		<title>Subscription</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <!--<subscriptionbackend module="subscription">
+			<title>Backend Page Title</title>
+			<sort_order>0</sort_order>
+			<action>admin_subscription/adminhtml_subscriptionbackend</action>
+		  </subscriptionbackend>-->
+		  <free module="subscription">
+		    <title>Manage Subscribe Customer</title>
+			<sort_order>0</sort_order>
+			<action>admin_subscription/adminhtml_free</action>
+		  </free>
+		</children>
+	  </subscription>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<subscription translate="title" module="subscription">
+			  <title>Subscription</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <subscriptionbackend translate="title">
+			<title>Backend Page Title</title>
+		  </subscriptionbackend>
+		  <free translate="title">
+			<title>Manage Free</title>
+			<sort_order>0</sort_order>
+		  </free>
+			  </children>
+			</subscription>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<subscription>
+		  <file>subscription.xml</file>
+		</subscription>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

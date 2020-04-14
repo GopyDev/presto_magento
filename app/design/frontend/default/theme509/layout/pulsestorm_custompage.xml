@@ -1,0 +1,19 @@
+<layout>
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink">
+                <name>our_new_section</name>
+                <path>pulsestorm_custompage</path>
+                <label>Order Delivery Date</label>
+            </action>
+        </reference>
+    </customer_account>
+
+    <pulsestorm_custompage_index_index>
+        <update handle="customer_account" />
+        <reference name="my.account.wrapper">
+            <block type="core/template" name="pulsestorm_custompage_content" template="pulsestorm_custompage.phtml"/>            
+        </reference>
+    </pulsestorm_custompage_index_index>
+
+</layout>

@@ -1,0 +1,34 @@
+{
+  "name": "Example deliveries, updated",
+  "label": "Your label text here, updated",
+  "orders": [{
+    "name": "Angela Edwards",
+    "loadUnits": 2,
+    "loadUnits2": 24,
+    "serviceTimeMin": 4,
+    "location": {
+      "address": "2610 W Norberry St, Lancaster, CA 93536, USA"
+    },
+    "eligibleDays": [1],
+    "timeWindows": [{
+      "startMin": 510,
+      "stopMin": 540
+    }],
+    "importance": "higher",
+    "skillsInclude": ["plumbing", "powertools"],
+    "skillsExclude": ["landscaping"]
+  }, {
+    "name": "Laurie Miles",
+    "loadUnits": 5,
+    "loadUnits2": 72,
+    "serviceTimeMin": 7,
+    "location": {
+      "address": "44115 Gadsden Ave, Lancaster, CA 93534, USA"
+    },
+    "eligibleDays": [],
+    "timeWindows": [{
+      "startMin": 475,
+      "stopMin": 540
+    }]
+  }]
+}

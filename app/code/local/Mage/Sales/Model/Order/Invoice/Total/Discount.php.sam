@@ -1,0 +1,163 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer 
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    Mage
+ * @package     Mage_Sales
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+
+class Mage_Sales_Model_Order_Invoice_Total_Discount extends Mage_Sales_Model_Order_Invoice_Total_Abstract
+{
+    public function collect(Mage_Sales_Model_Order_Invoice $invoice)
+    {
+        $invoice->setDiscountAmount(0);
+        $invoice->setBaseDiscountAmount(0);
+
+        $totalDiscountAmount     = 0;
+        $baseTotalDiscountAmount = 0;
+
+        /**
+         * Checking if shipping discount was added in previous invoices.
+         * So basically if we have invoice with positive discount and it
+         * was not canceled we don't add shipping discount to this one.
+         */
+        $addShippingDicount = true;
+        foreach ($invoice->getOrder()->getInvoiceCollection() as $previusInvoice) {
+            if ($previusInvoice->getDiscountAmount()) {
+                $addShippingDicount = false;
+            }
+        }
+
+        if ($addShippingDicount) {
+            $totalDiscountAmount     = $totalDiscountAmount + $invoice->getOrder()->getShippingDiscountAmount();
+            $baseTotalDiscountAmount = $baseTotalDiscountAmount + $invoice->getOrder()->getBaseShippingDiscountAmount();
+        }
+
+        /** @var $item Mage_Sales_Model_Order_Invoice_Item */
+        foreach ($invoice->getAllItems() as $item) {
+            $orderItem = $item->getOrderItem();
+            if ($orderItem->isDummy()) {
+                 continue;
+            }
+
+            $orderItemDiscount      = (float) $orderItem->getDiscountAmount();
+            $baseOrderItemDiscount  = (float) $orderItem->getBaseDiscountAmount();
+            $orderItemQty       = $orderItem->getQtyOrdered();
+
+            if ($orderItemDiscount && $orderItemQty) {
+                /**
+                 * Resolve rounding problems
+                 */
+                $discount = $orderItemDiscount - $orderItem->getDiscountInvoiced();
+                $baseDiscount = $baseOrderItemDiscount - $orderItem->getBaseDiscountInvoiced();
+                if (!$item->isLast()) {
+                    $activeQty = $orderItemQty - $orderItem->getQtyInvoiced();
+                    $discount = $invoice->roundPrice($discount / $activeQty * $item->getQty(), 'regular', true);
+                    $baseDiscount = $invoice->roundPrice($baseDiscount / $activeQty * $item->getQty(), 'base', true);
+                }
+
+                $item->setDiscountAmount($discount);
+                $item->setBaseDiscountAmount($baseDiscount);
+
+                $totalDiscountAmount += $discount;
+                $baseTotalDiscountAmount += $baseDiscount;
+            }
+        }
+//
+				$entity_id = $orderItem['order_id'];
+				$con = mysql_connect('localhost','prestofr_stage','GiAZ8sc7gpJS');
+				$tables = mysql_select_db('prestofr_stage',$con) or die(mysql_error());
+				
+				$sql = "select * from mg_sales_flat_order where entity_id='".$entity_id."'";
+				$execute = mysql_query($sql) or die(mysql_error());
+				$fetcharray = mysql_fetch_array($execute);
+			
+
+
+       
+		$invoice->setDiscountAmount($fetcharray['base_discount_amount']);   
+	    $invoice->setBaseDiscountAmount($fetcharray['base_discount_amount']);
+		$invoice->setBaseSubtotal($fetcharray['grand_total']);
+		$invoice->setBaseSubtotalInvoiced($fetcharray['grand_total']);
+		
+		$invoice->setBaseTotalInvoiced($fetcharray['grand_total']);
+		$invoice->setBaseTotalPaid($fetcharray['grand_total']);
+		$invoice->setTotalInvoiced($fetcharray['grand_total']);
+		$invoice->setTotalPaid($fetcharray['grand_total']);
+		   
+		$invoice->setBaseAmountPaid($fetcharray['grand_total']);
+		$invoice->setAmountPaid($fetcharray['grand_total']); 
+		
+		
+
+    /*$connection = Mage::getSingleton('core/resource')
+    ->getConnection('core_write');
+    $connection->beginTransaction();
+    $fields = array();
+    $fields['amount_paid'] = $fetcharray['grand_total'];
+	$fields['base_amount_paid'] = $fetcharray['grand_total'];
+	
+    $where = $connection->quoteInto('entity_id =?', $entity_id);
+    $connection->update('mg_sales_flat_order_payment', $fields, $where);
+    $connection->commit();*/
+	
+	
+   /* $field = array();
+	$field['base_subtotal_invoiced'] = $fetcharray['grand_total'];
+	$field['base_subtotal'] = $fetcharray['grand_total'];
+	$field['base_subtotal_incl_tax'] = $fetcharray['grand_total'];
+	$field['subtotal_incl_tax'] = $fetcharray['grand_total'];
+	$field['base_total_invoiced'] = $fetcharray['grand_total'];
+	$field['subtotal_incl_tax'] = $fetcharray['grand_total'];
+	
+	$field['base_total_paid'] = $fetcharray['grand_total'];
+	$field['total_invoiced'] = $fetcharray['grand_total'];
+	$field['total_paid'] = $fetcharray['grand_total'];
+
+    $where = $connection->quoteInto('entity_id =?', $entity_id);
+	
+    $connection->update('mg_sales_flat_order', $field, $where);
+    $connection->commit();$invoice->save();*/
+	
+	    //  $invoice->setDiscountAmount($totalDiscountAmount);
+      //  $invoice->setBaseDiscountAmount($baseTotalDiscountAmount);
+       if($invoice->getDiscountAmount() == '-2.0000'){
+	//echo '111';
+	    $invoice->setGrandTotal($invoice->getGrandTotal() -2);
+        $invoice->setBaseGrandTotal($invoice->getBaseGrandTotal() -2);
+    
+	}else if($invoice->getDiscountAmount() == '-3.0000'){
+
+
+        $invoice->setGrandTotal($invoice->getGrandTotal());
+		Mage::log($invoice->getGrandTotal(),null,'flexgrandtotal.log');
+        $invoice->setBaseGrandTotal($invoice->getGrandTotal());
+	}else{
+		//	echo '333';
+		Mage::log($invoice->getGrandTotal(),null,'invoiceg.log');
+        $invoice->setGrandTotal($invoice->getGrandTotal() - $fetcharray['base_discount_amount']);
+        $invoice->setBaseGrandTotal($invoice->getBaseGrandTotal() - $fetcharray['base_discount_amount']);
+	}
+
+        return $this;
+    }
+}

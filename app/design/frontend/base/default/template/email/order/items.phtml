@@ -1,0 +1,191 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_order = $this->getOrder() ?>
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:20px">
+    <thead>
+		<tr>
+            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px;padding:5px 9px 6px 9px;line-height:1em">Delivery Information:</th>
+            <th width="10"></th>
+            
+		</tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #eaeaea;border-bottom:1px solid #eaeaea;border-right:1px solid #eaeaea">
+            <?php       
+					 
+						$resource = Mage::getSingleton('core/resource');
+					$readConnection = $resource->getConnection('core_read');
+					$table = $resource->getTableName('shipping_delivery_window');
+					$query = "select * from mg_shipping_delivery_window where order_number ='".$_order->getRealOrderId()."'";
+					 $result = $readConnection->fetchAll($query);
+				foreach($result as $row ){
+				
+						$a = explode('|',$row['window']);
+						$array = sizeof($a);
+						if($array == '2'){
+						$a[1];
+							$date = str_replace('_','/',$a[1]);
+							list($dd,$mm,$yy) = explode("/", $date); 
+							$yy = substr($yy,2,4);
+							echo '<strong>Delivery date </strong>: '.$mm.'/'.$dd.'/'.$yy;	
+							echo '<br />';	
+							$a[0];
+							$time = str_replace('_',':',$a[0]);
+							$time1 = str_replace('pm:','pm - ',$time);
+							echo '<strong>Delivery Time </strong>: '.$time1;
+							
+						} else{
+							$row['window'];
+							$date = str_replace('_','/',$row['window']);
+							list($dd,$mm,$yy) = explode("/", $date);  
+							$yy = substr($yy,2,4);
+							echo '<strong>Delivery date </strong>: '. $mm.'/'.$dd.'/'.$yy;			
+							}
+							}
+							 //End Delivery date
+				?>
+            </td>
+            <td>&nbsp;</td>
+            
+        </tr>
+        <?php if($result[0]['unattended_shipping'] == 'yes'){?>
+        <tr><td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #eaeaea;border-bottom:1px solid #eaeaea;border-right:1px solid #eaeaea"><strong>Unattended Shipping</strong>
+        <?php //print_r($result)?>
+        <label><?php echo $result[0]['unattended_shipping']?></label></td></tr><?php } ?>
+	</tbody>
+</table>
+                    
+
+
+<?php if ($_order): ?>
+<table cellspacing="0" cellpadding="0" border="0" width="650" style="border:1px solid #EAEAEA;">
+    <thead>
+        <tr>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Item') ?></th>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Sku') ?></th>
+            <th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Qty') ?></th>
+            <th align="right" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Subtotal') ?></th>
+        </tr>
+    </thead>
+
+    <?php $i=0; foreach ($_order->getAllItems() as $_item): ?>
+    <?php if($_item->getParentItem()) continue; else $i++; ?>
+    <tbody<?php echo $i%2 ? ' bgcolor="#F6F6F6"' : '' ?>>
+        <?php echo $this->getItemHtml($_item) ?>
+<?php      // Mage::log($_item,null,'111.log')?>
+    </tbody>
+    <?php endforeach; ?>
+
+    <tbody>
+    <?php echo $this->getChildHtml('ugiftcert_total') ;
+	
+	?>
+    <!---- Subtotal ROw Display In Mail - Xoom  ---->
+	 <tr bgcolor="#F6F6F6">
+     	<td align="right" colspan="3" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;">Sub Total:</td>
+        <td  align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;">
+		    <?php $subtotal =  $_order['base_subtotal']; 
+				  echo Mage::helper('core')->currency($subtotal);
+			?>
+        </td>
+	     </tr>
+       <tr bgcolor="#F6F6F6">
+     	<td align="right" colspan="3" style="font-size:11px;border-bottom:1px dotted #cccccc;">Delivery & Handling </td>
+     	<td align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"><?php echo '$'.number_format($_order['base_shipping_amount'],2);?></td>
+     </tr>
+     <?php //if($_order['base_shipping_tax_amount'] != '0.0000'){?>
+     <tr bgcolor="#F6F6F6">
+         <td align="right" colspan="3" style="font-size:11px;border-bottom:1px dotted #cccccc;">Tax  </td>
+         <td align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"> <?php echo '$'.number_format($_order['base_tax_amount'],2);?></td>
+	 </tr>
+     <?php //} ?>
+	 <?php 
+				  $quote_id = $_order->getQuoteId();
+				  $resource = Mage::getSingleton('core/resource');
+				  $readConnection = $resource->getConnection('core_read'); 
+				  $table = $resource->getTableName('shipping_delivery_window');
+				  $result = $readConnection->fetchCol('SELECT shipcharge  FROM ' . $table .' WHERE quote_id LIKE '.$quote_id.'');
+				 
+	 if($result[0] != ''){
+	?>
+     <tr bgcolor="#F6F6F6">
+     	<td align="right" colspan="3" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;">Additional Delivery Fee for Overnight Processing</td>
+        <td  align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"><?php echo '$'.number_format($result[0],2);?></td>
+     </tr>
+     <?php } ?>
+     <?php 
+	 
+	 $table1 = $resource->getTableName('shipping_delivery_window');
+	 $result1 = $readConnection->fetchCol('SELECT discount_amount  FROM ' . $table1 .' WHERE quote_id LIKE '.$quote_id.'');
+	 if($result1[0] != '' ){
+		 if(($_order->getData('base_discount_amount') != '0.0000') ){ ?>
+	 <tr bgcolor="#F6F6F6">
+     	<td align="right" colspan="3" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;">Delivery Discount</td>
+        <td  align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"><?php $discountammount = $_order['base_discount_amount'];
+		 $find = strpos($discountammount,'-');
+				 if ($find === false) {
+				
+					 echo  '-$'.number_format($discountammount,2);
+					} else {
+						 echo str_replace('-','-$',number_format($discountammount,2));
+					}
+		 ///echo '-$'.number_format($result1[0],2);?></td>
+     </tr>	 
+	 <?php } }?>
+  	 <tr bgcolor="#F6F6F6">
+     	<td align="right" colspan="3" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;">Grand Total </td>
+		<td align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"><?php echo '$'.number_format($_order['grand_total'],2);?></td>
+     </tr>
+        <?php echo $this->getChildHtml('order_totals') ?>
+    </tbody>
+</table>
+<?php if ($this->helper('giftmessage/message')->isMessagesAvailable('order', $_order, $_order->getStore()) && $_order->getGiftMessageId()): ?>
+    <?php $_giftMessage = $this->helper('giftmessage/message')->getGiftMessage($_order->getGiftMessageId()); ?>
+    <?php if ($_giftMessage): ?>
+<br />
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #EAEAEA;">
+    <thead>
+        <tr>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><strong><?php echo $this->__('Gift Message for this Order') ?></strong></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <tr>
+            <td colspan="4" align="left" style="padding:3px 9px">
+            <strong><?php echo $this->__('From:'); ?></strong> <?php echo $this->htmlEscape($_giftMessage->getSender()) ?>
+            <br /><strong><?php echo $this->__('To:'); ?></strong> <?php echo $this->htmlEscape($_giftMessage->getRecipient()) ?>
+            <br /><strong><?php echo $this->__('Message:'); ?></strong><br /> <?php echo $this->htmlEscape($_giftMessage->getMessage()) ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
+    <?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>

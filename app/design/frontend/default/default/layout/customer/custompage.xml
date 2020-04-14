@@ -1,0 +1,15 @@
+<layout version="0.1.0">
+     <!--Istockphp\Customerpage\controllers\AccountpageController.php-->
+    <customer_accountpage_index translate="label">
+        <label>Custom Page</label>
+            <reference name="head">
+                    <action method="setTitle"><title>Free Shipping Subscription</title></action> <!--Page Title-->
+            </reference>
+        <!-- Mage_Customer -->
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <!--name in config file / Istockphp\Customerpage\Block\Customer.php--> 
+            <block type="istockphp/customer" name="istockphp" before="-" template="customer/custom_customer_page.phtml"/>
+        </reference>	
+    </customer_accountpage_index>  
+</layout> 

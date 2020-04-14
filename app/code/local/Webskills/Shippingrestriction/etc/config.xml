@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Webskills_Shippingrestriction>
+      <version>0.1.0</version>
+    </Webskills_Shippingrestriction>
+  </modules>
+  <frontend>
+    <routers>
+      <shippingrestriction>
+        <use>standard</use>
+          <args>
+            <module>Webskills_Shippingrestriction</module>
+            <frontName>shippingrestriction</frontName>
+          </args>
+      </shippingrestriction>
+    </routers>
+		<layout>
+		  <updates>
+			<shippingrestriction>
+			  <file>shippingrestriction.xml</file>
+			</shippingrestriction>
+		  </updates>
+		</layout>
+  </frontend>
+  <global>
+    <helpers>
+      <shippingrestriction>
+        <class>Webskills_Shippingrestriction_Helper</class>
+      </shippingrestriction>
+    </helpers>
+	<blocks>
+	  <shippingrestriction>
+		<class>Webskills_Shippingrestriction_Block</class>
+	  </shippingrestriction>
+	</blocks>
+	<models>
+	  <shippingrestriction>
+		<class>Webskills_Shippingrestriction_Model</class>
+		<resourceModel>shippingrestriction_mysql4</resourceModel>
+	  </shippingrestriction>
+	  <shippingrestriction_mysql4>
+		<class>Webskills_Shippingrestriction_Model_Mysql4</class>
+		<entities>		  
+			  <shippingzip>
+				<table>shipping_zipcodes</table>
+			  </shippingzip>
+        </entities>
+	  </shippingrestriction_mysql4>
+	</models>
+	<resources>
+	  <shippingrestriction_setup>
+		<setup>
+		  <module>Webskills_Shippingrestriction</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </shippingrestriction_setup>
+	  <shippingrestriction_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </shippingrestriction_write>
+	  <shippingrestriction_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </shippingrestriction_read>
+	</resources>
+    <events>
+	  <sales_order_save_before> <!-- identifier of the event we want to catch -->
+        <observers>
+          <sales_order_save_before_handler> <!-- identifier of the event handler -->
+            <type>model</type> <!-- class method call type; valid are model, object and singleton -->
+            <class>shippingrestriction/observer</class> <!-- observers class alias -->
+            <method>Shippingzip</method>  <!-- observer's method to be called -->
+            <args></args> <!-- additional arguments passed to observer -->
+          </sales_order_save_before_handler>
+        </observers>
+      </sales_order_save_before>
+    </events>
+  </global>
+  <admin>
+	<routers>
+	  <shippingrestriction>
+	    <use>admin</use>
+		<args>
+		  <module>Webskills_Shippingrestriction</module>
+		  <frontName>shippingrestriction</frontName>
+		</args>
+	  </shippingrestriction>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <shippingrestriction module="shippingrestriction">
+		<title>WS Shipping Restriction</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <shippingzip module="shippingrestriction">
+		    <title>Manage Zip Codes</title>
+			<sort_order>0</sort_order>
+			<action>shippingrestriction/adminhtml_shippingzip</action>
+		  </shippingzip>
+		</children>
+	  </shippingrestriction>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<shippingrestriction translate="title" module="shippingrestriction">
+			  <title>Shippingrestriction</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <shippingzip translate="title">
+			<title>Manage Shippingzip</title>
+			<sort_order>0</sort_order>
+		  </shippingzip>
+			  </children>
+			</shippingrestriction>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<shippingrestriction>
+		  <file>shippingrestriction.xml</file>
+		</shippingrestriction>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

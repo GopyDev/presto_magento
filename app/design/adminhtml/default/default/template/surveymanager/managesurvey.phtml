@@ -1,0 +1,122 @@
+<div class="entry-edit custom-options product-custom-options">
+    <div class="entry-edit-head">
+        <h4>Assign Questions to Survey</h4>
+        <div class="right"><button style="" onclick="addClick();" class="scalable " type="button" id="add_button11"><span>Add Question</span></button></div>
+    </div>
+    <div id="product_options_container" class="box">
+        <div id="product_options_container_top">
+            
+            <?php $counter = 1; ?>
+            <?php $list = ""; ?>
+            
+            <?php foreach($this->helper('surveymanager')->getSurveyRelations($this->getRequest()->getParam('id')) as $surveyRelation) { ?>
+                      <?php if($this->checkQnActiveByQid($surveyRelation->survey_qn_id)): ?>
+                <div id="question_<?php echo $counter ?>" class="option-box">
+                  <table cellspacing="0" cellpadding="0" class="option-header" id="product_option_2">                
+                    <thead>
+                      <tr>
+                        <th class="opt-title">Question <?php echo $counter ?>
+                          <span class="required">*
+                          </span>
+                        </th>
+                        <th class="a-right">
+                          <button style="" onclick="removeQuestion('<?php echo $counter ?>')" class="scalable delete delete-product-option " type="button" id="Delete_Question">
+                            <span>Delete Question</span>
+                          </button>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                         <select class="select select-product-option-type required-option-select" id="survey_qn_id_<?php echo $counter ?>" name="survey_qn_id_<?php echo $counter ?>" >   
+                           <?php foreach($this->getSurveyQuestions() as  $question): ?>
+                                 <option  value="<?php echo $question->survey_qn_id ?>" <?php if($surveyRelation->survey_qn_id == $question->survey_qn_id): ?> selected <?php endif; ?> >
+                                         <?php echo $question->survey_qn_title ?>
+                                 </option>
+                           <?php endforeach; ?>  
+                         </select>  
+                         </td>                        
+                      </tr>
+                    </tbody>
+                  </table> 
+                </div>  
+                    <?php endif; ?>
+                <?php $list .= " " . $counter . ","; ?>
+                <?php $counter++; ?>
+            <?php } ?>
+            
+        </div>
+        <input type="hidden" value="<?php echo ($counter - 1) ?>" name="highestID" id="highestID">
+        <input type="hidden" value="<?php echo $list; ?>" name="questionList" id="questionList">
+    </div>
+</div>
+
+<script type="text/javascript">
+function addClick() {
+	//get the highest ID
+	var highestID = document.getElementById('highestID').value;
+	var newQuestion = document.getElementById('super_secret').innerHTML;
+	var newID = parseInt(highestID) + 1;
+        
+	newQuestion = newQuestion.replace(/id111/g, 'id_'+newID);
+	newQuestion = newQuestion.replace(/fakevalue/g, "");
+	
+	var divTag = document.createElement("div");
+	 
+	divTag.id = "div" + newID;
+	
+	divTag.innerHTML = newQuestion;
+	
+	document.getElementById('product_options_container_top').appendChild(divTag);
+	
+	document.getElementById('highestID').value = newID;
+	
+	document.getElementById('questionList').value += " " + newID + ",";
+}
+
+function removeQuestion(id) {
+        
+	var child = document.getElementById('question_' + id);
+	var parent = document.getElementById('product_options_container_top');
+	
+	parent.removeChild(child);
+	
+	var list = document.getElementById('questionList').value;
+	
+	document.getElementById('questionList').value = list.replace(" " + id + ",", "");
+}
+
+</script>
+
+<div id="super_secret" style="display: none">
+
+    <div id="survey_qn_id111" class="option-box">
+              <table cellspacing="0" cellpadding="0" class="option-header" id="product_option_2">                
+                <thead>
+                  <tr>
+                    <th class="opt-title">Question 
+                      <span class="required">*
+                      </span>
+                    </th>   
+                    <th class="a-right">
+                      <button style="" onclick="removeQuestion('id111')" class="scalable delete delete-product-option " type="button" id="Delete_Question">
+                        <span>Delete Question</span>
+                      </button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <select  id="survey_qn_id111" name="survey_qn_id111" >
+                        <?php foreach($this->getSurveyQuestions() as  $question): ?>
+                             <option  value="<?php echo $question->survey_qn_id ?>" ><?php echo $question->survey_qn_title ?></option>
+                           <?php endforeach; ?>  
+                      </select>                        
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+      </div>
+</div>

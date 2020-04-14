@@ -1,0 +1,29 @@
+<?php $view = new Mage_Page_Block_Html_Topmenu;?>
+<div class="block block-layered-nav block-left-category">
+    <?php /*?><div class="block-title">
+        <strong><span>Categories</span></strong>
+    </div><?php */?>
+    <div class="block-content">
+    	<ul class="left-nav">
+    		<?php echo $_menu = $view->getHtml('level-top');?>
+    	</ul>
+    </div>
+</div>
+<script type="text/javascript">
+jQuery(function(){
+	jQuery('.level0').click(function(){
+		if(jQuery(this).hasClass('level0')){
+			jQuery('ul.level0').hide();
+			if(jQuery(this).hasClass('active-nav')){
+				jQuery(this).removeClass('active-nav');
+				jQuery(this).find('ul.level0').hide().removeClass('active-nav-child');
+			}else{
+				jQuery(this).addClass('active-nav');
+				jQuery(this).find('ul.level0').show().addClass('active-nav-child');
+			}
+		}
+	});
+	
+	jQuery('.left-nav li.active').find('ul.level0').show().addClass('active-nav-child');
+});
+</script>

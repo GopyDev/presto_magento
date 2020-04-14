@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+                <action method="addJs"><script>surveymanager/jsapi</script></action>
+        </reference>    
+    </default>
+    <surveymanager_adminhtml_index_index>         
+	<reference name="content">
+	  <block type="surveymanager/adminhtml_survey_manage" name="surveymanager" />
+	</reference>
+    </surveymanager_adminhtml_index_index>
+    <surveymanager_adminhtml_index_questions>
+	<reference name="content">
+	  <block type="surveymanager/adminhtml_questions_manage" name="surveymanager" />
+	</reference>
+    </surveymanager_adminhtml_index_questions>
+</layout>

@@ -1,0 +1,90 @@
+<?php $surveyId = $this->getRequest()->getParam('id'); ?>
+<div class="entry-edit custom-options product-custom-options">
+    <div class="entry-edit-head">
+        <h4><?php echo $this->__('Survey Results') ?></h4>       
+    </div>
+    <?php $cnt=1; ?>
+    <div id="product_options_container" class="box">
+        <div id="product_options_container_top" >
+            <?php foreach( $this->helper('surveymanager')->getSurveyRelations( $surveyId) as $surveyRln): ?>                
+                 <?php $question = $this->helper('surveymanager')
+                                        ->getSurveyQnById( $surveyRln->getSurveyQnId()) ?> 
+                 <?php $dataTable = ''; ?>
+            <div style="padding-bottom:10px;">
+                 <div style="padding-bottom:10px;">
+                        <?php echo $cnt.':'?> 
+                        <?php echo $question->survey_qn_title; ?>
+                 </div>                 
+                 <?php $surveyResults = $this->getResultsByQnId( $surveyRln->getSurveyQnId()); ?>
+                 <?php $answers = $this->helper('surveymanager')->getSurveyAnswersByQid($surveyRln->getSurveyQnId()) ?>
+                 <?php $ansType = $question->survey_ans_type;  ?>
+                 <?php if( $ansType!="3" && $ansType!="4"): ?>
+                    <div><?php echo $this->__('No: of Votes:').$this->getResultsCountByQnId($surveyRln->getSurveyQnId()) ?></div>
+                 <?php endif; ?>
+                 <?php if( $ansType=="9" || $ansType=="7" ): ?>
+                        <?php foreach($answers as $answer): ?>
+                            <?php $ansCnt[$answer->survey_ans_id] = 0; ?>
+                            <?php foreach($surveyResults as $surveyResult): ?>                          
+                             <?php  $surveyResultValue = $this->getValueByResultId($surveyResult->getSurveyResultId()); ?>
+                                <?php if($answer->survey_ans_id==$surveyResultValue): ?> 
+                                      <?php $ansCnt[$answer->survey_ans_id]++; ?>
+                                <?php endif; ?>                         
+                            <?php endforeach; ?>
+                             <div><span><?php echo $answer->survey_ans_title; ?></span></div>
+                             <?php  $dataTable .= "['".$answer->survey_ans_title."',".$ansCnt[$answer->survey_ans_id]."],";  ?>
+                         <?php endforeach; ?>
+                         <!------- Pie Chart -------->
+                         <div id="piechart_<?php echo $surveyRln->getSurveyQnId(); ?>" style="width: 100px; height: 200px;"></div>
+                        <script type="text/javascript">
+                          google.load("visualization", "1", {packages:["corechart"]});
+                          google.setOnLoadCallback(drawChart);
+                          function drawChart() {
+                            var data = google.visualization.arrayToDataTable([['Question', 'Votes'],
+                                                                        <?php echo $dataTable ?>]);
+                            var options = {
+                              title: '<?php echo $question->survey_qn_title; ?>',
+                               is3D: true
+                            };
+
+                            var chart = new google.visualization.PieChart(document.getElementById('piechart_<?php echo $surveyRln->getSurveyQnId(); ?>'));
+                            chart.draw(data, options);
+                          }
+                        </script>
+                   <?php endif; ?>
+                   <?php if( $ansType=="6"): ?>                         
+                            <?php $ansYesCnt = $ansNoCnt = 0; ?>
+                            <?php foreach($surveyResults as $surveyResult): ?>                          
+                             <?php  $surveyResultValue = $this->getValueByResultId($surveyResult->getSurveyResultId()); ?>
+                                <?php if("yes"==$surveyResultValue): ?> 
+                                      <?php $ansYesCnt++; ?>
+                                <?php endif; ?>
+                                <?php if("no"==$surveyResultValue): ?> 
+                                      <?php $ansNoCnt++; ?>
+                                <?php endif; ?> 
+                            <?php endforeach; ?>
+                         <!------- Pie Chart -------->
+                         <div id="piechart_<?php echo $surveyRln->getSurveyQnId(); ?>" style="width: 100px; height: 200px;"></div>
+                         <script type="text/javascript">
+                          google.load("visualization", "1", {packages:["corechart"]});
+                          google.setOnLoadCallback(drawChart);
+                          function drawChart() {
+                            var data = google.visualization.arrayToDataTable([['Question', 'Votes'],['Yes',<?php echo $ansYesCnt ?>],['No',<?php echo $ansNoCnt ?>]]);
+
+                            var options = {
+                              title: '<?php echo $question->survey_qn_title; ?>',
+                               is3D: true
+                            };
+
+                            var chart = new google.visualization.PieChart(document.getElementById('piechart_<?php echo $surveyRln->getSurveyQnId(); ?>'));
+                            chart.draw(data, options);
+                          }
+                         </script>
+                   <?php endif; ?>     
+                 <?php $cnt++; ?>
+            </div>            
+            <?php endforeach; ?>            
+        </div>
+    </div>
+</div>
+
+

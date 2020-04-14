@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * zeonsolutions inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.zeonsolutions.com/shop/license-community.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * This package designed for Magento COMMUNITY edition
+ * =================================================================
+ * zeonsolutions does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * zeonsolutions does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   Zeon
+ * @package    Zeon_AjaxCart
+ * @version    0.0.1
+ * @copyright  @copyright Copyright (c) 2013 zeonsolutions.Inc. (http://www.zeonsolutions.com)
+ * @license    http://www.zeonsolutions.com/shop/license-community.txt
+ */
+-->
+<config>
+    <modules>
+        <Zeon_AjaxCart>
+            <version>0.1.0</version>
+        </Zeon_AjaxCart>
+    </modules>
+    <frontend>
+        <routers>
+            <ajaxcart>
+                <use>standard</use>
+                <args>
+                    <module>Zeon_AjaxCart</module>
+                    <frontName>ajaxcart</frontName>
+                </args>
+            </ajaxcart>
+        </routers>
+        <layout>
+            <updates>
+                <ajaxcart>
+                    <file>zeon_ajaxcart.xml</file>
+                </ajaxcart>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Zeon_AjaxCart>
+                    <files>
+                        <default>Zeon_AjaxCart.csv</default>
+                    </files>
+                </Zeon_AjaxCart>
+            </modules>
+        </translate>
+    </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Zeon_AjaxCart>
+                    <files>
+                        <default>Zeon_AjaxCart.csv</default>
+                    </files>
+                </Zeon_AjaxCart>
+            </modules>
+        </translate>
+    </adminhtml>
+    <global>
+        <models>
+            <zeon_ajaxcart>
+                <class>Zeon_AjaxCart_Model</class>
+            </zeon_ajaxcart>
+            <wishlist>
+                <rewrite>
+                    <wishlist>Zeon_AjaxCart_Model_Wishlist</wishlist>
+                </rewrite>
+            </wishlist>
+        </models>
+        <helpers>
+            <zeon_ajaxcart>
+                <class>Zeon_AjaxCart_Helper</class>
+            </zeon_ajaxcart>
+        </helpers>
+        <blocks>
+            <zeon_ajaxcart>
+                <class>Zeon_AjaxCart_Block</class>
+            </zeon_ajaxcart>
+        </blocks>
+    </global>
+    <default>
+        <zeon_ajaxcart>
+            <general>
+                <is_enabled>1</is_enabled>
+            </general>
+            <frontend>
+                <auto_hide_popup>0</auto_hide_popup>
+                <show_rule_products_block>0</show_rule_products_block>
+            </frontend>
+        </zeon_ajaxcart>
+    </default>
+</config>

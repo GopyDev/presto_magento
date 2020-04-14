@@ -1,0 +1,252 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="page-title">
+     <h1><?php echo $this->__('Account Information') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+
+<form action="<?php echo $this->getUrl('customer/account/editPost') ?>" method="post" id="form-validate">
+    <div class="fieldset">
+        <?php echo $this->getBlockHtml('formkey')?>
+          <!--  <h2 class="legend"><?php //echo $this->__('Account Information') ?></h2>-->
+        <ul class="form-list">
+            <li class="fields">
+                <?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getCustomer())->toHtml() ?>
+            </li>
+            <li>
+                <label for="email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+                <div class="input-box">
+                    <input type="text" name="email" id="email" value="<?php echo $this->htmlEscape($this->getCustomer()->getEmail()) ?>" title="<?php echo $this->__('Email Address') ?>" class="input-text required-entry validate-email" />
+                </div>
+            </li>
+        <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+        <?php if ($_dob->isEnabled()): ?>
+            <li><?php echo $_dob->setDate($this->getCustomer()->getDob())->toHtml() ?></li>
+        <?php endif ?>
+        <?php $_taxvat = $this->getLayout()->createBlock('customer/widget_taxvat') ?>
+        <?php if ($_taxvat->isEnabled()): ?>
+            <li><?php echo $_taxvat->setTaxvat($this->getCustomer()->getTaxvat())->toHtml() ?></li>
+        <?php endif ?>
+        <?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+        <?php if ($_gender->isEnabled()): ?>
+            <li><?php echo $_gender->setGender($this->getCustomer()->getGender())->toHtml() ?></li>
+        <?php endif ?>
+        <li>
+            	<div class="field" style="width:auto;">
+                    <label for="confirmation" class="required" style="width:132px; height:20px; display:block"><?php /*?><em>*</em><?php echo $this->__('Confirm Password') ?><?php */?></label>
+                    <div class="input-box" style="position:relative">
+                        <input type="checkbox" <?php echo ($this->getCustomer()->getAcceptSubstitutes()) ? 'checked="checked"' : ''?> name="accept_substitutes" title="<?php echo $this->__('Agree to Substitutes') ?>" id="accept_substitutes" class="" style="float:left" />
+                            <label for="accept_substitutes" style="display:inline-block; float:left; font-size:14px; line-height:15px; margin-left:7px;"><?php echo $this->__('Agree to Substitutes') ?></label>
+						<div style="background-color: #EAEAEA;border-radius: 7px;color: #000;display: block;float: left;padding: 11px;" class="" id="popup_flexi"><h4 style="font-size:13px;">Substitution Note</h4><p style="font-size:12px; background:#dbdbdb; padding:5px;">Due to constantly changing inventory levels and the time between when you place your order and when you receive delivery, there is a small possibility that we will be 'out of stock' of the exact item you chose. If you choose to 'accept substitutes', we will fulfill your order with a product of equal or greater quality. If you choose not to accept substitutes and this situation arises, we will not be able to fulfill this part of your order.</p><div class="popup-action"></div>
+						</div>
+                    </div>
+				</div>
+            </li>
+            <li class="control">
+                <input style="display:none;" type="checkbox" name="change_password" id="change_password" value="1" onclick="setPasswordForm(this.checked)" title="<?php echo $this->__('Change Password') ?>"<?php if($this->getCustomer()->getChangePassword()==1): ?> checked="checked"<?php endif; ?> class="checkbox" /><label style="height: 30px;background-color: #808080;border-radius: 10px;width: 99%;cursor: pointer;
+padding: 10px 0px 5px 10px;"for="change_password"><?php echo $this->__('Click Here to Manage Password') ?></label>
+				<div class="fieldset" style="display:none;margin: 25px 0 0 10px;">
+							<h2 class="legend"><?php echo $this->__('Change Password') ?></h2>
+							<ul class="form-list">
+								<li>
+									<label  style="float:left;" for="current_password" class="required"><em>*</em><?php echo $this->__('Current Password') ?></label>
+									<div class="input-box">
+										<input type="password" title="<?php echo $this->__('Current Password') ?>" class="input-text" name="current_password" id="current_password" />
+									</div>
+								</li>
+								<li class="fields">
+									<div class="field">
+										<label for="password" class="required"><em>*</em><?php echo $this->__('New Password') ?></label>
+										<div class="input-box">
+											<input type="password" title="<?php echo $this->__('New Password') ?>" class="input-text validate-password" name="password" id="password" />
+										</div>
+									</div>
+									<div class="field">
+										<label for="confirmation" class="required"><em>*</em><?php echo $this->__('Confirm New Password') ?></label>
+										<div class="input-box">
+											<input type="password" title="<?php echo $this->__('Confirm New Password') ?>" class="input-text validate-cpassword" name="confirmation" id="confirmation" />
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+            </li>
+            <li class="control">
+                <input style="display:none;" type="checkbox" name="change_ccdinfo" id="change_ccdinfo" value="1" onclick="setcreditcardForm(this.checked)" title="<?php echo $this->__('Edit Credit card Information') ?>" class="checkbox" /><label style="height: 30px;background-color: #808080;border-radius: 10px;width: 99%;cursor: pointer;padding: 10px 0px 5px 10px;margin-top:10px;"for="change_ccdinfo"><?php echo $this->__('Click Here to Manage Payment Method') ?></label>
+					<div class="fieldset" style="display:none;margin: 25px 0 0 10px;">
+						<h2 class="legend"><?php echo $this->__('Edit Creditcard Infromation') ?></h2>
+						
+						<div style="margin-top:10px;float:right">
+		<a href="http://www.prestofreshgrocery.com/customer/account/clear/" style="padding:5px;color:#fff;background:red;text-decoration:underline;">Delete Payment Information</a>
+		</div>
+		
+						<ul class="form-list">
+
+							<?php 
+
+							$customerData = Mage::getSingleton('customer/session')->getCustomer();
+							$customerData->getId();
+							$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+							$select = $connection->select()->from('mg_save_creditcarddetail', array('*')) ->where('customer_id=?',$customerData->getId());
+							$rowsArray = $connection->fetchAll($select);
+							$rowArray =$connection->fetchRow($select); 
+
+							?>
+							<li>
+								<label style="float:left;" for="authorizenet_cc_type" class="required"><em>*</em><?php echo $this->__('Credit Card Type') ?></label>
+								<div class="input-box">
+								   <?php $verificationExpList = array('VI' => 'Visa', 'MC' => 'Master Card' ,'AE' => 'American Express', 'DI' => 'Discovery');?>
+								  <select id="authorizenet_cc_type" name="cc_type" class="validate-cc-type-select" autocomplete="off" onChange="do4digit();" >
+									<option value="">--Please Select--</option>
+									<?php foreach($verificationExpList as $_typeCode => $_typeName):?>
+									 <option value="<?php echo $_typeCode ?>"<?php if($_typeCode==$rowArray['cc_type']): ?> selected="selected"<?php endif ?>><?php echo $_typeName ?></option>
+									  <?php endforeach ?>
+									 
+								 </select>
+								</div>
+							</li>
+							<li>
+								<label style="float:left;" for="authorizenet_cc_number" class="required"><em>*</em><?php echo $this->__('Credit Card Number') ?></label>
+								<div class="input-box">
+									<input type="password" id="authorizenet_cc_number" style="font-size: 19px;padding: 5px 0 5px 5px;" name="cc_number"  maxlength="16" title="<?php echo $this->__('Credit Card Number') ?>" class="input-text validate-cc-number validate-cc-type" value="<?php echo $rowArray['cc_number'];?>"  />
+								</div>
+							</li>
+							<input type="hidden" name="customer_id" value="<?php echo $customerData->getId();?>" />
+						<li id="<?php echo $_code ?>_cc_type_exp_div">
+							<label style="float:left;" for="authorizenet_expiration" class="required"><em>*</em><?php echo $this->__('Expiration Date') ?></label>
+							<div class="input-box">
+								<div class="v-fix">
+								  <select id="authorizenet_expiration" name="cc_exp_month" class="month validate-cc-exp " autocomplete="off">
+								  <?php 
+									  $month = array('1' => '01 - January', '2' => '02 - February' , '3' => '03 - March' , '4' => '04 - April' , '5' => '05 - May' ,'6' => '06 - June' ,'7' => '07 - July' ,'8' => '08 - August' ,'9' => '09 - September' ,'10' => '10 - October' ,'11' => '11 - November' ,'12' => '12 - December')
+								  ?>  <option value="">--Please Select--</option>
+									<?php $_ccExpMonth = $rowArray['cc_exp_month'] ?>
+									<?php foreach ($month as $k=>$v): ?>
+										<option value="<?php echo $k?$k:'' ?>"<?php if($k==$_ccExpMonth): ?> selected="selected"<?php endif ?>><?php echo $v ?></option>
+									<?php endforeach ?> 
+								 </select>
+								</div>
+								<div class="v-fix">
+									<?php $_ccExpYear = $this->getInfoData('cc_exp_year') ?>
+									 <select id="authorizenet_expiration_yr" name="cc_exp_year" class="year" autocomplete="off">
+										<option value="">Year</option>
+										<?php  $year = array('2015' => '2015','2016' => '2016','2017' => '2017','2018' =>'2018','2019' =>'2019','2020' =>'2020','2021' => '2021','2022' => '2022','2023' => '2023','2024' => '2024');
+										 $_ccExpYear =  $rowArray['cc_exp_year'];
+										 foreach ($year as $k=>$v): ?>
+										<option value="<?php echo $k?$k:'' ?>"<?php if($k==$_ccExpYear): ?> selected="selected"<?php endif ?>><?php echo $v ?></option>
+									<?php endforeach ?>
+
+									</select>
+
+								</div>
+							</div>
+						</li>
+						<?php echo $this->getChildHtml() ?>
+						<?php //if($this->hasVerification()): ?>
+						<!-- <li id="<?php echo $_code ?>_cc_type_cvv_div">
+							<label style="float:left" for="authorizenet_cc_cid" class="required"><em>*</em><?php echo $this->__('Card Verification Number') ?></label>
+							<div class="input-box">
+								<div class="v-fix" >
+									<input type="password" style="width:40px;font-size: 19px; padding:5px;" s title="<?php echo $this->__('Card Verification Number') ?>"  class="input-text cvv validate-cc-cvn" id="authorizenet_cc_cid" name="cc_cid" value="<?php echo $rowArray['cc_cid'];//if(jQuery("#p_method_authorizenet_userememberdata").is(":checked")){echo $rowArray['cc_cid'];}?>" />
+								 </div>
+								 
+								<a href="#" class="cvv-what-is-this"><span class="img-cvv"><?php echo $this->__('What is this?') ?></span></a>
+							</div>
+						</li> -->
+						<?php //endif; ?>
+							
+						</ul>
+					</div>
+							</li>
+        </ul>
+		
+		
+    </div>
+     <!-- Customer CCD Information-->
+    
+    <!-- End -->
+    
+    
+    <div class="buttons-set">
+        <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+        <p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+         <button type="submit" title="<?php echo $this->__('Save') ?>" class="button"><span><span><?php echo $this->__('Save') ?></span></span></button>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var dataForm = new VarienForm('form-validate', true);
+    function setPasswordForm(arg){
+        if(arg){
+            $('current_password').up(3).show();
+            $('current_password').addClassName('required-entry');
+            $('password').addClassName('required-entry');
+            $('confirmation').addClassName('required-entry');
+
+        }else{
+            $('current_password').up(3).hide();
+            $('current_password').removeClassName('required-entry');
+            $('password').removeClassName('required-entry');
+            $('confirmation').removeClassName('required-entry');
+        }
+    }
+	 function setcreditcardForm(arg){
+        if(arg){
+            $('authorizenet_cc_type').up(3).show();$('current_password').up(3).hide();
+            $('authorizenet_cc_number').addClassName('required-entry');
+            $('authorizenet_expiration').addClassName('required-entry');
+            $('authorizenet_expiration_yr').addClassName('required-entry');
+			$('authorizenet_cc_cid').addClassName('required-entry');
+
+        }else{
+            $('authorizenet_cc_type').up(3).hide();
+            $('authorizenet_cc_number').removeClassName('required-entry');
+             $('authorizenet_expiration').removeClassName('required-entry');
+            $('authorizenet_expiration_yr').removeClassName('required-entry');
+			 $('authorizenet_cc_cid').removeClassName('required-entry');
+        }
+    }
+    <?php if($this->getCustomer()->getChangePassword()): ?>
+        setPasswordForm(true);
+    <?php endif; ?>
+//]]>
+
+function do4digit()
+{
+    if(jQuery('#authorizenet_cc_type').val()=='AE')
+	{
+		jQuery("#authorizenet_cc_cid").attr('maxlength','4');
+		
+	}
+	
+	else
+	{
+	   jQuery("#authorizenet_cc_cid").attr('maxlength','3');
+	}
+}
+</script>

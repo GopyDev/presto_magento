@@ -1,0 +1,4 @@
+2017-07-07T00:49:38-04:00 ERR (3): Warning: PDO::__construct(): MySQL server has gone away  in /home/prestofr/public_html/lib/Zend/Db/Adapter/Pdo/Abstract.php on line 129
+2017-07-07T00:49:38-04:00 ERR (3): Warning: PDO::__construct(): Error while reading greeting packet. PID=14368  in /home/prestofr/public_html/lib/Zend/Db/Adapter/Pdo/Abstract.php on line 129
+2017-12-27T16:42:39-05:00 ERR (3): Notice: Trying to get property of non-object  in /home/prestofr/public_html/app/code/core/Mage/Core/Model/Config.php on line 1245
+2017-12-27T16:42:39-05:00 ERR (3): Notice: Trying to get property of non-object  in /home/prestofr/public_html/app/code/core/Mage/Core/Model/Config.php on line 1595

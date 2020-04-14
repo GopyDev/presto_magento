@@ -1,0 +1,99 @@
+/**
+ * BelVG
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ 
+ * @category   Belvg
+ * @package    Chameleon Mobile Theme
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+ /********** Mage_CSS Common Elements ***********/
+/*FLAGS / COUNTRY*/
+
+.header-dropdown ul li a.af_za, .header-dropdown ul li a.af, .header-dropdown ul li a.za{background-image:url("../../images/flags/za.png");}
+.header-dropdown ul li a.sq_al, .header-dropdown ul li a.sq, .header-dropdown ul li a.al{background-image:url("../../images/flags/al.png");}
+.header-dropdown ul li a.ar_dz, .header-dropdown ul li a.dz	{background-image:url("../../images/flags/dz.png");}
+.header-dropdown ul li a.ar_eg, .header-dropdown ul li a.eg	{background-image:url("../../images/flags/eg.png");}
+.header-dropdown ul li a.ar_kw, .header-dropdown ul li a.kw	{background-image:url("../../images/flags/kw.png");}
+.header-dropdown ul li a.ar_ma, .header-dropdown ul li a.ma	{background-image:url("../../images/flags/ma.png");}
+.header-dropdown ul li a.ar_sa, .header-dropdown ul li a.sa	{background-image:url("../../images/flags/sa.png");}
+.header-dropdown ul li a.az_az, .header-dropdown ul li a.az	{background-image:url("../../images/flags/az.png");}
+.header-dropdown ul li a.be_by, .header-dropdown ul li a.be, .header-dropdown ul li a.by{background-image:url("../../images/flags/by.png");}
+.header-dropdown ul li a.bn_bd, .header-dropdown ul li a.bn, .header-dropdown ul li a.bd{background-image:url("../../images/flags/bd.png");}
+.header-dropdown ul li a.bs_ba, .header-dropdown ul li a.bs, .header-dropdown ul li a.ba{background-image:url("../../images/flags/ba.png");}
+.header-dropdown ul li a.bg_bg, .header-dropdown ul li a.bg{background-image:url("../../images/flags/bg.png");}
+.header-dropdown ul li a.ca_es, .header-dropdown ul li a.ca, .header-dropdown ul li a.es{background-image:url("../../images/flags/es.png");}
+.header-dropdown ul li a.zh_cn, .header-dropdown ul li a.cn{background-image:url("../../images/flags/cn.png");}
+.header-dropdown ul li a.zh_hk, .header-dropdown ul li a.hk{background-image:url("../../images/flags/hk.png");}
+.header-dropdown ul li a.zh_tw, .header-dropdown ul li a.tw{background-image:url("../../images/flags/tw.png");}
+.header-dropdown ul li a.hr_hr, .header-dropdown ul li a.hr{background-image:url("../../images/flags/hr.png");}
+.header-dropdown ul li a.cs_cz, .header-dropdown ul li a.cs, .header-dropdown ul li a.cz{background-image:url("../../images/flags/cz.png");}
+.header-dropdown ul li a.da_dk, .header-dropdown ul li a.da, .header-dropdown ul li a.dk{background-image:url("../../images/flags/dk.png");}
+.header-dropdown ul li a.nl_nl, .header-dropdown ul li a.nl{background-image:url("../../images/flags/nl.png");}
+.header-dropdown ul li a.en_au, .header-dropdown ul li a.au{background-image:url("../../images/flags/au.png");}
+.header-dropdown ul li a.en_ca, .header-dropdown ul li a.ca{background-image:url("../../images/flags/ca.png");}
+.header-dropdown ul li a.en_ie, .header-dropdown ul li a.ie{background-image:url("../../images/flags/ie.png");}
+.header-dropdown ul li a.en_nz, .header-dropdown ul li a.nz{background-image:url("../../images/flags/nz.png");}
+.header-dropdown ul li a.en_gb, .header-dropdown ul li a.en, .header-dropdown ul li a.gb{background-image:url("../../images/flags/en.png");}
+.header-dropdown ul li a.en_us, .header-dropdown ul li a.us{background-image:url("../../images/flags/usa.png");}
+.header-dropdown ul li a.et_ee, .header-dropdown ul li a.et, .header-dropdown ul li a.ee{background-image:url("../../images/flags/ee.png");}
+.header-dropdown ul li a.fil_ph, .header-dropdown ul li a.fil, .header-dropdown ul li a.ph{background-image:url("../../images/flags/ph.png");}
+.header-dropdown ul li a.fi_fi, .header-dropdown ul li a.fi{background-image:url("../../images/flags/fi.png");}
+.header-dropdown ul li a.fr_ca, .header-dropdown ul li a.ca{background-image:url("../../images/flags/ca.png");}
+.header-dropdown ul li a.fr_fr, .header-dropdown ul li a.fr{background-image:url("../../images/flags/fr.png");}
+.header-dropdown ul li a.gl_es, .header-dropdown ul li a.gl{background-image:url("../../images/flags/es.png");}
+.header-dropdown ul li a.ka_ge, .header-dropdown ul li a.ka, .header-dropdown ul li a.ge{background-image:url("../../images/flags/ge.png");}
+.header-dropdown ul li a.de_at, .header-dropdown ul li a.at{background-image:url("../../images/flags/at.png");}
+.header-dropdown ul li a.de_de, .header-dropdown ul li a.de{background-image:url("../../images/flags/de.png");}
+.header-dropdown ul li a.de_ch, .header-dropdown ul li a.ch{background-image:url("../../images/flags/ch.png");}
+.header-dropdown ul li a.el_gr, .header-dropdown ul li a.el, .header-dropdown ul li a.gr{background-image:url("../../images/flags/gr.png");}
+.header-dropdown ul li a.gu_in, .header-dropdown ul li a.gu, .header-dropdown ul li a.in{background-image:url("../../images/flags/in.png");}
+.header-dropdown ul li a.he_il, .header-dropdown ul li a.he, .header-dropdown ul li a.il{background-image:url("../../images/flags/il.png");}
+.header-dropdown ul li a.hi_in, .header-dropdown ul li a.hi, .header-dropdown ul li a.in{background-image:url("../../images/flags/in.png");}
+.header-dropdown ul li a.hu_hu, .header-dropdown ul li a.hu{background-image:url("../../images/flags/hu.png");}
+.header-dropdown ul li a.is_is, .header-dropdown ul li a.is{background-image:url("../../images/flags/is.png");}
+.header-dropdown ul li a.id_id, .header-dropdown ul li a.id{background-image:url("../../images/flags/id.png");}
+.header-dropdown ul li a.it_it, .header-dropdown ul li a.it{background-image:url("../../images/flags/it.png");}
+.header-dropdown ul li a.it_ch, .header-dropdown ul li a.ch{background-image:url("../../images/flags/ch.png");}
+.header-dropdown ul li a.ja_jp, .header-dropdown ul li a.ja, .header-dropdown ul li a.jp{background-image:url("../../images/flags/jp.png");}
+.header-dropdown ul li a.km_kh, .header-dropdown ul li a.km, .header-dropdown ul li a.kh{background-image:url("../../images/flags/kh.png");}
+.header-dropdown ul li a.ko_kr, .header-dropdown ul li a.ko, .header-dropdown ul li a.kr{background-image:url("../../images/flags/kr.png");}
+.header-dropdown ul li a.lo_la, .header-dropdown ul li a.lo,.header-dropdown ul li a.la {background-image:url("../../images/flags/la.png");}
+.header-dropdown ul li a.lv_lv, .header-dropdown ul li a.lv{background-image:url("../../images/flags/lv.png");}
+.header-dropdown ul li a.lt_lt, .header-dropdown ul li a.lt{background-image:url("../../images/flags/lt.png");}
+.header-dropdown ul li a.mk_mk, .header-dropdown ul li a.mk{background-image:url("../../images/flags/mk.png");}
+.header-dropdown ul li a.ms_my, .header-dropdown ul li a.ms,.header-dropdown ul li a.my{background-image:url("../../images/flags/my.png");}
+.header-dropdown ul li a.mn_mn, .header-dropdown ul li a.mn{background-image:url("../../images/flags/mn.png");}
+.header-dropdown ul li a.nb_no, .header-dropdown ul li a.nb{background-image:url("../../images/flags/no.png");}
+.header-dropdown ul li a.nn_no, .header-dropdown ul li a.nn, .header-dropdown ul li a.no{background-image:url("../../images/flags/no.png");}
+.header-dropdown ul li a.fa_ir, .header-dropdown ul li a.fa, .header-dropdown ul li a.ir{background-image:url("../../images/flags/ir.png");}
+.header-dropdown ul li a.pl_pl, .header-dropdown ul li a.pl{background-image:url("../../images/flags/pl.png");}
+.header-dropdown ul li a.pt_br, .header-dropdown ul li a.br{background-image:url("../../images/flags/br.png");}
+.header-dropdown ul li a.pt_pt, .header-dropdown ul li a.pt{background-image:url("../../images/flags/pt.png");}
+.header-dropdown ul li a.ro_ro, .header-dropdown ul li a.ro{background-image:url("../../images/flags/ro.png");}
+.header-dropdown ul li a.ru_ru, .header-dropdown ul li a.ru{background-image:url("../../images/flags/ru.png");}
+.header-dropdown ul li a.sr_rs, .header-dropdown ul li a.sr, .header-dropdown ul li a.rs{background-image:url("../../images/flags/rs.png");}
+.header-dropdown ul li a.sk_sk, .header-dropdown ul li a.sk{background-image:url("../../images/flags/sk.png");}
+.header-dropdown ul li a.sl_si, .header-dropdown ul li a.sl, .header-dropdown ul li a.si{background-image:url("../../images/flags/sl.png");}
+.header-dropdown ul li a.es_ar, .header-dropdown ul li a.ar{background-image:url("../../images/flags/ar.png");}
+.header-dropdown ul li a.es_cl, .header-dropdown ul li a.cl{background-image:url("../../images/flags/cl.png");}
+.header-dropdown ul li a.es_co, .header-dropdown ul li a.co{background-image:url("../../images/flags/co.png");}
+.header-dropdown ul li a.es_cr, .header-dropdown ul li a.cr{background-image:url("../../images/flags/cr.png");}
+.header-dropdown ul li a.es_mx, .header-dropdown ul li a.mx{background-image:url("../../images/flags/mx.png");}
+.header-dropdown ul li a.es_pa, .header-dropdown ul li a.pa{background-image:url("../../images/flags/pa.png");}
+.header-dropdown ul li a.es_pe, .header-dropdown ul li a.pe{background-image:url("../../images/flags/pe.png");}
+.header-dropdown ul li a.es_es, .header-dropdown ul li a.es{background-image:url("../../images/flags/es.png");}
+.header-dropdown ul li a.es_ve, .header-dropdown ul li a.ve{background-image:url("../../images/flags/ve.png");}
+.header-dropdown ul li a.sw_ke, .header-dropdown ul li a.sw, .header-dropdown ul li a.ke{background-image:url("../../images/flags/ke.png");}
+.header-dropdown ul li a.sv_se, .header-dropdown ul li a.sv, .header-dropdown ul li a.se{background-image:url("../../images/flags/se.png");}
+.header-dropdown ul li a.th_th, .header-dropdown ul li a.th{background-image:url("../../images/flags/th.png");}
+.header-dropdown ul li a.tr_tr, .header-dropdown ul li a.tr{background-image:url("../../images/flags/tr.png");}
+.header-dropdown ul li a.uk_ua, .header-dropdown ul li a.uk, .header-dropdown ul li a.ua{background-image:url("../../images/flags/ua.png");}
+.header-dropdown ul li a.vi_vn, .header-dropdown ul li a.vi, .header-dropdown ul li a.vn{background-image:url("../../images/flags/vn.png");}
+.header-dropdown ul li a.cy_gb, .header-dropdown ul li a.cy, .header-dropdown ul li a.gb{background-image:url("../../images/flags/gb.png");}

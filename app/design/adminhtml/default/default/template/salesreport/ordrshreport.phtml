@@ -1,0 +1,1563 @@
+<script type="text/javascript">
+function dodm(ordernumber)
+{
+                dm = jQuery('#dm-'+ordernumber).val();
+				   jQuery.ajax({
+				   url: "<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>ajaxrefundpm.php?rand="+Math.random()+"&ordernumber="+ordernumber+"&dm="+dm,
+				   context: document.body
+					}).done(function(data) {
+						alert("mistake has been updated successfully");
+				 });
+}
+
+function dopcomplete(ordernumber)
+{
+    if(jQuery("#pm-"+ordernumber).is(':checked'))
+	{
+	  comp=1;
+	}
+	else
+	{
+	  comp=0;
+	}
+
+	tpm = jQuery("#tpm-"+ordernumber).val();
+
+	 jQuery.ajax({
+				   url: "<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>ajaxreq.php?rand="+Math.random()+"&ordernumber="+ordernumber+"&comp="+comp+"&tpm="+tpm,
+				   context: document.body
+					}).done(function(data) {
+						alert("order has been updated successfully");
+				 });
+
+}
+
+
+function dogcomplete(ordernumber)
+{
+    if(jQuery("#gm-"+ordernumber).is(':checked'))
+	{
+	  comp=1;
+	}
+	else
+	{
+	  comp=0;
+	}
+
+	 jQuery.ajax({
+				   url: "<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>ajaxreqg.php?rand="+Math.random()+"&ordernumber="+ordernumber+"&comp="+comp,
+				   context: document.body
+					}).done(function(data) {
+						alert("order has been updated successfully");
+				 });
+
+}
+
+
+function showtr(ordernumber)
+{
+   jQuery('#trp-'+ordernumber).toggle();
+}
+</script>
+<?php
+		 error_reporting(E_ALL);
+		 ini_set('display_errors', 1);
+		 require 'vendor/autoload.php';
+
+	    $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+	    define("AUTHORIZENET_API_LOGIN_ID", "85z7aV7XB");
+		define("AUTHORIZENET_TRANSACTION_KEY", "3bWR6zZ8hx9h34zs");
+		define("AUTHORIZENET_SANDBOX", false);
+
+		if(isset($_GET["changedate"]) && $_GET["changedate"]!="")
+		{
+		   if($_GET["changetime"]!="")
+		   {
+		       $wed=$_GET["changetime"]."|".$_GET["changedate"];
+		   }
+		   else
+		   {
+		       $wed=$_GET["changedate"];
+		   }
+
+		    $sql55555c = "UPDATE `mg_shipping_delivery_window` SET window='".$wed."' where `order_number`='".$_GET["oid"]."'";
+			$rows55555 = $connection->query($sql55555c);
+
+		}
+
+		if(isset($_GET["detl"]))
+		{
+
+			   $fetch_name="select name from mg_sales_flat_order_item where item_id='".$_GET["detl"]."'";
+			   $name= $connection->fetchOne($fetch_name);
+
+			   $name=str_replace("'","",$name);
+
+			   $fetch_qty_ordered="select qty_ordered from mg_sales_flat_order_item where item_id='".$_GET["detl"]."'";
+			   $qty_ordered= $connection->fetchOne($fetch_qty_ordered);
+
+			   $fetch_price="select price from mg_sales_flat_order_item where item_id='".$_GET["detl"]."'";
+			   $price= $connection->fetchOne($fetch_price);
+
+			   $operation="Removed ".$name.",Qty Orderd :- ".$qty_ordered.",Price :-".$price ;
+
+			   $insert="insert into orderoperation set oid='".$_GET["oid"]."',pro_id='".$_GET["detl"]."',operation='".$operation."'";
+			   $connection->query($insert);
+
+			   $delete="delete from mg_sales_flat_order_item where item_id='".$_GET["detl"]."'";
+			   $connection->query($delete);
+
+				$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+				$currentUrl2 = explode("?",$currentUrl);
+				$currentUrl22 = $currentUrl2."?oid=".$_GET['oid'];
+
+				header("Location:".$currentUrl22);
+
+		}
+
+
+		if(isset($_GET["qty_set"]))
+		{
+		   if($_GET["qty_set"]>=1)
+		   {
+			   $nowprice=round(($_GET["qty_set"]*$_GET["proprice"]),4);
+			$update="update mg_sales_flat_order_item set qty_invoiced='".$_GET["qty_set"]."',qty_ordered='".$_GET["qty_set"]."',qty_shipped='".$_GET["qty_set"]."',row_total='".$nowprice."',base_row_total='".$nowprice."',row_invoiced='".$nowprice."',base_row_invoiced='".$nowprice."' where item_id='".$_GET["item_id"]."'";
+			 $connection->query($update);
+
+			   $fetch_name="select name from mg_sales_flat_order_item where item_id='".$_GET["item_id"]."'";
+			   $name= $connection->fetchOne($fetch_name);
+
+				$name=str_replace("'","",$name);
+
+			   $operation="Qty updated for ".$name.",Qty Changed from ".$_GET["qty_orderd"]." to ".$_GET["qty_set"];
+			   $insert="insert into orderoperation set oid='".$_GET["oid"]."',pro_id='".$_GET["pro_id"]."',operation='".$operation."'";
+			  $connection->query($insert);
+
+				$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+				$currentUrl2 = explode("?",$currentUrl);
+				$currentUrl22 = $currentUrl2."?oid=".$_GET['oid'];
+				header("Location:".$currentUrl22);
+		   }
+		}
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+
+		function dorefund(itemid)
+		{
+
+		   bcd=(jQuery('#chkref-'+itemid).is(':checked'));
+
+		   if(bcd==true)
+		   {
+			  bcd=1;
+			  k=confirm('Are you sure you want to refund this item ?');
+		   }
+		   else
+		   {
+			 bcd=0;
+			 k=confirm('Are you sure you remove this item from refund list?');
+		   }
+
+
+		   if(k==true)
+		   {
+
+			       jQuery.ajax({
+				   url: "<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>ajaxrefund.php?rand="+Math.random()+"&itemid="+itemid+"&refund="+bcd,
+				   context: document.body
+					}).done(function(data) {
+					 if(data==1)
+					 {
+						alert("item has been refunded successfully");
+					 }
+					 else if(data==0)
+					 {
+					   alert("item has been removed from refund list successfully");
+					 }
+				 });
+		   }
+		}
+
+
+		function dorefundp(itemid)
+		{
+				// alert(itemid);
+				selref = jQuery('#selectref-'+itemid).val();
+				txtref = jQuery('#txtref-'+itemid).val();
+
+				   jQuery.ajax({
+				   url: "<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>ajaxrefundp.php?rand="+Math.random()+"&itemid="+itemid+"&selref="+selref+"&txtref="+txtref,
+				   context: document.body
+					}).done(function(data) {
+						alert("mistake has been updated successfully");
+				 });
+		 }
+
+    </script>
+
+	<script type="text/javascript">
+    jQuery(document).ready(function() {
+    jQuery('input').bind('keypress', function (event) {
+    var regex = new RegExp("'");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (regex.test(key)) {
+       event.preventDefault();
+       return false;
+    }
+    });
+
+	jQuery('textarea').bind('keypress', function (event) {
+    var regex = new RegExp("'");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (regex.test(key)) {
+       event.preventDefault();
+       return false;
+    }
+    });
+	jQuery('input').bind('keypress', function (event) {
+    var regex = new RegExp("&");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (regex.test(key)) {
+       event.preventDefault();
+       return false;
+    }
+    });
+
+	jQuery('textarea').bind('keypress', function (event) {
+    var regex = new RegExp("&");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (regex.test(key)) {
+       event.preventDefault();
+       return false;
+    }
+    });
+});
+</script>
+<?php
+	if(isset($_GET["dnote"]))
+	{
+	    $update="update drivlist set dnote='".$_GET["dnote"]."' where ordernumber='".$_GET["ordernumber"]."'";
+		$connection->query($update);
+	}
+
+
+	if(isset($_GET["cnote"]))
+	{
+	    $update="update mg_sales_flat_order set customer_note='".$_GET["cnote"]."' where increment_id='".$_GET["ordernumber"]."'";
+		$connection->query($update);
+	}
+
+
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+
+	if(!empty($_REQUEST['from']) ){
+		/*====================== Start Code for Magento Orders Product =====================*/
+		//echo "<pre>";
+		$orders_row = array();
+
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+
+		$rr=explode("/",$from);
+		$adate=$rr[2]."-".$rr[0]."-".$rr[1];
+
+		$to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		$from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+
+		$custname=$_GET["custname"];
+	}
+
+	if(!isset($_GET["custname"]))
+	{
+		if($from=="" && $to=="") {
+		      $to=date('m/d/Y');
+			  $from=date('m/d/Y',strtotime($to . " -1 day"));
+			  $_GET["from"] = $from;
+			  $from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+		    }
+	}
+	?>
+	<script>
+	function dognote()
+		{
+		   gnote = jQuery('#gnote').val();
+		   fromv = '<?php echo $from_date; ?>';
+		   jQuery.ajax({
+				   url: "<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>ajaxgnote.php?rand="+Math.random()+"&gnote="+gnote+"&dodate="+fromv,
+				   context: document.body
+					}).done(function(data) {
+					 jQuery('#updategnote').html("Updated Successfully.");
+				 });
+		}
+  </script>
+<div id="anchor-content" class="middle">
+  <div id="page:main-container">
+    <div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Order Support Report");?></h3></td>
+            <td class="form-buttons"><button style="" onclick="filterFormSubmit.submit()" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Show Report</span></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <?php /*?><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><?php */?>
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Delivery Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" input-text" title="From" value="<?php echo $from; ?>" id="sales_report_from" name="from" />
+                      <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif">
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_from",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_from_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+
+				  <tr>
+                    <td class="label"><label for="sales_report_from">Order Type</label></td>
+                    <td class="value">
+					<select name="rf" id="rf">
+					<option value="">All</option>
+					<option value="1" <?php if($_GET["rf"]==1) { ?> selected  <?php } ?> >Price Adjustment Needed</option>
+					<option value="2" <?php if($_GET["rf"]==2) { ?> selected  <?php } ?> >Unprocessed Gratuity</option>
+					</select>
+                    </td>
+                  </tr>
+
+				  <tr>
+                    <td class="label"><label for="sales_report_from">Customer Name (first name or last name)<span class="required">*</span></label></td>
+                    <td class="value">
+					<input type="text" style="width:110px !important;" class=" input-text" title="Customer Name" value="<?php echo $_GET["custname"]; ?>" id="custname" name="custname" />
+                      </td>
+                  </tr>
+				  <?php
+				  $sel_gnote="select note from general_note where dodate='".$from_date."'";
+				  $gnote=$connection->fetchOne($sel_gnote);
+				  ?>
+				  <tr>
+                    <td class="label"><label for="sales_report_from">General Note :-</label></td>
+                    <td class="value">
+					<div id="updategnote" style="color:green;font-size:14px;font-weight:bold;"></div>
+					<br/>
+					<textarea style="width:400px;border:1px solid #000;" name="gnote" id="gnote" onBlur="dognote();" ><?php echo $gnote; ?></textarea></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+	<?php if(isset($_GET["oid"]) && $_GET["oid"]!="" ) {
+
+     $order = Mage::getModel('sales/order')->load($_GET["oid"], 'increment_id');
+	 $order->getAllVisibleItems();
+	 $address = $order->getShippingAddress();
+	 $address2 = $order->getBillingAddress();
+	 $orderValue = $order->getSubtotal();
+	 $orderValue2 = $order->getBaseGrandTotal();
+?>
+
+<style>
+.page
+{
+   width:90%;
+}
+td, th
+{
+   padding:5px !important;
+   font-size:12px;
+   color:#000;
+}
+table
+{
+   border-color:#000;
+}
+th
+{
+   color:#000;
+}
+</style>
+<div style="border-bottom:3px solid #dfdfdf;margin-bottom:5px;" >
+<h3 class="icon-head head-manage-blog" style="padding-left:0px;color:#eb5e00;">Order Details ( <?php echo $_GET["oid"]; ?> )</h3>
+<?php
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$url77 = explode("?oid=",$currentUrl);
+
+?>
+
+<a href="<?php echo $url77[0]; ?>" > Back to Order Support Report </a>
+
+</div>
+	 <b> Delivery Address :- </b>
+	             <?php echo $custName = $address->getName()."&nbsp;&nbsp;";
+				echo $custAddr = $address->getStreetFull()."&nbsp;&nbsp;";
+				echo $region2 = $address->getCity()."&nbsp;&nbsp;";
+				echo $region = $address->getRegion()."&nbsp;&nbsp;";
+				echo $country = $address["postcode"]; ?>
+
+	 <br/><br/><b> Billing Address :- </b>
+	  <?php echo $custName = $address2->getName()."&nbsp;&nbsp;";
+				echo $custAddr = $address2->getStreetFull()."&nbsp;&nbsp;";
+				echo $region2 = $address2->getCity()."&nbsp;&nbsp;";
+				echo $region = $address2->getRegion()."&nbsp;&nbsp;";
+				echo $country = $address2["postcode"]; ?>
+		<br/><br/>
+		<b> Customer :- </b>
+		<?php echo $custName; ?>
+		&nbsp; &nbsp;
+
+
+		<b> Customer Telephone :- </b>
+		<?php echo $address->getTelephone(); ?>
+		&nbsp; &nbsp;
+		<br/><br/>
+
+		<script>
+function dorefund2(itemid)
+		{
+		   bcd=(jQuery('#chkref-').is(':checked'));
+
+		   if(bcd==true)
+		   {
+			  bcd=1;
+		   }
+		   else
+		   {
+			 bcd=0;
+		   }
+			       jQuery.ajax({
+				   url: "<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>ajaxel.php?rand="+Math.random()+"&itemid="+itemid+"&refund="+bcd,
+				   context: document.body
+					}).done(function(data) {
+					 if(data==1)
+					 {
+						alert("Order Has Been Removed From Specialty Dept. Report ");
+					 }
+					 else if(data==0)
+					 {
+					   alert("Order Has Been Added to Specialty Dept. Report ");
+					 }
+				 });
+		  		}
+</script>
+
+
+	  <?php
+	  		$sql55555 = "SELECT `window` FROM `mg_shipping_delivery_window` where `order_number`='".$_GET["oid"]."'";
+			$rows55555 = $connection->fetchOne($sql55555);
+			 $temp = explode("|",$rows55555);
+
+			  $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+			  $sel_el="select exclude_lables from mg_shipping_delivery_window where order_number='".$_GET["oid"]."'";
+			  $el=$connection->fetchOne($sel_el);
+
+		 ?>
+
+		 <b> Delivery Date :- </b>
+
+		&nbsp; &nbsp;<b> Delivery Time :- </b>
+			 <?php if($temp[1]=="") { echo 'Flexible Time'; } else { echo $temp[0]; } ?>
+
+			   <div style="padding:5px;background:red;color:#fff;font-weight:bold;margin-bottom:10px;"> <input type="checkbox" name="chkref-" value="1" id="chkref-" OnChange="dorefund2(<?php echo $_GET["oid"]; ?>);" <?php if($el==1) { ?> checked="checked" <?php } ?>  > Remove From Specialty Dept. Report </div>
+
+			 <form method="get" action="" id="frmdates" name="frmdates" >
+			 <div style="margin-top:10px;">
+			 Change Date :- <input type="text" name="changedate" value="<?php if($temp[1]=="") { echo $temp[0]; } else { echo $temp[1]; } ?>" > (dd_mm_yyyy)
+			 </div>
+			  <div style="margin-top:10px;" >
+			 Change Time :- <input type="text" name="changetime" value="<?php if($temp[1]=="") { echo 'Flexible Time'; } else { echo $temp[0]; } ?>" >  ( Note :- For Flexible Time Keep It Blank )
+			  </div>
+			  <div style="margin-top:10px;">
+			  <button style="margin-top:15px;" onclick="dofrmsubmit();" class="scalable " type="button" id=""><span>Change Date</span></button>
+			  </div>
+			  <input type="hidden" name="oid" id="oid" value="<?php echo $_GET["oid"]; ?>" />
+			   <input type="hidden" name="from" id="from" value="<?php echo $_GET["from"]; ?>" />
+			 </form>
+
+			 <script>
+			 function dofrmsubmit()
+			 {
+			     document.getElementById("frmdates").submit();
+			 }
+			 </script>
+
+<?php
+   $value["order_number"] = $_GET["oid"];
+   if($value["order_number"]!="")
+		   {
+		       $sql2        = "SELECT entity_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows2 = $connection->fetchOne($sql2);
+			   echo "<br/>";
+
+				$sql3 = "SELECT mei.value,msi.item_id,msi.selref,msi.txtref,msi.refund,msi.product_id,msi.price,msi.row_total,msi.qty_ordered,msi.name,msi.sku FROM `mg_sales_flat_order_item` msi
+			    left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251
+			    where msi.`order_id`='".$rows2."'";
+
+			   $rows3 = $connection->fetchAll($sql3);
+
+			   $sel_check_operation="select * from orderoperation where oid='".$_GET["oid"]."'";
+			   $rows3heck_operation = $connection->fetchAll($sel_check_operation);
+
+			   if(count($rows3heck_operation>=1))
+			   {
+			   ?>
+			   <table border=1 cellpadding="5" cellspacing="5" border="1" style="border-collapse:collapse;margin-bottom:20px;margin-top:15px;" >
+
+			   <tr style="background:red;color:#fff;">
+			   <th> Order Edits </th>
+			   </tr>
+			   <?php
+			   foreach ($rows3heck_operation as $value3) {
+			   ?>
+			   <tr>
+			   <td> <?php echo $value3["operation"]; ?></td>
+			   </tr>
+			   <?php } ?>
+			   </table>
+			   <?php
+			   }
+			   ?>
+			   <br/><br/><b> Order Items </b>
+			   <table border=1 cellpadding="5" cellspacing="5" border="1" style="border-collapse:collapse" >
+			   <tr>
+			   <th >Product Name</th>
+			   <th>Sku</th>
+			   <th>Price</th>
+			   <th>Qty</th>
+			   <th>Subtotal</th>
+			   <th>Product Type</th>
+			   <th>Found / Not Found</th>
+				<th>Packed / Not Packed</th>
+				<th>Substitute</th>
+				<th>Refund</th>
+				<th>Picker Mistake</th>
+			   <th>Change Qty</th>
+			   <th>Remove Item</th>
+			   </tr>
+
+			   <?php
+			   $rr=0;
+			   foreach ($rows3 as $value3) {
+
+			    $sel_status="select status from supervision where item_id='".$value3["item_id"]."'";
+				$nstatus=$connection->fetchOne($sel_status);
+
+				$sel_log="select log2 from supervision where item_id='".$value3["item_id"]."'";
+				$nlog=$connection->fetchOne($sel_log);
+
+				$sel_subs="select substitute from supervision where item_id='".$value3["item_id"]."'";
+				$nsubs=$connection->fetchOne($sel_subs);
+
+
+				  if($nlog==1)
+				  {
+				     $nlog = 'Packed';
+				  }
+				  else
+				  {
+				     $nlog = 'Not Packed';
+				  }
+
+				$_resource = Mage::getSingleton('catalog/product')->getResource();
+				$optionValue1 = $_resource->getAttributeRawValue($value3["product_id"],'protype', Mage::app()->getStore());
+
+				$product = Mage::getModel('catalog/product')->setStoreId($store_id)->setProtype($optionValue1);
+                $optionLabel1 = $product->getAttributeText('protype');
+
+				$optionValue4 = $_resource->getAttributeRawValue($value3["product_id"],'vendor_product_id', Mage::app()->getStore());
+
+				$rr = $rr + $value3["row_total"];
+			   ?>
+
+			    <tr>
+				<td><?php echo $value3["name"]; ?></td>
+				<td><?php echo $value3["sku"]; ?></td>
+				<td>$<?php echo number_format($value3["price"], 2, '.', ''); ?></td>
+				<td><?php echo round($value3['qty_ordered'],0); ?></td>
+				<td>$<?php echo number_format($value3["row_total"], 2, '.', ''); ?></td>
+				<td><?php echo $optionLabel1; ?></td>
+				<td><?php echo $nstatus; ?></td>
+				<td><?php echo $nlog; ?></td>
+				<td><?php echo $nsubs; ?></td>
+				<td style="font-weight:bold;font-size:12px;"><div style="color:#000;margin-top:15px;"> <input type="checkbox" name="chkref-<?php echo $value3['item_id']; ?>" id="chkref-<?php echo $value3['item_id']; ?>" <?php if($value3['refund']==1) { echo "checked"; } ?> value="<?php echo $value3['item_id']; ?>" onClick="dorefund(<?php echo $value3['item_id']; ?> )" /> Refund Item </div></td>
+
+				<td style="font-weight:bold;font-size:12px;">
+				Picker Mistake
+
+				<select name="selectref-<?php echo $value3['item_id']; ?>" id="selectref-<?php echo $value3['item_id']; ?>">
+				<option value=""> Select </option>
+				<option value="Expired Product" <?php if($value3['selref']=="Expired Product") { echo "selected"; } ?> > Expired Product </option>
+				<option value="Incorrect Item" <?php if($value3['selref']=="Incorrect Item") { echo "selected"; } ?> > Incorrect Item </option>
+				<option value="Missing Item" <?php if($value3['selref']=="Missing Item") { echo "selected"; } ?> > Missing Item </option>
+				<option value="Packing Issue" <?php if($value3['selref']=="Packing Issue") { echo "selected"; } ?> > Packing Issue </option>
+				<option value="Other" <?php if($value3['selref']=="Other") { echo "selected"; } ?> > Other </option>
+				</select>
+
+				<textarea name="txtref-<?php echo $value3['item_id']; ?>" id="txtref-<?php echo $value3['item_id']; ?>" onBlur="dorefundp(<?php echo $value3['item_id']; ?> )" style="margin-top:10px;"><?php echo $value3['txtref']; ?></textarea>
+				<br/>
+				</td>
+
+
+				<td>  <form method="get" action="" name="editform<?php echo $value3["item_id"]; ?>" id="editform<?php echo $value3["item_id"]; ?>"><input type="text" style="width:20px;" name="qty_set" value="<?php echo round($value3['qty_ordered'],0); ?>" /><br/><button style="margin-top:15px;" onclick="gosubmit(<?php echo $value3["item_id"]; ?>)" class="scalable " type="button" id="id_sxIHHR43YtHVy4TP"><span>Change Qty</span></button><input type="hidden" name="item_id" id="item_id" value="<?php echo $value3["item_id"]; ?>" />
+				<input type="hidden" name="qty_orderd" id="qty_orderd" value="<?php echo round($value3["qty_ordered"],0) ?>" />
+				<input type="hidden" name="pro_id" id="pro_id" value="<?php echo round($value3["product_id"],0) ?>" />
+				<input type="hidden" name="rowtotal" id="rowtotal" value="<?php echo round($value3["row_total"],2) ?>" />
+				<input type="hidden" name="proprice" id="proprice" value="<?php echo round($value3["price"],2) ?>" />
+				<input type="hidden" name="oid" id="oid" value="<?php echo $_GET["oid"]; ?>" />
+			  </form>
+
+			 <?php
+
+			  $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+			  ?>
+       			  <td><a href="<?php echo $currentUrl; ?>&detl=<?php echo $value3["item_id"]; ?> " onClick="return confirm('Are you sure you want to remove this item ?');"> Remove Item</a></td>
+
+			   <script type="text/javascript">
+       	       function gosubmit(id)
+			   {
+			      jQuery('#editform'+id).submit();
+			   }
+</script> </td>
+				</tr>
+			   <?php
+			   }
+			   ?>
+			   <tr>
+			     <td></td>
+			   <td style="text-align:right;" colspan="4">
+			   <b>
+			   <br/>
+			    Total : $<?php echo number_format($rr, 2, '.', ''); ?><br/> <br/>
+			   Original Subtoal : $<?php echo number_format($orderValue, 2, '.', ''); ?>  <br/>  <br/>
+			   Grandtotal :  $<?php echo number_format($orderValue2, 2, '.', ''); ?>  <br/>
+			   </b>
+			  <br/>
+			   </td>
+			   <td colspan="3" style="background:red;color:#fff;font-size:15px;font-weight:bold;"> Difference Amount : $<?php if($rr!=$orderValue) { echo round($orderValue-$rr,2); } ?></td>
+			   </tr>
+			    </table>
+			   <?php
+		   }
+
+	  exit(0);
+	  }
+	?>
+	<?php
+	  if(!empty($_REQUEST['from']) || !empty($_REQUEST['custname']) ){ ?>
+	  <style>
+	.page
+	{
+	   width:90%;
+	}
+	td, th
+	{
+	   padding-top:5px !important;
+	   padding-left:5px !important;
+	   padding-right:5px !important;
+	   padding-bottom:5px !important;
+	   font-size:11px;
+	   font-weight:bold;
+	}
+	table
+	{
+	   border-collapse:collapse;
+	}
+	</style>
+
+
+	  <table border=1 style="border-collapse:collapse;font-size:11px;">
+		<tr>
+		<th style="text-align:left;width:190px;"><b>Delivery Date / Time </b></th>
+		<th><b>Order Number</b></th>
+		<th style="text-align:left;width:160px;"><b>Customer Name</b></th>
+		<th ><b>Picker</b> </th>
+		<th><b>Gratuity</b> </th>
+		<th><b>Trans No :- </b> </th>
+		<th style="text-align:left;width:160px;" ><b>Delivery Information</b> </th>
+		<th style="text-align:left;width:160px;" ><b>Customer note</b> </th>
+		<!-- <th ><b>Delivery Time</b> </th> -->
+		</tr>
+<?php
+
+	   $j=0;
+	   if(isset($_GET["custname"]) && $_GET["custname"]!="")
+	   {
+	 $sql = "SELECT m.* FROM `mg_shipping_delivery_window` m
+	 left join mg_sales_flat_order mo on mo.increment_id=m.order_number where mo.customer_firstname LIKE '".$_GET["custname"]."%' or mo.customer_lastname LIKE '".$_GET["custname"]."%' order by mo.entity_id DESC limit 0,25 ";
+	 $rows = $connection->fetchAll($sql);
+	 $total_rows = count($rows);
+	 if($total_rows>0)
+	 {
+	    $j=$j+1;
+     }
+	 if($j%2==0)
+	 {
+	    $color='#fff';
+	 }
+	 else
+	 {
+	    $color='#cecece';
+	 }
+	  $check=explode("-",$kbt2);
+	  $check2[$i] =  $check[1];
+	  foreach ($rows as $value) {
+
+	    $sqlstatus = "SELECT status FROM mg_sales_flat_order_grid  where increment_id='".$value["order_number"]."'";
+		$rowstatus = $connection->fetchOne($sqlstatus);
+
+			 if($value["order_number"]!="" && $value["order_number"]!='100003190' && $value["order_number"]!='100005508' && $rowstatus!='canceled' )
+		   {
+		            $oid[0] = $value["order_number"];
+
+		            $sqlstatus  = "SELECT dnote FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["dnote"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT cnote FROM mg_shipping_delivery_window  where order_number='".$oid[0]."'";
+					$number["cnote"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT status FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["status"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT tip FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["tip"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT tipstatus FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["tipstatus"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT sign FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["sign"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT nowtime FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["nowtime"] = $connection->fetchOne($sqlstatus);
+
+		       $sql2  = "SELECT entity_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows2 = $connection->fetchOne($sql2);
+
+			   $sql22  = "SELECT customer_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows22 = $connection->fetchOne($sql22);
+
+			   $customer = "" ;
+			   $customer = Mage::getModel('customer/customer')->load($rows22);
+
+			   $sql222  = "SELECT entity_id FROM mg_sales_flat_order_grid where customer_id='".$rows22."' and increment_id!='".$value["order_number"]."'";
+		       $rows222 = $connection->fetchOne($sql222);
+
+			   $sql3  = "SELECT SUM(qty_ordered) FROM `mg_sales_flat_order_item` where `order_id`='".$rows2."'";
+			   $rows3 = $connection->fetchOne($sql3);
+
+			   $sel_refunds="select count(item_id) from `mg_sales_flat_order_item` where `order_id`='".$rows2."' and refund=1";
+			   $refunds = $connection->fetchOne($sel_refunds);
+
+			   $sel_pmistake="select count(item_id) from `mg_sales_flat_order_item` where `order_id`='".$rows2."' and selref!=''";
+			   $pmistake = $connection->fetchOne($sel_pmistake);
+
+			   $order = Mage::getModel("sales/order")->load($rows2); //load order by order id
+			   $address = $order->getShippingAddress();
+			   $temp = explode("|",$value['window']);
+			   if($temp[1]=="")
+			   {
+			   $ktemp = explode("_",$temp[0]);
+			   }
+			   else
+			   {
+			   $ktemp = explode("_",$temp[1]);
+			   }
+			   $temp3 = explode(".",$rows3);
+			   $check22 = 0;
+			   if($refunds>=1)
+			   {
+			     $color = '#ffcece';
+			   }
+			   else
+			   {
+			      $color = '#fff';
+			   }
+			   ?>
+
+			   <tr style="background-color:<?php echo $color; ?>;">
+			   <td  <?php if($rows222 == "" ) {  echo 'style="color:#0041d7;font-weight:bold;font-size:12px;"'; } ?> ><?php echo $ktemp[1]."/".$ktemp[0]."/".$ktemp[2]; ?> | <?php if($temp[1]=="") { echo 'Flexible Time'; } else { echo $temp[0]; } ?>
+
+			   </td>
+			   <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?>>
+			   <a href="?oid=<?php echo $value['order_number'] ?>&from=<?php echo $_GET["from"]; ?>"  <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;text-decoration:underline;"'; } else {  echo 'style="color:#000;font-weight:bold;font-size:12px;text-decoration:underline;"'; } ?> >
+			   <?php echo $value['order_number'];
+			   if($refunds>=1)
+			   {
+			      echo " Refund(".$refunds.")";
+			   }
+			   ?>
+			   </a>
+			   <br/>
+			   <b> Driver Mistake </b>
+			   <textarea name="dm-<?php echo $value['order_number']; ?>" id="dm-<?php echo $value['order_number']; ?>"  style="min-height:70px;" onBlur="dodm('<?php echo $value['order_number']; ?>');" ><?php echo $value["drivermistake"]; ?></textarea></td>
+			    <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?> ><?php $custName = $address->getName(); ?> <?php if(trim($custName)=="") { echo $customer->getName(); } else { echo $custName; } ?>
+
+				<?php
+
+				    $sqlstatus  = "SELECT tipstatus FROM drivlist  where ordernumber='".$value["order_number"]."'";
+					$number["tipstatus"] = $connection->fetchOne($sqlstatus);
+
+				if($number["tipstatus"]>=1)
+				{
+
+				$request = new AuthorizeNetTD;
+                $response = $request->getTransactionDetails($number["tipstatus"]);
+				if($response->xml->transaction->transactionStatus=='settledSuccessfully')
+				{
+				   $soda=1;
+				}
+				else if($response->xml->transaction->transactionStatus=='capturedPendingSettlement')
+				{
+				   $soda=1;
+				}
+				else
+					{
+						 $soda=0;
+					}
+
+				}
+				?>
+
+				</td>
+				<td>
+				<?php $sql2g        = "SELECT picker_id FROM mg_order_picker where order_number='".$value["order_number"]."'";
+		        $rows2g = $connection->fetchOne($sql2g);
+				if($rows2g!="")
+			     {
+					$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+					$url77 = explode("/",$currentUrl);
+                  ?>
+				 <?php
+				    $sql2gk = "SELECT name FROM mg_pickers where id='".$rows2g."'";
+		            echo $rows2gk = $connection->fetchOne($sql2gk);
+				 }
+
+				if($pmistake>=1)
+			    {
+			      echo " <br/> Mistake(".$pmistake.") ";
+			    }
+
+			   ?>
+				</td>
+				<?php
+				    $sql2gk = "SELECT name FROM mg_pickers where email='".$value["driver_email"]."'";
+		            $drivername = $connection->fetchOne($sql2gk);
+			   ?>
+				<!-- <td><?php echo $drivername; ?></td>
+				<td><?php echo $value["drivername"]; ?></td> -->
+
+
+				<?php if( $number["tip"]>=1 && $soda==0 ) {
+
+				 $sel_cid = "select cid from mg_save_creditcarddetail where customer_id='".$rows22."'";
+			     $cid4 = $connection->fetchOne($sel_cid);
+
+				 if($cid4=="")
+				{
+					 $to = "support@prestofreshgrocery.com";
+					 $subject = "Gratuity for order ".$value['order_number']." has not processed";
+					 $txt = "Customer :".$custName."<br/>";
+					 $txt.= "Order Number :".$value['order_number']."<br/>";
+					 $txt.= "Gratuity : $".$number["tip"]."<br/>";
+					 $txt.= "Reason : Customer dont have auth.net CIM Profile";
+					 $headers = "MIME-Version: 1.0" . "\r\n";
+					 $headers.= "Content-type:text/html;charset=UTF-8" . "\r\n";
+					 $headers.= "From: gratuity@prestofreshgrocery.com" . "\r\n";
+					// mail($to,$subject,$txt,$headers);
+				}
+				else
+				{
+				     $to = "support@prestofreshgrocery.com";
+					 $subject = "Gratuity for order ".$value['order_number']." has not processed";
+					 $txt = "Customer :".$custName."<br/>";
+					 $txt.= "Order Number :".$value['order_number']."<br/>";
+					 $txt.= "Gratuity : $".$number["tip"]."<br/>";
+					 $txt.= "Auth.net Transaction Number : ".$number["tipstatus"]."<br/>";
+					 $txt.= "Reason : ".$response->xml->transaction->responseReasonDescription;
+					 $headers = "MIME-Version: 1.0" . "\r\n";
+					 $headers.= "Content-type:text/html;charset=UTF-8" . "\r\n";
+					 $headers.= "From: gratuity@prestofreshgrocery.com" . "\r\n";
+					// mail($to,$subject,$txt,$headers);
+				}
+
+				}
+
+				?>
+
+
+				<td <?php if( $number["tip"]>=1 && $soda==0 ) {
+				?> style="background:red;color:#fff;" <?php } else if($number["tipstatus"]!="" && $number["tip"]>=1 && $soda>0 ) { ?> style="background:green;color:#fff;" <?php } ?> >$<?php echo $number["tip"]; ?>
+				<br/>
+				<?php if($number["tipstatus"]!="" && $number["tip"]>=1 ) { echo $response->xml->transaction->transactionStatus; }
+
+				// if($response->xml->transaction->transactionStatus!=)
+				?>
+				</td>
+				<td><?php echo $number["tipstatus"]; ?></td>
+				<td <?php if($number["dnote"]!="") { ?> style="background:#ffc9ae;" <?php } else { ?> style="background:#fff;" <?php } ?> >
+				Driver : <?php echo $drivername; ?>
+				<br/>
+				Vehicle : <?php echo $value["drivername"]; ?>
+				<br/>
+				Delivery Note : <?php echo $number["dnote"]; ?>
+				<br/>
+				ETA : <?php echo $value["estt"]; ?>
+				<br/>
+				Delivery Time : <?php echo $number["nowtime"]; ?>
+				</td>
+				<td><form name="frm2" method="get">
+				<textarea name="cnote" id="cnote" <?php if($number["cnote"]!="") { ?> style="min-height:70px;" <?php } ?> ><?php echo $number["cnote"]; ?></textarea>
+				<input type="hidden" name="from" id="from" value="<?php echo $_GET["from"]; ?>" />
+				<input type="hidden" name="ordernumber" id="ordernumber" value="<?php echo $value["order_number"]; ?>" />
+				<button style="margin-top:7px;margin-bottom:7px;" onclick="this.form.submit()" class="scalable " type="button" id="id_DQPfu4xftZ9C1OYg"><span>Change / Add New </span></button>
+				</form>
+				</td>
+			   </tr>
+			   <?php
+		   }
+
+	     }
+
+	   }
+	   else
+	   {
+	   for($i=1;$i<=1;$i++){
+	   $kb=0;
+	   $Date1 = $adate;
+							$date = new DateTime($Date1);
+							$date->add(new DateInterval('P'.$kb.'D')); // P1D means a period of 1 day
+							$kbt = $date->format('d_m_Y');
+	 $sql = "SELECT m.* FROM `mg_shipping_delivery_window` m  where m.`window` LIKE '%".$kbt."' order by m.drivername,m.`rc`";
+	 $rows = $connection->fetchAll($sql);
+	 $total_rows = count($rows);
+	 if($total_rows>0)
+	 {
+	    $j=$j+1;
+     }
+	 if($j%2==0)
+	 {
+	    $color='#fff';
+	 }
+	 else
+	 {
+	    $color='#cecece';
+	 }
+	  $check=explode("-",$kbt2);
+	  $check2[$i] =  $check[1];
+	  foreach ($rows as $value) {
+
+	    $sqlstatus = "SELECT status FROM mg_sales_flat_order_grid  where increment_id='".$value["order_number"]."'";
+		$rowstatus = $connection->fetchOne($sqlstatus);
+
+	       if($value["order_number"]!="" && $value["order_number"]!='100003190' && $value["order_number"]!='100005508' && $rowstatus!='canceled' )
+		   {
+		            $oid[0] = $value["order_number"];
+
+		            $sqlstatus  = "SELECT dnote FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["dnote"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT cnote FROM mg_shipping_delivery_window  where order_number='".$oid[0]."'";
+					$number["cnote"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT status FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["status"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT tip FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["tip"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT tipstatus FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["tipstatus"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT sign FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["sign"] = $connection->fetchOne($sqlstatus);
+
+					$sqlstatus  = "SELECT nowtime FROM drivlist  where ordernumber='".$oid[0]."'";
+					$number["nowtime"] = $connection->fetchOne($sqlstatus);
+
+		       $sql2  = "SELECT entity_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows2 = $connection->fetchOne($sql2);
+
+			   $sql22  = "SELECT customer_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows22 = $connection->fetchOne($sql22);
+
+			   $customer = "" ;
+			   $customer = Mage::getModel('customer/customer')->load($rows22);
+
+			   $sql222  = "SELECT entity_id FROM mg_sales_flat_order_grid where customer_id='".$rows22."' and increment_id!='".$value["order_number"]."'";
+		       $rows222 = $connection->fetchOne($sql222);
+
+			   $sql3  = "SELECT SUM(qty_ordered) FROM `mg_sales_flat_order_item` where `order_id`='".$rows2."'";
+			   $rows3 = $connection->fetchOne($sql3);
+
+			   $sel_refunds="select count(item_id) from `mg_sales_flat_order_item` where `order_id`='".$rows2."' and refund=1";
+			   $refunds = $connection->fetchOne($sel_refunds);
+
+			   $sel_pmistake="select count(item_id) from `mg_sales_flat_order_item` where `order_id`='".$rows2."' and selref!=''";
+			   $pmistake = $connection->fetchOne($sel_pmistake);
+
+			   $order = Mage::getModel("sales/order")->load($rows2); //load order by order id
+			   $address = $order->getShippingAddress();
+			   $temp = explode("|",$value['window']);
+			   $temp3 = explode(".",$rows3);
+			   $check22 = 0;
+
+			   $showr=0;
+			   if($refunds>=1)
+			   {
+			     $color = '#ffcece';
+				 $showr=1;
+			   }
+			   else
+			   {
+			      $color = '#fff';
+			   }
+
+				      $sel_start_time="select starttime from route_driver where route='".$value["route"]."' and driver='".$value["drivername"]."'";
+		              $start_time=$connection->fetchOne($sel_start_time);
+
+		              $sel_end_time="select endtime from route_driver where route='".$value["route"]."' and driver='".$value["drivername"]."'";
+		              $end_time=$connection->fetchOne($sel_end_time);
+
+					  $sel_std="select std from route_driver where route='".$value["route"]."' and driver='".$value["drivername"]."'";
+		              $std=$connection->fetchOne($sel_std);
+
+					  $sel_std2="select std2 from route_driver where route='".$value["route"]."' and driver='".$value["drivername"]."'";
+		              $std2=$connection->fetchOne($sel_std2);
+
+					  $sqlstatus  = "SELECT tipstatus FROM drivlist  where ordernumber='".$value["order_number"]."'";
+					  $numberff = $connection->fetchOne($sqlstatus);
+
+					   $sqlstatus  = "SELECT tipstatus FROM drivlist  where ordernumber='".$value["order_number"]."'";
+					   $numberff = $connection->fetchOne($sqlstatus);
+
+					   $carrayc=4;
+					   if($number["tip"]>=1 && $rows22>=1 ) {
+					    $sel_cidx = "select pid from mg_save_creditcarddetail where customer_id='".$rows22."'";
+			            $carrayc = $connection->fetchOne($sel_cidx);
+				       }
+
+				       $sodad=1;
+						if($numberff>=1)
+						{
+							$request = new AuthorizeNetTD;
+							$response = $request->getTransactionDetails($numberff);
+							$response->xml->transaction->transactionStatus;
+							if($response->xml->transaction->transactionStatus=='declined')
+							{
+							   $sodad=0;
+							}
+
+						}
+						else
+						{
+						  $sodad=1;
+						}
+
+						if($carrayc=="")
+						{
+						   $sodad=0;
+						}
+
+						 if(trim($value["drivername"])=="Box Truck")
+				   {
+				       $value["drivername"] = "Van 2 - New";
+				   }
+
+				   if(trim($value["drivername"])=="Van 1")
+				   {
+				      $value["drivername"] = "Van 1 - Old";
+				   }
+
+				?>
+			   <?php if($value["rc"]==1) {
+			   if($_GET["rf"]!="1")
+			   {
+
+
+			   ?>
+			   	<tr>
+				<td colspan="8" style="text-align:center;paddin-top:5px;padding-bottom:5px;font-weight:bold;font-size:14px;"> Vehicle : <?php echo $value["drivername"]; ?> &nbsp;&nbsp; Scheduled Departure Time: <?php echo $std; ?> &nbsp;&nbsp; Scheduled Finish Time: <?php echo $std2; ?> &nbsp;&nbsp; Driver Start Time : <?php echo $start_time; ?> &nbsp;&nbsp; Driver Finish Time : <?php echo $end_time; ?> </td>
+				</tr>
+				<?php } } ?>
+
+			   <tr <?php if(isset($_GET["rf"]) && $_GET["rf"]==1) { ?> <?php if($showr==1) { ?> style="background-color:<?php echo $color; ?>;" <?php } else { ?> style="display:none;background-color:<?php echo $color; ?>;"  <?php } ?> <?php } ?>  <?php if(isset($_GET["rf"]) && $_GET["rf"]==2) { ?> <?php if($sodad==0) { ?> style="background-color:<?php echo $color; ?>;" <?php } else { ?> style="display:none;background-color:<?php echo $color; ?>;"  <?php } ?> <?php } ?> <?php if(isset($_GET["rf"]) && $_GET["rf"]=="") { ?> style="background-color:<?php echo $color; ?>;" <?php } ?> >
+			   <td  <?php if($rows222 == "" ) {  echo 'style="color:#0041d7;font-weight:bold;font-size:12px;"'; } ?> ><?php echo $_REQUEST['from']; ?> | <?php if($temp[1]=="") { echo 'Flexible Time'; } else { echo $temp[0]; } ?></td>
+			   <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?>>
+			   <a href="?oid=<?php echo $value['order_number'] ?>&from=<?php echo $_GET["from"]; ?>"  <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;text-decoration:underline;"'; } else {  echo 'style="color:#000;font-weight:bold;font-size:12px;text-decoration:underline;"'; } ?> >
+			   <?php echo $value['order_number']; ?>
+			   </a>
+			    <?php
+			   if($refunds>=1)
+			   {
+
+			     $sel_pc="select rcomplete from mg_sales_flat_order where increment_id='".$value["order_number"]."'";
+				 $pc=$connection->fetchOne($sel_pc);
+
+				 $sel_tpm="select ramount from mg_sales_flat_order where increment_id='".$value["order_number"]."'";
+				 $tpmrr=$connection->fetchOne($sel_tpm);
+
+			      echo " <br/> <a href='javascript:void(0)' onClick='showtr(".$value['order_number'].")'> View Refund(".$refunds.") </a> ";
+				  if($pc==1)
+				  {
+					 echo " <br/> <span style='color:green'> Status : Complete </span> ";
+				  }
+				  else
+				  {
+				     echo " <br/> <span style='color:red'> Status : Incomplete </span> ";
+				  }
+
+				  echo "<br/> <span style='color:green'> Refund Amount :".$tpmrr." </span>";
+			   }
+			   ?>
+			   <br/>
+			   <b> Driver Mistake </b>
+			   <textarea name="dm-<?php echo $value['order_number']; ?>" id="dm-<?php echo $value['order_number']; ?>"  style="min-height:70px;" onBlur="dodm('<?php echo $value['order_number']; ?>');" ><?php echo $value["drivermistake"]; ?></textarea>
+			    </td>
+			    <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?> ><?php $custName = $address->getName(); ?> <?php if(trim($custName)=="") { echo $customer->getName(); } else { echo $custName; } ?>
+				<?php
+				$it=1;
+				if($it==1)
+				{
+
+				require_once( Mage::getBaseDir('base').'/_db.config.inc.php' );
+                $con = mysql_connect(DBHOSTNAME, DBUSERNAME, DBPASSWORD);
+                $selected = mysql_select_db( DBDATABASE, $con ) or die(mysql_error());
+
+				define("AUTHORIZENET_API_LOGIN_ID", "85z7aV7XB");
+				define("AUTHORIZENET_TRANSACTION_KEY", "3bWR6zZ8hx9h34zs");
+				define("AUTHORIZENET_SANDBOX", false);
+
+
+		    $sel_data="SELECT *
+			FROM  `mg_save_creditcarddetail`
+			WHERE  `cid` =  ''";
+					  $rs_data=mysql_query($sel_data);
+					  while ($row = mysql_fetch_array($rs_data)) {
+
+		      $sel_customer_email="select email from mg_customer_entity where entity_id='".$row["customer_id"]."'";
+			  $rs_customer_email=mysql_query($sel_customer_email);
+			  $customer_email=mysql_fetch_array($rs_customer_email);
+
+			  if($row["cc_number"]!="" && $row["cc_exp_year"]!="" && $row["cc_exp_month"]!="")
+			  {
+
+				if($customer_email=="")
+				{
+				  $customer_email="noemail@gmail.com";
+				}
+
+				$request = new AuthorizeNetCIM;
+				$customerProfile = new AuthorizeNetCustomer;
+				$customerProfile->description = "Customer Profile id :".$row["customer_id"];
+				$customerProfile->merchantCustomerId = time().rand(1,5000000);
+				$customerProfile->email = $customer_email["email"];
+
+
+				for($i=1;$i<=9;$i++)
+				{
+					if($row["cc_exp_month"]==$i)
+					{
+					   $row["cc_exp_month"]="0".$i;
+					}
+				}
+
+				$paymentProfile = new AuthorizeNetPaymentProfile;
+				$paymentProfile->customerType = "individual";
+				$paymentProfile->payment->creditCard->cardNumber = $row["cc_number"];
+				$paymentProfile->payment->creditCard->expirationDate = $row["cc_exp_year"]."-".$row["cc_exp_month"];
+				$customerProfile->paymentProfiles[] = $paymentProfile;
+
+				$response = $request->createCustomerProfile($customerProfile);
+				$customerProfileId = $response->getCustomerProfileId();
+
+				$request = new AuthorizeNetCIM;
+				$response = $request->getCustomerProfile($customerProfileId);
+			    $paymentProfileId = $response->getPaymentProfileId();
+
+				$update="update mg_save_creditcarddetail set cid='".$customerProfileId."',pid='".$paymentProfileId."' where id='".$row["id"]."'";
+				mysql_query($update);
+
+				}
+		  }
+
+				if($number["tip"]>=1 && $rows22>=1 ) {
+				 $sel_cid = "select * from mg_save_creditcarddetail where customer_id='".$rows22."'";
+			     $carray = $connection->fetchAll($sel_cid);
+
+				 foreach ($carray as $ber) {
+					 $cid = $ber["cid"];
+					 $pid = $ber["pid"];
+					    $request = new AuthorizeNetCIM;
+						$response = $request->getCustomerPaymentProfile($cid, $pid);
+						if ($response->isOk()) {
+							$ppp = $response->getPaymentProfileId();
+
+
+							for($i=1;$i<=9;$i++)
+								{
+									if($ber["cc_exp_month"]==$i)
+									{
+									   $ber["cc_exp_month"]="0".$i;
+									}
+								}
+
+
+							$newPaymentProfile = new AuthorizeNetPaymentProfile;
+							$newPaymentProfile->customerType = "individual";
+							$newPaymentProfile->payment->creditCard->cardNumber = $ber["cc_number"];
+							$newPaymentProfile->payment->creditCard->expirationDate = $ber["cc_exp_year"]."-".$ber["cc_exp_month"];
+
+							$request = new AuthorizeNetCIM;
+							$response = $request->updateCustomerPaymentProfile($cid, $pid, $newPaymentProfile);
+
+						}
+				        }
+						$carrayc="";
+						$sel_cidx = "select pid from mg_save_creditcarddetail where customer_id='".$rows22."'";
+			            $carrayc = $connection->fetchOne($sel_cidx);
+
+						if($cid>=1 && $carrayc>=1 )
+						{
+						   $sqlstatus  = "SELECT tipstatus FROM drivlist  where ordernumber='".$value["order_number"]."'";
+					       $number["tipstatus"] = $connection->fetchOne($sqlstatus);
+						   if($number["tipstatus"]=="" || $number["tipstatus"]==0 )
+						   {
+						        $request = new AuthorizeNetCIM;
+		                        $transaction = new AuthorizeNetTransaction;
+
+								$customerProfileId=$cid;
+								$response = $request->getCustomerProfile($customerProfileId);
+
+									 $paymentProfileId = $response->getPaymentProfileId();
+									 echo $customerAddressId = $response->getCustomerAddressId();
+									 $request2 = new AuthorizeNetCIM;
+									 $response2 = $request2->getCustomerPaymentProfile($customerProfileId, $paymentProfileId);
+
+									$transaction->amount = $number["tip"];
+									$transaction->order->invoiceNumber = "Gratuity #".$value["order_number"];
+									$transaction->customerProfileId = $customerProfileId;
+									$transaction->customerPaymentProfileId = $paymentProfileId;
+									$response = $request->createCustomerProfileTransaction("AuthCapture", $transaction);
+									$transactionResponse = $response->getTransactionResponse();
+									$transactionId = $transactionResponse->transaction_id;
+
+									if($transactionId=="")
+									{
+									   $transactionId==1;
+									}
+
+									$upd = "update drivlist set tipstatus='".$transactionId."' where ordernumber='".$value["order_number"]."'";
+					                $connection->query($upd);
+						   }
+
+						   echo "<div style='background:green;color:white;padding:5px;'> Auth.Net Profile ID:".$carrayc."</div>";
+
+						}
+						else
+						{
+						   echo "<div style='background:red;color:white;padding:5px;'> This Customer Dont Have Profile on Auth.Net ! </div>";
+						}
+				  }
+				}
+
+				    $sqlstatus  = "SELECT tipstatus FROM drivlist  where ordernumber='".$value["order_number"]."'";
+					$number["tipstatus"] = $connection->fetchOne($sqlstatus);
+
+				if($number["tipstatus"]>=1)
+				{
+
+				$request = new AuthorizeNetTD;
+                $response = $request->getTransactionDetails($number["tipstatus"]);
+				if($response->xml->transaction->transactionStatus=='settledSuccessfully')
+				{
+				   $soda=1;
+				}
+				else if($response->xml->transaction->transactionStatus=='capturedPendingSettlement')
+				{
+				   $soda=1;
+				}
+				else
+					{
+						 $soda=0;
+					}
+
+				}
+
+				if($rows22=="")
+				{
+				    $soda=0;
+				}
+
+				if($carrayc=="")
+				{
+				    $soda=0;
+				}
+
+				?>
+				</td>
+				<td>
+				<?php $sql2g = "SELECT picker_id FROM mg_order_picker where order_number='".$value["order_number"]."'";
+		        $rows2g = $connection->fetchOne($sql2g);
+				if($rows2g!="")
+			     {
+					$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+					$url77 = explode("/",$currentUrl);
+                  ?>
+				 <?php
+				    $sql2gk = "SELECT name FROM mg_pickers where id='".$rows2g."'";
+		            echo $rows2gk = $connection->fetchOne($sql2gk);
+				 }
+
+				if($pmistake>=1)
+			    {
+			      echo " <br/> Mistake(".$pmistake.") ";
+			    }
+
+			   ?>
+				</td>
+				<?php
+				    $sql2gk = "SELECT name FROM mg_pickers where email='".$value["driver_email"]."'";
+		            $drivername = $connection->fetchOne($sql2gk);
+
+				$sel_cid = "select cid from mg_save_creditcarddetail where customer_id='".$rows22."'";
+			    $cid4 = $connection->fetchOne($sel_cid);
+
+			   ?>
+				<?php if( $number["tip"]>=1 && $soda==0 ) {
+
+				if($rows22>=1)
+				{
+				     $sel_cid = "select pid from mg_save_creditcarddetail where customer_id='".$rows22."'";
+			         $cid4 = $connection->fetchOne($sel_cid);
+				}
+				else
+				{
+				   $cid4="";
+				}
+
+				 if($cid4=="")
+				{
+					 $to = "support@prestofreshgrocery.com";
+					 $subject = "Gratuity for order ".$value['order_number']." has not processed";
+					 $txt = "Customer :".$custName."<br/>";
+					 $txt.= "Order Number :".$value['order_number']."<br/>";
+					 $txt.= "Gratuity : $".$number["tip"]."<br/>";
+					 $txt.= "Reason : Customer dont have auth.net CIM Profile";
+					 $headers = "MIME-Version: 1.0" . "\r\n";
+					 $headers.= "Content-type:text/html;charset=UTF-8" . "\r\n";
+					 $headers.= "From: gratuity@prestofreshgrocery.com" . "\r\n";
+					// mail($to,$subject,$txt,$headers);
+				}
+				else
+				{
+				     $to = "support@prestofreshgrocery.com";
+					 $subject = "Gratuity for order ".$value['order_number']." has not processed";
+					 $txt = "Customer :".$custName."<br/>";
+					 $txt.= "Order Number :".$value['order_number']."<br/>";
+					 $txt.= "Gratuity : $".$number["tip"]."<br/>";
+					 $txt.= "Auth.net Transaction Number : ".$number["tipstatus"]."<br/>";
+					 $txt.= "Reason : ".$response->xml->transaction->responseReasonDescription;
+					 $headers = "MIME-Version: 1.0" . "\r\n";
+					 $headers.= "Content-type:text/html;charset=UTF-8" . "\r\n";
+					 $headers.= "From: gratuity@prestofreshgrocery.com" . "\r\n";
+					// mail($to,$subject,$txt,$headers);
+			        }
+				}
+				?>
+				<td <?php if( $number["tip"]>=1 && $soda==0 ) {
+				?> style="background:red;color:#fff;" <?php } else if($number["tipstatus"]!="" && $number["tip"]>=1 && $soda>0 ) { ?> style="background:green;color:#fff;" <?php } ?> >$<?php echo $number["tip"];
+				 ?>
+
+				 <?php if( $number["tip"]>=1 && $soda==0 ) {
+				  $sel_gc="select gcomplete from mg_sales_flat_order where increment_id='".$value["order_number"]."'";
+				  $gc=$connection->fetchOne($sel_gc);
+				  ?>
+				   <div style="text-align:center;margin-top:10px;margin-bottom:10px;font-size:14px;"> Complete <input type="checkbox" name="gm-<?php echo $value["order_number"]; ?>" id="gm-<?php echo $value["order_number"]; ?>" onClick="dogcomplete(<?php echo $value["order_number"]; ?> )" <?php if($gc==1) { echo "checked"; } ?> />
+				   </div>
+				 <?php } ?>
+				<br/>
+				<?php if($number["tipstatus"]!="" && $number["tip"]>=1 ) { echo $response->xml->transaction->transactionStatus; }
+				echo "<br/>Customer Id:".$rows22;
+				?>
+				<br/>
+				<?php if($rows22=="") {
+				echo "Guest Checkout";
+				?>
+				<?php } ?>
+				</td>
+				<td><?php echo $number["tipstatus"]; ?></td>
+				<td  <?php if($number["nowtime"]!="") { ?> style="background:#ddffdd;" <?php } ?> >
+				Driver : <?php echo $drivername; ?>
+
+				<div <?php if($number["dnote"]!="") { ?> style="background:#800080;padding:3px;color:#fff;" <?php } else { ?> style="background:#none;padding:3px;" <?php } ?> >
+				<br/>
+				Vehicle : <?php echo $value["drivername"]; ?>
+				<br/>
+				Delivery Note : <?php echo $number["dnote"]; ?>
+				<br/>
+				ETA : <?php echo $value["estt"]; ?>
+				<br/>
+				Delivery Time : <?php echo $number["nowtime"]; ?>
+				</div>
+
+			   <?php
+			  $sel_order_comment="select customer_note from mg_sales_flat_order where entity_id='".$rows2."' and customer_note is not NULL";
+			  $comment=$connection->fetchOne($sel_order_comment);
+			   ?>
+
+				</td>
+				<td><form name="frm2" method="get">
+				<textarea name="cnote" id="cnote" <?php if($comment!="") { ?> style="min-height:70px;" <?php } ?> ><?php echo  $comment; ?></textarea>
+				<input type="hidden" name="from" id="from" value="<?php echo $_GET["from"]; ?>" />
+				<input type="hidden" name="ordernumber" id="ordernumber" value="<?php echo $value["order_number"]; ?>" />
+				<button style="margin-top:7px;margin-bottom:7px;" onclick="this.form.submit()" class="scalable " type="button" id="id_DQPfu4xftZ9C1OYg"><span>Change / Add New </span></button>
+				<?php
+				    $sql2gwdk = "SELECT spt FROM sp where order_id='".$value["order_number"]."'";
+		            $refl2gwdk = $connection->fetchOne($sql2gwdk);
+					if($refl2gwdk!="")
+					{
+					   echo "<div style='background:red;color:#fff;margin-top:15px;'>".$refl2gwdk."</div>";
+					}
+				?>
+				</form>
+				</td>
+			   </tr>
+			   <?php
+			   $sel_refunds="select count(item_id) from `mg_sales_flat_order_item` where `order_id`='".$rows2."' and refund=1";
+			   $refunds = $connection->fetchOne($sel_refunds);
+			   if($refunds>=1)
+			   {
+			   ?>
+			   <tr style="display:none;" id="trp-<?php echo $value['order_number']; ?>">
+			   <td colspan="8">
+			    <table border=1 cellpadding="5" cellspacing="5" border="1" style="border-collapse:collapse;width:95%;margin:2%;background-color:#ffcece;" >
+			   <tr>
+			   <th >Product Name</th>
+			   <th>Sku</th>
+			   <th>Price</th>
+			   <th>Qty</th>
+			   <th>Subtotal</th>
+			   <th>Product Type</th>
+			   <th>Found / Not Found</th>
+				<th>Packed / Not Packed</th>
+				<th>Substitute</th>
+				<th>Picker Note</th>
+			   </tr>
+			   <?php
+			       $sel_refund="select * from `mg_sales_flat_order_item` where `order_id`='".$rows2."' and refund=1";
+				   $refunds5=$connection->fetchAll($sel_refund);
+				   $rr=0;
+				   foreach ($refunds5 as $value3) {
+
+					$sel_status="select status from supervision where item_id='".$value3["item_id"]."'";
+					$nstatus=$connection->fetchOne($sel_status);
+
+					$sel_log="select log2 from supervision where item_id='".$value3["item_id"]."'";
+					$nlog=$connection->fetchOne($sel_log);
+
+					$sel_subs="select substitute from supervision where item_id='".$value3["item_id"]."'";
+					$nsubs=$connection->fetchOne($sel_subs);
+
+				  if($nlog==1)
+				  {
+				     $nlog = 'Packed';
+				  }
+				  else
+				  {
+				     $nlog = 'Not Packed';
+				  }
+
+				$_resource = Mage::getSingleton('catalog/product')->getResource();
+				$optionValue1 = $_resource->getAttributeRawValue($value3["product_id"],'protype', Mage::app()->getStore());
+
+		$product = Mage::getModel('catalog/product')->setStoreId($store_id)->setProtype($optionValue1);
+        $optionLabel1 = $product->getAttributeText('protype');
+
+		$optionValue4 = $_resource->getAttributeRawValue($value3["product_id"],'vendor_product_id', Mage::app()->getStore());
+		$rr = $rr + $value3["row_total"];
+
+				 $sql22fff = "SELECT note FROM supervision where item_id='".$value3["item_id"]."'";
+		         $sql22fffd = $connection->fetchOne($sql22fff);
+
+			   ?>
+
+			    <tr>
+				<td><?php echo $value3["name"]; ?></td>
+				<td><?php echo $value3["sku"]; ?></td>
+				<td>$<?php echo number_format($value3["price"], 2, '.', ''); ?></td>
+				<td><?php echo round($value3['qty_ordered'],0); ?></td>
+				<td>$<?php echo number_format($value3["row_total"], 2, '.', ''); ?></td>
+				<td><?php echo $optionLabel1; ?></td>
+				<td><?php echo $nstatus; ?></td>
+				<td><?php echo $nlog; ?></td>
+				<td><?php echo $nsubs; ?></td>
+				<td><?php echo $sql22fffd; ?></td>
+				</tr>
+			   <?php
+			   }
+			   ?>
+			   </table>
+			       <div style="text-align:center;margin-top:10px;margin-bottom:10px;font-size:14px;"> Complete Price Adjustment Request $ <input type="text" name="tpm-<?php echo $value["order_number"]; ?>" onBlur="dopcomplete(<?php echo $value["order_number"]; ?> )" id="tpm-<?php echo $value["order_number"]; ?>" value="<?php echo $tpmrr; ?>" > &nbsp;&nbsp; <input type="checkbox" name="pm-<?php echo $value["order_number"]; ?>" id="pm-<?php echo $value["order_number"]; ?>" onClick="dopcomplete(<?php echo $value["order_number"]; ?> )" <?php if($pc==1) { echo "checked"; } ?> />
+				   </div>
+				</td>
+				</tr>
+				<?php
+			   }
+		     }
+	       }
+	     }
+	   }
+  ?>
+<br/><br/>
+</table>
+	  <?php } ?>
+	<script type="text/javascript">
+       	 //<![CDATA[
+        	var filterFormSubmit  = new varienForm('filter_form');
+         //]]>
+        </script>
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script>
+</body>
+</html>

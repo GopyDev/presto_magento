@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Activo_BulkImages>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Activo_BulkImages>
+    </modules>
+</config>

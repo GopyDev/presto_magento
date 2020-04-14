@@ -1,0 +1,119 @@
+/* GLOBAL STYLES
+-------------------------------------------------- */
+
+
+body {font-family: 'Open Sans',sans-serif !important;}
+p{font-size:18px;line-height:30px;}
+.para p{font-size:18px;color:#7b7d89;line-height:35px;text-align:left;font-style:italic;}
+.partner{text-align:center;}
+.headsmall{font-size:25px;font-weight:300;color:#818181;}
+.headbig{font-size:30px;font-weight:900;color:#3f7e19;}
+.qt-text{font-size:18px;color:#3d3d3d;line-height:35px;font-style:italic;text-decoration:none}
+.gray{background:#ebebeb;padding:25px 0px;margin-top:25px;}
+.bigheading{font-size:50px;color:#3f7e19;font-weight:400;line-height:90px;}
+.spaceone{margin-top:30px;}
+.btn-cont{background:#a8a8a8;color:#fff;font-size:15px;text-align:center;padding:7px 20px;margin-top:15px;transition:all 0.5s ease;}
+.btn-cont:hover{background:#444;color:#fff;}
+
+
+
+
+/* Media query CSS
+-------------------------------------------------- */
+
+@media (max-width: 1024px) {
+  .bigheading{font-size:30px;line-height:50px;}
+   
+}
+@media (max-width: 1280px) {
+  .bigheading{font-size:30px;line-height:50px;}
+  .header-links .links {margin-bottom: 0 !important;}
+}
+#search_mini_fieldset legend
+{
+	display:none;
+}
+.row
+{
+	    margin-left: -30px !important;
+}
+.header-container .row
+{
+	margin-left: -30px;
+}
+/*
+.header-container .container
+{
+	padding-left: 0px; 
+}
+*/
+.left-portion #search
+{
+	font-size: 12px;
+}
+.left-portion #cat
+{
+	font-size: 12px;
+    width: 157px;
+}
+
+.headercartblock #search_mini_form_mini 
+{
+	 /*   float: left;
+		margin-left:25px;*/
+}
+/*
+.header-container {
+    padding: 0px 0 5px;
+}*/
+.footer-col  p
+{
+	margin:0px !important;
+}
+.main {
+    min-height: auto !important;
+}
+	/*.span12 {
+		width: 100% !important;
+	}
+	.container {
+		width: 100% !important;
+	}
+
+.container 
+{
+	padding-left: 0px !important;
+}	
+.header .welcome-msg
+{
+	margin-right:85px;
+}
+.header-links{
+
+    margin-left: 45px;
+}
+.right-columns
+{
+	margin-right: 70px !important;
+}
+.logo
+{
+	padding-left: 22px !important;
+}*/
+@media (max-width: 767px) 
+{
+	.footer-col.last 
+	{
+	 	padding-left: 20px;
+	}
+	.AuthorizeNetSeal
+	{
+		padding-left: 20px !important;
+	}
+	.header-container .container
+	{
+		margin-left: 5% !important;
+		margin-right: 3% !important;
+	}
+}
+ 

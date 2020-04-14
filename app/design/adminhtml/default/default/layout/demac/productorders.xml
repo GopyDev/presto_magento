@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_catalog_product_productorders>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="demac_productorders/adminhtml_catalog_product_edit_tab_orders"
+                   name="catalog.product.edit.tab.orders"/>
+        </block>
+    </adminhtml_catalog_product_productorders>
+    <adminhtml_catalog_product_productordersgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="demac_productorders/adminhtml_catalog_product_edit_tab_orders"
+                   name="catalog.product.edit.tab.orders"/>
+        </block>
+    </adminhtml_catalog_product_productordersgrid>
+</layout>

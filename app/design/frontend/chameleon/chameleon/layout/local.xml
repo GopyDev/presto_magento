@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BelVG
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ 
+ * @category   Belvg
+ * @package    Chameleon Mobile Theme
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+
+-->
+<layout>
+    <default>	
+        <reference name="jquery_head">
+            <action method="addLib"><libname>jquery</libname></action>
+            <action method="addLib"><libname>noconflict</libname></action>
+		</reference>
+	</default>
+	<customer_account translate="label">
+		<reference name="customer_account_navigation">
+            <!--<action method="addLink" translate="label title before_text" module="customer"><label>My Compare Products</label><url helper="chameleoncolorchanger/getCompareUrl" /><title>My Compare Products</title><prepare/><urlParams/><position>100</position></action>-->
+			<!--<action method="addLink" translate="label title before_text" module="customer"><label>My Compare Products</label><path>catalog/product_compare/index</path><title>My Compare Products</title><prepare/><urlParams/><position>100</position></action>   -->   
+	   </reference>
+	</customer_account>
+</layout>

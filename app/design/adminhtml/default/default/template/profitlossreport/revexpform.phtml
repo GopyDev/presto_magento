@@ -1,0 +1,113 @@
+<?php
+/************************************************************************
+ * 
+ * jtechextensions @ J-Tech LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.jtechextensions.com/LICENSE-M1.txt
+ *
+ * @package    Inventory Report
+ * @copyright  Copyright (c) 2012-2013 jtechextensions @ J-Tech LLC. (http://www.jtechextensions.com)
+ * @license    http://www.jtechextensions.com/LICENSE-M1.txt
+************************************************************************/
+
+	$revenueItems = $this->getAttItems('revenue');
+	$expenseItems = $this->getAttItems('expense');
+
+?>
+
+<div class="entry-edit">
+
+	<div style="float: left; width: 49%">
+		<div class="entry-edit-head">
+		    <h4 class="icon-head head-edit-form fieldset-legend">Additional Revenue</h4>
+		    <div class="form-buttons"></div>
+		</div>
+		<div id="reportsrev_form" class="fieldset ">
+		
+			<?php 
+				if ($revenueItems)
+				{
+					foreach ($revenueItems as $id => $name)
+					{
+						echo $name;
+					}
+				} else { ?>
+					<p>There are currently no revenue items</p>	
+				<?php }
+			?>
+			
+		</div>
+	</div>
+	
+	<div style="float:left; width:2%">&nbsp;</div>
+	
+	<div style="float: left; width: 49%">
+		<div class="entry-edit-head">
+		    <h4 class="icon-head head-edit-form fieldset-legend">Additional Expenses</h4>
+		    <div class="form-buttons"></div>
+		</div>
+		<div id="reportsexp_form" class="fieldset ">
+		
+			<?php 
+				if ($expenseItems)
+				{
+				foreach ($expenseItems as $id => $name)
+					{
+						echo $name;
+					}
+				} else { ?>
+					<p>There are currently no expense items</p>	
+				<?php }
+			?>
+		
+		</div>
+	</div>
+	
+	<div style="clear: both"></div>
+	
+</div>
+
+<SCRIPT TYPE="text/javascript">
+<!--
+
+function numbersonly(myfield, e, dec)
+{
+var key;
+var keychar;
+
+if (window.event)
+   key = window.event.keyCode;
+else if (e)
+   key = e.which;
+else
+   return true;
+keychar = String.fromCharCode(key);
+
+// control keys
+if ((key==null) || (key==0) || (key==8) || 
+    (key==9) || (key==13) || (key==27) )
+   return true;
+
+// numbers
+else if ((("0123456789").indexOf(keychar) > -1))
+   return true;
+
+// decimal point jump
+else if (dec && (keychar == ".") && ((myfield.value).indexOf(".") == -1))
+   {
+   myfield.form.elements[dec].focus();
+   return false;
+   }
+else
+   return false;
+}
+
+//-->
+</SCRIPT>
+
+<?php echo $this->getChildHtml('form_after');?>

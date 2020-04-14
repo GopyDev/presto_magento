@@ -1,0 +1,56 @@
+<?php
+/**
+* zeonsolutions inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.zeonsolutions.com/shop/license-community.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * This package designed for Magento Community edition
+ * =================================================================
+ * zeonsolutions does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * zeonsolutions does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   design
+ * @package    base_default
+ * @version    0.0.1
+ * @copyright  @copyright Copyright (c) 2013 zeonsolutions.Inc. (http://www.zeonsolutions.com)
+ * @license    http://www.zeonsolutions.com/shop/license-community.txt
+ */
+?>
+<?php if ($this->hasItems()): ?>
+    <div class="box-collateral box-up-sell">
+        <div class="box-title">
+            <h2><?php echo $this->__('Based on your selection, you may be interested in the following items:') ?></h2>
+        </div>
+        <ul class="products-grid">
+            <?php foreach ($this->getItemCollection() as $_item): ?>
+                <li class="item">
+                    <a class="product-image" href="<?php echo $this->getProductUrl($_item) ?>"><img src="<?php echo $this->helper('catalog/image')->init($_item, 'thumbnail')->resize(75); ?>" width="75" alt="<?php echo $this->htmlEscape($_item->getName()) ?>" title="<?php echo $this->htmlEscape($_item->getName()) ?>" /></a>
+                    <div class="product-shop">
+                        <h3 class="product-name"><a href="<?php echo $this->getProductUrl($_item) ?>"><?php echo $this->htmlEscape($_item->getName()) ?></a></h3>
+                        <?php echo $this->getPriceHtml($_item, true) ?>
+                        <p><button class="button btn-cart" onclick="ajaxCart.viewProductOptions('ajaxcart/product/view','<?php echo $_item->getId() ?>')" type="button"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button></p>
+                        <ul class="add-to-links">
+                            <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                                <li><a href="javascript:void(0);" onclick="ajaxCart.addByUrl('<?php echo $this->getAddToWishlistUrl($_item) ?>'); return false;"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                            <?php endif; ?>
+                            <?php if ($_compareUrl = $this->getAddToCompareUrl($_item)): ?>
+                                <li><span class="separator">|</span> <a href="javascript:void(0);" onclick="ajaxCart.addByUrl('<?php echo $_compareUrl ?>'); return false;"><?php echo $this->__('Add to Compare') ?></a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+            <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+        </ul>
+    </div>
+<?php endif; ?>

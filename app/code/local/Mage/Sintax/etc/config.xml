@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mage_Sintax>
+            <version>0.1.0</version>
+        </Mage_Sintax>
+    </modules>
+    
+    <global>
+        <models>
+            <sintax>
+                <class>Mage_Sintax_Model</class>
+                <resourceModel>sintax_mysql4</resourceModel>
+            </sintax>
+            <sintax_mysql4>
+                <class>Mage_Sintax_Model_Mysql4</class>
+            </sintax_mysql4>
+        </models>
+        <blocks>
+            <sintax>
+                <class>Mage_Sintax_Block</class>
+            </sintax>
+        </blocks>
+        <helpers>
+            <sintax>
+                <class>Mage_Sintax_Helper</class>
+            </sintax>  
+        </helpers>
+    </global>
+    
+    <admin>
+        <routers>
+            <sintax>
+                <use>admin</use>
+                <args>
+                    <module>Mage_Sintax</module>
+                    <frontName>sintax</frontName>
+                </args>
+            </sintax>
+        </routers>
+    </admin>
+    
+    <adminhtml>
+        <translate>
+            <modules>
+                <mage_adminhtml>
+                    <files>
+                        <sintax>Mage_Sintax.csv</sintax>
+                    </files>
+                </mage_adminhtml>
+            </modules>
+        </translate>
+        
+       <menu>
+            <report>
+                <children>
+                    <sintax_adminform translate="title" module="sintax">
+                        <title>Route Plan</title>
+                        <action>sintax/adminhtml_myform</action>
+						<sort_order>6</sort_order>
+                    </sintax_adminform>
+                </children>
+				
+				
+				 <children>
+                    <newreport888 translate="title" module="sintax">
+                        <title>Route Plan Work Wave</title>
+                        <action>salesreport/adminhtml_sales/newreport888</action>
+						<sort_order>6</sort_order>
+                    </newreport888>
+                </children>
+				
+            </report>
+        </menu> 
+        
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                       <report>
+                <children>
+                    <sintax_adminform translate="title" module="sintax">
+                        <title>Route Plan</title>
+                        <action>sintax/adminhtml_myform</action>
+                    </sintax_adminform>
+                </children>
+				
+				
+				 <children>
+                    <newreport888 translate="title" module="sintax">
+                        <title>Route Plan Work Wave</title>
+                        <action>salesreport/adminhtml_sales/newreport888</action>
+						<sort_order>6</sort_order>
+                    </newreport888>
+                </children>
+				
+            </report>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <sintax>
+                    <file>sintax.xml</file>
+                </sintax>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

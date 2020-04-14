@@ -1,0 +1,134 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product description template
+ *
+ * @see Mage_Catalog_Block_Product_View_Description
+ */
+?> 
+
+<style>
+.des2 {
+  font-size: 11px !important;
+  line-height:17px;
+  width:97%;
+}
+
+.des1 {
+  font-size: 11px !important;
+  line-height:17px;
+  width:97%;
+}
+
+#product-attribute-specs-table th
+{
+   padding:2px 0px 2px !important;
+}
+p
+{
+  line-height:17px;
+}
+
+h3
+{
+   line-height:1.3px;
+}
+</style>
+
+
+<?php $_description = $this->getProduct()->getDescription(); ?>
+<?php if ($_description): ?>
+    <h2><?php echo $this->__('Details') ?></h2>
+	<div class="box-collateral-content" style="padding:10px;text-align:justify;">
+		<div class="std" id="testID">
+        
+			<?php  $desc =  $this->helper('catalog/output')->productAttribute($this->getProduct(), $_description, 'description');
+	   			   $totaldesc =  strlen($desc);
+					  if($desc <= 600)?>
+					  <div class="des1" id="des1">
+					  <?php echo $desc1 = substr($desc, 0, 600);?>
+                      <a class="expand" id="expand">...Read More</a> 
+					 </div>
+                     <div class="des2" id="des2" style="display:none">
+                     <?php  $remain = strlen($desc) - 600;
+					  echo $desc1 = substr($desc, 600, $remain);
+					 ?>
+                     </div>
+                     <a  class="collapse" id="collapse">...Read Less  </a>
+		</div>
+		<div style="margin-top:10px;width:97%;font-family:"Open Sans",sans-serif;">
+              <?php if($this->getProduct()->getIngredients() != ''){?>
+              <h3 style="color: #000000; font-family: verdana,arial; font-size: 9pt !important; font-weight: bold;text-transform: uppercase;">Ingredients:</h3>
+              <p style="color: #7b7b7b; font-size:8pt;margin-bottom:10px;"><?php echo $this->getProduct()->getIngredients();?></p>
+           <?php } ?>
+           <?php if($this->getProduct()->getAllergen() != ''){?>
+              <h3 style="color: #000000; font-family: verdana, arial; text-transform: uppercase; font-size:9pt !important">Allergen Statement:</h3>
+              <p style="color: #7b7b7b; font-family:'Open Sans',sans-serif; font-size:8pt;margin-bottom:10px;"><?php echo $this->getProduct()->getAllergen();?></p>
+           <?php } ?>
+           <?php if($this->getProduct()->getTemperatureindicator() != ''){?>
+              <h3 style="color: #000000; font-family: verdana, arial; text-transform: uppercase; font-size:9pt !important">TEMPERATURE INDICATOR:</h3>
+              <p style="color: #7b7b7b; font-family:'Open Sans',sans-serif; font-size:8pt;margin-bottom:10px;"><?php echo $this->getProduct()->getTemperatureindicator();?></p>
+           <?php } ?> 
+            <?php if($this->getProduct()->getWarning() != ''){?>
+              <h3 style="color: #000000; font-family: verdana, arial; text-transform: uppercase; font-size:9pt !important">WARNINGS:</h3>
+              <p style="color: #7b7b7b; font-family:'Open Sans',sans-serif; font-size:8pt;margin-bottom:10px;"><?php echo $this->getProduct()->getWarning();?></p>
+           <?php } ?> 
+              <?php if($this->getProduct()->getDirections() != ''){?>
+              <h3 style="color: #000000; font-family: verdana, arial; text-transform: uppercase; font-size:9pt !important">DIRECTIONS:</h3>
+              <p style="color: #7b7b7b; font-family:'Open Sans',sans-serif; font-size:8pt;margin-bottom:10px;"><?php echo $this->getProduct()->getDirections();?></p>
+           <?php } ?>
+		      <?php if($this->getProduct()->getGlutenfree() == 'Y'){?>
+              <div class="foolreactor">
+               <img  style=" text-align: center;"  class="tip" data-tip="Gluten Free" title="Gluten Free"  src="<?php echo $this->getSkinUrl('images/Gluten_Free.jpg') ?>" /> </div> <?php } ?>
+              <?php if($this->getProduct()->getRecyclecodes() != ''){?>
+                <img  style=" text-align: center;"  title="Recycle Code"   src="<?php echo $this->getSkinUrl('images/recycleCode_Y.png')?>" />
+            <?php } ?>
+              <?php if($this->getProduct()->getKoshercode() != ''){?>
+               <img style="text-align: center;"  title="Kosher Code"  src="<?php echo $this->getSkinUrl('images/kosher.PNG')?>" />
+            <?php } ?>  
+</div>
+	</div>
+<?php endif; ?>
+<script type="text/javascript">
+
+jQuery(document).ready(function() {
+  jQuery('#collapse').hide();
+ jQuery('#expand').click(function() {
+	 jQuery('#des2').show();
+	 jQuery('#expand').hide();
+	 jQuery('#collapse').show();
+	 
+ });
+  jQuery('#collapse').click(function() {
+	 jQuery('#des2').hide();
+	 jQuery('#collapse').hide();
+	  jQuery('#expand').show();
+	
+	 
+ });
+});
+</script>

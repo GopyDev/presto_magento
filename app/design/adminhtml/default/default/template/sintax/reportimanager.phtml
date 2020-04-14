@@ -1,0 +1,375 @@
+<?php
+     $kbt45=0;
+     $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+     if(isset($_GET["idff"]) && $_GET["idff"] > 0 )
+	 {
+		 $update="update pickerlog set pickerst='".$_GET["picid"]."' where id='".$_GET["idff"]."'";
+         $connection->query($update);
+		 $kbt45=1;
+	 }
+	 
+	 if(isset($_GET["datenew"]))
+	 {
+	     // print_r($_GET);
+		 
+		 $dodate2=explode("/",$_GET["datenew"]);
+		 
+		 for($i=1;$i<=9;$i++)
+		 {
+		    if($dodate2[1]>=$i)
+			{
+			   $dodate2[1]="0".$dodate2[1];
+			}
+		 }
+		 
+		 $dodate=$dodate2[1]."_".$dodate2[0]."_".$dodate2[2];
+		 
+		 
+		 echo $insert="insert into pickerlog set pickerst='".$_GET["workinghours"]."',pickerid='".$_GET["emph"]."',dodate='".$dodate."'";
+		  $connection->query($insert);
+		  
+		  $newgreen=1;
+		  
+		  
+	 }
+	 
+	 if(isset($_GET["drivid"]) && isset($_GET["route"]))
+	 {
+		  $update="update route_driver set starttime='".$_GET["starttime"]."',endtime='".$_GET["endtime"]."' where driver_id='".$_GET["drivid"]."' and route='".$_GET["route"]."'";
+         $connection->query($update);
+		 $kbt45=1;
+	 }
+	 
+	 
+	  if(isset($_GET["semail"]) && isset($_GET["dodate2"]) && isset($_GET["proex"]))
+	 {
+		 $sel_check="select pickerst2 from expenses where semail='".$_GET["semail"]."' and dodate2='".$_GET["dodate2"]."'";
+		 $check=$connection->fetchOne($sel_check);
+		 
+		 if($check=="")
+		 {
+		     $update="insert into expenses set pickerst2='".$_GET["proex"]."' ,semail='".$_GET["semail"]."', dodate2='".$_GET["dodate2"]."'";
+         	$connection->query($update);
+		 	$kbt46=1;
+			
+		 }
+		 else
+		 {
+		 	$update="update expenses set pickerst2='".$_GET["proex"]."' where semail='".$_GET["semail"]."' and dodate2='".$_GET["dodate2"]."'";
+         	$connection->query($update);
+		 	$kbt46=1;
+		 }
+		 
+	 }
+	 
+	 
+	  if(isset($_GET["semail"]) && isset($_GET["dodate2"]) && isset($_GET["supex"]))
+	 {
+		  $sel_check="select pickerst3 from expenses where semail='".$_GET["semail"]."' and dodate2='".$_GET["dodate2"]."'";
+		 $check=$connection->fetchOne($sel_check);
+		 
+		 if($check=="")
+		 {
+		    echo $update="insert into expenses set pickerst3='".$_GET["supex"]."' ,semail='".$_GET["semail"]."', dodate2='".$_GET["dodate2"]."'";
+         	$connection->query($update);
+		 	$kbt47=1;
+			
+		 }
+		 else
+		 {
+		 	$update="update expenses set pickerst3='".$_GET["supex"]."' where semail='".$_GET["semail"]."' and dodate2='".$_GET["dodate2"]."'";
+         	$connection->query($update);
+		 	$kbt47=1;
+		 }
+	 }
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+<?php 
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+	
+	if(!empty($_REQUEST['from']) ){
+		/*====================== Start Code for Magento Orders Product =====================*/
+
+		$orders_row = array();
+		
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+	    
+		$rr=explode("/",$from);
+		$adate=$rr[1]."_".$rr[0]."_".$rr[2];
+		$adate3=$rr[2]."-".$rr[0]."-".$rr[1];
+		
+		$rr2=explode("/",$to);
+		$adate2=$rr2[1]."_".$rr2[0]."_".$rr2[2];
+		
+		$to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		$from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+		
+		$datetime1 = new DateTime($from_date);
+		$datetime2 = new DateTime($to_date);
+		$interval = $datetime1->diff($datetime2);
+		$kdf =  $interval->format('%R%a');
+
+	}
+?>
+<div id="anchor-content" class="middle">
+<div class="entry-edit">
+<form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="add_form">
+<?php if($newgreen==1) { ?>
+   <div style="background:green;color:#fff;padding:20px;margin-bottom:10px;">Working hour has been updated successfully.</div>
+<?php } ?>
+<div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Add New Employee</h4>
+            <div class="form-buttons"></div>
+          </div>
+<div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class="required-entry input-text" title="From" value="" id="datenew" name="datenew">
+                      <img style="" title="Select Date" id="datenewb" class="v-middle" alt="" src="http://www.prestofreshgrocery.com/skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "datenew",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "datenewb",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  <tr>
+				  <td class="label"><label for="sales_report_from">Employee<span class="required">*</span></label></td>
+				  <td class="value" >
+				  <select name="emph" id="emph" class="required-entry">
+				  <option value=""> Select </option>
+	 			 <?php
+				 $sql444 = "select * from mg_pickers order by name";
+	             $rows444 = $connection->fetchAll($sql444); 
+				 foreach ($rows444 as $value444) {
+				 if($rows3wr=="")
+				 {
+				   $rows3wr=0;
+				 }
+				 ?>
+				<?php echo $value444["name"]; ?>
+				<option value="<?php echo $value444["id"]; ?>" <?php if($value444["id"]==$_GET["emp"]) { ?> selected <?php } ?> > <?php echo $value444["name"]; ?></option>
+				 <?php } ?>
+				 </select>
+				 </td>
+				 </tr>
+				 
+				  <tr>
+                    <td class="label"><label for="workinghours">Working Hours<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class="required-entry input-text" title="Working Hours" value="" id="workinghours" name="workinghours"></td>
+				 </tr>
+				 
+				 <tr>
+                    <td class="label"><label for="workinghours">Start Time</label></td>
+                    <td class="value"><select name="starttime" id="starttime">
+
+<option> Select </option>
+<option value="0900" <?php if($starttime=='0900') { ?> selected <?php } ?> >09:00</option>
+<option value="0915" <?php if($starttime=='0915') { ?> selected <?php } ?> >09:15</option>
+<option value="0930" <?php if($starttime=='0930') { ?> selected <?php } ?> >09:30</option>
+<option value="0945" <?php if($starttime=='0945') { ?> selected <?php } ?> >09:45</option>
+
+<option value="1000" <?php if($starttime=='1000') { ?> selected <?php } ?> >10:00</option>
+<option value="1015" <?php if($starttime=='1015') { ?> selected <?php } ?> >10:15</option>
+<option value="1030" <?php if($starttime=='1030') { ?> selected <?php } ?> >10:30</option>
+<option value="1045" <?php if($starttime=='1045') { ?> selected <?php } ?> >10:45</option>
+
+
+<option value="1100" <?php if($starttime=='1100') { ?> selected <?php } ?> >11:00</option>
+<option value="1115" <?php if($starttime=='1115') { ?> selected <?php } ?> >11:15</option>
+<option value="1130" <?php if($starttime=='1130') { ?> selected <?php } ?> >11:30</option>
+<option value="1145" <?php if($starttime=='1145') { ?> selected <?php } ?> >11:45</option>
+
+
+<option value="1200" <?php if($starttime=='1200') { ?> selected <?php } ?> >12:00</option>
+<option value="1215" <?php if($starttime=='1215') { ?> selected <?php } ?> >12:15</option>
+<option value="1230" <?php if($starttime=='1230') { ?> selected <?php } ?> >12:30</option>
+<option value="1245" <?php if($starttime=='1245') { ?> selected <?php } ?> >12:45</option>
+
+
+<option value="1300" <?php if($starttime=='1300') { ?> selected <?php } ?> >13:00</option>
+<option value="1315" <?php if($starttime=='1315') { ?> selected <?php } ?> >13:15</option>
+<option value="1330" <?php if($starttime=='1330') { ?> selected <?php } ?> >13:30</option>
+<option value="1345" <?php if($starttime=='1345') { ?> selected <?php } ?> >13:45</option>
+
+<option value="1400" <?php if($starttime=='1400') { ?> selected <?php } ?> >14:00</option>
+<option value="1415" <?php if($starttime=='1415') { ?> selected <?php } ?> >14:15</option>
+<option value="1430" <?php if($starttime=='1430') { ?> selected <?php } ?> >14:30</option>
+<option value="1445" <?php if($starttime=='1445') { ?> selected <?php } ?> >14:45</option>
+
+<option value="1500" <?php if($starttime=='1500') { ?> selected <?php } ?> >15:00</option>
+<option value="1515" <?php if($starttime=='1515') { ?> selected <?php } ?> >15:15</option>
+<option value="1530" <?php if($starttime=='1530') { ?> selected <?php } ?> >15:30</option>
+<option value="1545" <?php if($starttime=='1545') { ?> selected <?php } ?> >15:45</option>
+
+
+<option value="1600" <?php if($starttime=='1600') { ?> selected <?php } ?> >16:00</option>
+<option value="1615" <?php if($starttime=='1615') { ?> selected <?php } ?> >16:15</option>
+<option value="1630" <?php if($starttime=='1630') { ?> selected <?php } ?> >16:30</option>
+<option value="1645" <?php if($starttime=='1645') { ?> selected <?php } ?> >16:45</option>
+
+
+<option value="1700" <?php if($starttime=='1700') { ?> selected <?php } ?> >17:00</option>
+<option value="1715" <?php if($starttime=='1715') { ?> selected <?php } ?> >17:15</option>
+<option value="1730" <?php if($starttime=='1730') { ?> selected <?php } ?> >17:30</option>
+<option value="1745" <?php if($starttime=='1745') { ?> selected <?php } ?> >17:45</option>
+
+
+<option value="1800" <?php if($starttime=='1800') { ?> selected <?php } ?> >18:00</option>
+<option value="1815" <?php if($starttime=='1815') { ?> selected <?php } ?> >18:15</option>
+<option value="1830" <?php if($starttime=='1830') { ?> selected <?php } ?> >18:30</option>
+<option value="1845" <?php if($starttime=='1845') { ?> selected <?php } ?> >18:45</option>
+
+
+<option value="1900" <?php if($starttime=='1900') { ?> selected <?php } ?> >19:00</option>
+<option value="1915" <?php if($starttime=='1915') { ?> selected <?php } ?> >19:15</option>
+<option value="1930" <?php if($starttime=='1930') { ?> selected <?php } ?> >19:30</option>
+<option value="1945" <?php if($starttime=='1945') { ?> selected <?php } ?> >19:45</option>
+
+
+<option value="2000" <?php if($starttime=='2000') { ?> selected <?php } ?> >20:00</option>
+<option value="2015" <?php if($starttime=='2015') { ?> selected <?php } ?> >20:15</option>
+<option value="2030" <?php if($starttime=='2030') { ?> selected <?php } ?> >20:30</option>
+<option value="2045" <?php if($starttime=='2045') { ?> selected <?php } ?> >20:45</option>
+
+
+<option value="2100" <?php if($starttime=='2100') { ?> selected <?php } ?> >21:00</option>
+<option value="2115" <?php if($starttime=='2115') { ?> selected <?php } ?> >21:15</option>
+<option value="2130" <?php if($starttime=='2130') { ?> selected <?php } ?> >21:30</option>
+<option value="2145" <?php if($starttime=='2145') { ?> selected <?php } ?> >21:45</option>
+
+
+<option value="2200" <?php if($starttime=='2200') { ?> selected <?php } ?> >22:00</option>
+<option value="2215" <?php if($starttime=='2215') { ?> selected <?php } ?> >22:15</option>
+<option value="2230" <?php if($starttime=='2230') { ?> selected <?php } ?> >22:30</option>
+<option value="2245" <?php if($starttime=='2245') { ?> selected <?php } ?> >22:45</option>
+
+
+<option value="2300" <?php if($starttime=='2300') { ?> selected <?php } ?> >23:00</option>
+<option value="2315" <?php if($starttime=='2315') { ?> selected <?php } ?> >23:15</option>
+<option value="2330" <?php if($starttime=='2330') { ?> selected <?php } ?> >23:30</option>
+<option value="2345" <?php if($starttime=='2345') { ?> selected <?php } ?> >23:45</option>
+
+
+<option value="0100" <?php if($starttime=='0100') { ?> selected <?php } ?> >01:00</option>
+<option value="0115" <?php if($starttime=='0115') { ?> selected <?php } ?> >01:15</option>
+<option value="0130" <?php if($starttime=='0130') { ?> selected <?php } ?> >01:30</option>
+<option value="0145" <?php if($starttime=='0145') { ?> selected <?php } ?> >01:45</option>
+
+
+<option value="0200" <?php if($starttime=='0200') { ?> selected <?php } ?> >02:00</option>
+<option value="0215" <?php if($starttime=='0215') { ?> selected <?php } ?> >02:15</option>
+<option value="0230" <?php if($starttime=='0230') { ?> selected <?php } ?> >02:30</option>
+<option value="0245" <?php if($starttime=='0245') { ?> selected <?php } ?> >02:45</option>
+
+<option value="0300" <?php if($starttime=='0300') { ?> selected <?php } ?> >03:00</option>
+<option value="0315" <?php if($starttime=='0315') { ?> selected <?php } ?> >03:15</option>
+<option value="0330" <?php if($starttime=='0330') { ?> selected <?php } ?> >03:30</option>
+<option value="0345" <?php if($starttime=='0345') { ?> selected <?php } ?> >03:45</option>
+
+
+<option value="0400" <?php if($starttime=='0400') { ?> selected <?php } ?> >04:00</option>
+<option value="0415" <?php if($starttime=='0415') { ?> selected <?php } ?> >04:15</option>
+<option value="0430" <?php if($starttime=='0430') { ?> selected <?php } ?> >04:30</option>
+<option value="0445" <?php if($starttime=='0445') { ?> selected <?php } ?> >04:45</option>
+
+
+
+<option value="0500" <?php if($starttime=='0500') { ?> selected <?php } ?> >05:00</option>
+<option value="0515" <?php if($starttime=='0515') { ?> selected <?php } ?> >05:15</option>
+<option value="0530" <?php if($starttime=='0530') { ?> selected <?php } ?> >05:30</option>
+<option value="0545" <?php if($starttime=='0545') { ?> selected <?php } ?> >05:45</option>
+
+
+<option value="0600" <?php if($starttime=='0600') { ?> selected <?php } ?> >06:00</option>
+<option value="0615" <?php if($starttime=='0615') { ?> selected <?php } ?> >06:15</option>
+<option value="0630" <?php if($starttime=='0630') { ?> selected <?php } ?> >06:30</option>
+<option value="0645" <?php if($starttime=='0645') { ?> selected <?php } ?> >06:45</option>
+
+
+<option value="0700" <?php if($starttime=='0700') { ?> selected <?php } ?> >07:00</option>
+<option value="0715" <?php if($starttime=='0715') { ?> selected <?php } ?> >07:15</option>
+<option value="0730" <?php if($starttime=='0730') { ?> selected <?php } ?> >07:30</option>
+<option value="0745" <?php if($starttime=='0745') { ?> selected <?php } ?> >07:45</option>
+
+
+<option value="0800" <?php if($starttime=='0800') { ?> selected <?php } ?> >08:00</option>
+<option value="0815" <?php if($starttime=='0815') { ?> selected <?php } ?> >08:15</option>
+<option value="0830" <?php if($starttime=='0830') { ?> selected <?php } ?> >08:30</option>
+<option value="0845" <?php if($starttime=='0845') { ?> selected <?php } ?> >08:45</option>
+
+
+</select></td>
+				 </tr>
+				 
+				 <tr>
+                    <td class="label"><label for="workinghours">End Time</label></td>
+                    <td class="value"><select name="endtime" id="endtime">
+			
+			<option> Select </option>
+			
+			<option value="0900" <?php if($endtime=='0900') { ?> selected <?php } ?> >09:00</option>
+<option value="0915" <?php if($endtime=='0915') { ?> selected <?php } ?> >09:15</option>
+<option value="0930" <?php if($endtime=='0930') { ?> selected <?php } ?> >09:30</option>
+<option value="0945" <?php if($endtime=='0945') { ?> selected <?php } ?> >09:45</option>
+
+<option value="1000" <?php if($endtime=='1000') { ?> selected <?php } ?> >10:00</option>
+<option value="1015" <?php if($endtime=='1015') { ?> selected <?php } ?> >10:15</option>
+<option value="1030" <?php if($endtime=='1030') { ?> selected <?php } ?> >10:30</option>
+<option value="1045" <?php if($endtime=='1045') { ?> selected <?php } ?> >10:45</option>
+
+
+<option value="1100" <?php if($endtime=='1100') { ?> selected <?php } ?> >11:00</option>
+<option value="1115" <?php if($endtime=='1115') { ?> selected <?php } ?> >11:15</option>
+<option value="1130" <?php if($endtime=='1130') { ?> selected <?php } ?> >11:30</option>
+<option value="1145" <?php if($endtime=='1145') { ?> selected <?php } ?> >11:45</option>
+
+
+<option value="1200" <?php if($endtime=='1200') { ?> selected <?php } ?> >12:00</option>
+<option value="1215" <?php if($endtime=='1215') { ?> selected <?php } ?> >12:15</option>
+<option value="1230" <?php if($endtime=='1230') { ?> selected <?php } ?> >12:30</option>
+<option value="1245" <?php if($endtime=='1245') { ?> selected <?php } ?> >12:45</option>
+
+
+<option value="1300" <?php if($endtime=='1300') { ?> selected <?php } ?> >13:00</option>
+<option value="1315" <?php if($endtime=='1315') { ?> selected <?php } ?> >13:15</option>
+<option value="1330" <?php if($endtime=='1330') { ?> selected <?php } ?> >13:30</option>
+<option value="1345" <?php if($endtime=='1345') { ?> selected <?php } ?> >13:45</option>
+
+<option value="1400" <?php if($endtime=='1400') { ?> selected <?php } ?> >14:00</option>
+<option value="1415" <?php if($endtime=='1415') { ?> selected <?php } ?> >14:15</option>
+<option value="1430" <?php if($endtime=='1430') { ?> selected <?php } ?> >14:30</option>
+<option value="1445" <?php if($endtime=='1445') { ?> selected <?php } ?> >14:45</option>
+
+<option value="1500" <?php if($endtime=='1500') { ?> selected <?php } ?> >15:00</option>
+<option value="1515" <?php if($endtime=='1515') { ?> s

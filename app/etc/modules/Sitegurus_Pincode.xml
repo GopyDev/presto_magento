@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Sitegurus_Pincode>
+            <active>false</active>
+            <codePool>local</codePool>
+        </Sitegurus_Pincode>
+    </modules>
+</config> 

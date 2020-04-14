@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <modules>
+        <Survey_Order>
+            <version>0.0.0.1</version>
+        </Survey_Order>
+    </modules>
+ 
+    <global>
+        <models>
+            <survey_details>
+                <class>Survey_Details_Model</class>
+                <resourceModel>survey_details_resource</resourceModel>
+            </survey_details>
+        </models>
+ 
+        <resources>
+            <survey_details_setup>
+                <setup>
+                    <module>Survey_Details</module>
+                </setup>
+            </survey_details_setup>
+        </resources>
+ 
+        <blocks>
+            <survey_details>
+                <class>Survey_details_Block</class>
+            </survey_details>
+        </blocks>
+ 
+        <helpers>
+            <survey_details>
+                <class>Survey_details_Helper</class>
+            </survey_details>
+        </helpers>
+    </global>
+ 
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <survey_details before="Mage_Adminhtml">Survey_Details_Adminhtml</survey_details>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config> 
+

@@ -1,0 +1,93 @@
+<?php
+/**
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011-2012 Sergey Storchay <r8@r8.com.ua>
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+ 
+  $customer_id = Mage::getSingleton('customer/session')->getId();
+ $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+ $select="select subs from mg_customer_entity where entity_id='".$customer_id."'";
+	$de_select=$connection->fetchOne($select);
+	// echo $de_select;
+	$jemp=explode(",",$de_select);
+?>
+<form action="" id="checkout-agreements" onsubmit="return false;">
+    <div class="buttons-set">
+        <ul class="form-list">
+            <li>
+                <fieldset>
+                    <ul>
+                        <li class="wide">
+						<div>
+                            <label for="ordercomment-comment" style="clear:both;"><?php echo Mage::helper('ordercomment')->__('Substitute Preferences') ?>  (check all that apply): </label>
+							 <br/>
+							 <br/>
+							 <div style="float:left;width:250px;color:#000;">
+							 <input type="checkbox" name="chk-1" value="Caffeine Free" <?php if(in_array("Caffeine Free", $jemp)) { ?>
+                             checked <?php } ?>  > Caffeine Free <br/>
+							 <input type="checkbox" name="chk-2"  value="Gluten Free" <?php if(in_array("Gluten Free", $jemp)) { ?>
+                             checked <?php } ?> > Gluten Free <br/>
+							 <input type="checkbox" name="chk-3"  value="GMO Free" <?php if(in_array("GMO Free", $jemp)) { ?>
+                             checked <?php } ?> > GMO Free <br/>
+							 <input type="checkbox" name="chk-4" value="Kosher" <?php if(in_array("Kosher", $jemp)) { ?>
+                             checked <?php } ?> > Kosher <br/>
+							 <input type="checkbox" name="chk-5" value="Lactose Free" <?php if(in_array("Lactose Free", $jemp)) { ?>
+                             checked <?php } ?> > Lactose Free <br/>
+							 <input type="checkbox" name="chk-6" value="Low Carb" <?php if(in_array("Low Carb", $jemp)) { ?>
+                             checked <?php } ?> > Low Carb <br/>
+							 </div>
+							 <div style="float:left;width:250px;color:#000;">
+							 <input type="checkbox" name="chk-7"  value="Low Cholesterol" <?php if(in_array("Low Cholesterol", $jemp)) { ?> checked <?php } ?>  > Low Cholesterol <br/>
+							 <input type="checkbox" name="chk-8" value="Low Fat" <?php if(in_array("Low Fat", $jemp)) { ?> checked <?php } ?>  > Low Fat <br/>
+							 <input type="checkbox" name="chk-9" value="No Fat" <?php if(in_array("No Fat", $jemp)) { ?> checked <?php } ?> > No Fat <br/>
+							 <input type="checkbox" name="chk-10" value="No Pork" <?php if(in_array("No Pork", $jemp)) { ?> checked <?php } ?> > No Pork <br/>
+							 <input type="checkbox" name="chk-11" value="Organic" <?php if(in_array("Organic", $jemp)) { ?> checked <?php } ?> > Organic <br/>
+							 <input type="checkbox" name="chk-12" value="Vegan" <?php if(in_array("Vegan", $jemp)) { ?> checked <?php } ?> > Vegan <br/>
+							 <input type="checkbox" name="chk-13" value="Vegetarian" <?php if(in_array("Vegetarian", $jemp)) { ?> checked <?php } ?> > Vegetarian
+							 </div>
+							 <div style="clear:both;"></div>
+							 <br/>
+							</div>
+							<br/>
+						<div>
+                            <label for="ordercomment-comment"><?php echo Mage::helper('ordercomment')->__('Provide any requests about your ordered products here') ?></label>
+							</div>
+							<div style="clear:both;"></div>
+							<div style="color:red;font-size:12px;margin-bottom:10px;">This can include preferences regarding produce items (e.g. ripeness, etc), substitutes, etc. Note: please do not enter delivery instructions here. Delivery instructions can be entered on the Delivery Address step of checkout or in your address book under My Account. Thank you! </div>
+                            <div class="input-box">
+                                <textarea id="ordercomment-comment" maxlength="300" class="input-text validation-passed" name="ordercomment[comment]" title="<?php echo $this->__('Order Comment') ?>" style="width:98%;border:1px solid #666;"></textarea>
+								<br/> ( Maximum 300 characters ) 
+                            </div>
+                        </li>
+                    </ul>
+                </fieldset>
+            </li>
+        </ul>
+    </div>
+
+    <?php if ($this->getAgreements()): ?>
+        <ol class="checkout-agreements">
+            <?php foreach ($this->getAgreements() as $_a): ?>
+            <li>
+                <div class="agreement-content"<?php echo ($_a->getContentHeight() ? ' style="height:' . $_a->getContentHeight() . '"' : '')?>>
+                    <?php if ($_a->getIsHtml()):?>
+                    <?php echo $_a->getContent() ?>
+                    <?php else:?>
+                    <?php echo nl2br($this->htmlEscape($_a->getContent())) ?>
+                    <?php endif; ?>
+                </div>
+                <p class="agree">
+                    <input type="checkbox" id="agreement-<?php echo $_a->getId()?>" name="agreement[<?php echo $_a->getId()?>]" value="1" title="<?php echo $this->htmlEscape($_a->getCheckboxText()) ?>" class="checkbox" /><label for="agreement-<?php echo $_a->getId()?>"><?php echo $_a->getIsHtml() ? $_a->getCheckboxText() : $this->htmlEscape($_a->getCheckboxText()) ?></label>
+                </p>
+            </li>
+            <?php endforeach ?>
+        </ol>
+    <?php endif; ?>
+</form>

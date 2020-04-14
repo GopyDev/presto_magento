@@ -1,0 +1,562 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+<?php 
+    $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+	
+	if(!empty($_REQUEST['from']) ){
+		/*====================== Start Code for Magento Orders Product =====================*/
+		//echo "<pre>";
+		$orders_row = array();
+		
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+	    
+		$rr=explode("/",$from);
+		$adate=$rr[1]."_".$rr[0]."_".$rr[2];
+		$adate3=$rr[2]."-".$rr[0]."-".$rr[1];
+		
+		$rr2=explode("/",$to);
+		$adate2=$rr2[1]."_".$rr2[0]."_".$rr2[2];
+		
+		$adate22=$rr2[1]."-".$rr2[0]."-".$rr2[2];
+	
+		$to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		$from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+		
+		$datetime1 = new DateTime($from);
+		$datetime2 = new DateTime($to);
+		
+	function getWeekDates($date, $start_date, $end_date)
+    {
+    $week =  date('W', strtotime($date));
+    $year =  date('Y', strtotime($date));
+    $from12 = date("Y-m-d", strtotime("{$year}-W{$week}+1")); //Returns the date of monday in week
+    if($from12 < $start_date) $from = $start_date;
+    $to12 = date("Y-m-d", strtotime("{$year}-W{$week}-6"));   //Returns the date of sunday in week
+    // if($to12 > $end_date) $to12 = $end_date;
+    return "SD:".$from12.",ED:".$to12;
+    }
+
+	$start_date = $from_date;
+	$end_date = $to_date;
+    $end_date1 = date('Y-m-d',strtotime($adate22 . " +6 day"));
+
+	
+		$interval = $datetime1->diff($datetime2);
+		$kdf =  $interval->format('%R%a');
+  }
+?>
+<div id="anchor-content" class="middle">
+  <div id="page:main-container">
+    <div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Substitute Report");?></h3></td>
+            <td class="form-buttons"><button style="" onclick="document.getElementById('filter_form').submit();" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Show Report</span></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <?php /*?><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><?php */?>
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Start Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $from; ?>" id="sales_report_from" name="from" />
+                      <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_from",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_from_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  
+				  <tr>
+                    <td class="label"><label for="sales_report_from">End Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $to; ?>" id="sales_report_to" name="to" />
+                      <img style="" title="Select Date" id="sales_report_to_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_to",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_to_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	<?php
+	  if(!empty($_REQUEST['from']) ){
+	?>
+	<style>
+	.page
+	{
+	   width:90%;
+	}
+	
+	td, th 
+	{
+	   padding-top:5px !important;
+	   padding-left:5px !important;
+	   padding-right:5px !important;
+	   padding-bottom:5px !important;
+	}
+	
+	table
+	{
+	   border-collapse:collapse;
+	}
+	</style>
+	<?php
+		 $rdate = explode("_",$adate);
+		 $opdate = $rdate[1]."-".$rdate[0]."-".$rdate[2];
+		 $bpil = 0;
+	?>
+		  <br/>
+		 
+		  <br/>
+		  <script type="text/javascript">
+		function divprintlove()
+		{
+            var divContents = jQuery("#divlove").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title> </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+		  
+		  <!-- <a href="javascript:void(0);" onClick="divprintlove();"> Print All</a>  -->
+    <div id="divlove">	  
+    <div id="dvContainer">
+	
+	<?php function timeDiff($firstTime,$lastTime){
+   // convert to unix timestamps
+   $firstTime=strtotime($firstTime);
+   $lastTime=strtotime($lastTime);
+
+   // perform subtraction to get the difference (in seconds) between times
+   $timeDiff=$lastTime-$firstTime;
+
+   // return the difference
+   return $timeDiff;
+} ?>
+		 
+	<div>
+		  <table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;" >
+				   <tr>
+				   <th>Date</th>
+				   <th>Items packed </th>
+				   <th>Items (Subs)</th>
+				   <th>Items (No Subs)</th>
+				   <th> Orders</th>
+				   <th> Order (Subs/Nosubs) </th>
+				   <th style="width:600px;">Substitutions</th>
+     			   </tr>
+				   
+				   
+		  <?php
+		           $t1=0;
+				   $t2=0;
+				   $t3=0;
+				   $t4=0;
+				   $t5=0;
+				   $t6=0;
+				   $sub=array();
+				   $countrrr=0;
+		  for($i=0;$i<=$kdf;$i++){
+		  
+		             if($i==0)
+					{
+					   $delete="delete from ss where id >= 1";
+					   $connection->query($delete);
+					}
+					
+					$Date1 = $adate3;
+					$date = new DateTime($Date1);
+					$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+					$kbt = $date->format('d_m_Y');
+					
+					$kbt2 = $date->format('m-d-Y');
+					
+					$sql3 = "select count(item_id) from supervision where ddate='".$kbt."'";
+					$rows33 = $connection->fetchOne($sql3); 
+					
+					$sql3 = "select count(item_id) from supervision where ddate='".$kbt."' and substitute!=' ' ";
+					$rows4 = $connection->fetchOne($sql3); 
+					
+					$sql3 = "select count(item_id) from supervision where ddate='".$kbt."' and ( log=3 or status='found' ) and substitute=' ' ";
+					$rows5 = $connection->fetchOne($sql3); 
+					
+					$sql3a = "select msi.order_id from supervision s 
+					left join mg_sales_flat_order_item msi on msi.item_id = s.item_id
+					where s.ddate='".$kbt."'  and s.status!='found' and s.substitute!=' ' and s.item_id is not null group by msi.order_id";
+					$rows3a = $connection->fetchAll($sql3a);
+					$hh=1; 
+					$bbbc="";
+					$gprs="";
+				    foreach ($rows3a as $bbbc) {
+					
+					  if($bbbc["order_id"]!="")
+					  {
+					   $gprs[$hh] = $bbbc["order_id"];
+					   }
+					   $hh=$hh+1;
+					}
+					
+					$sql322 = "select msi.order_id from supervision s 
+					left join mg_sales_flat_order_item msi on msi.item_id = s.item_id
+					where s.ddate='".$kbt."' group by msi.order_id";
+					$rows3s = $connection->fetchAll($sql322);
+					$hh=1; 
+					$bbbcgg="";
+					$gprs2="";
+				    foreach ($rows3s as $bbbcgg) {
+					
+					  if($bbbcgg["order_id"]!="")
+					  {
+					   $gprs2[$hh] = $bbbcgg["order_id"];
+					   }
+					   $hh=$hh+1;
+					}
+					
+					$t1=$t1+$rows33;
+					$t2=$t2+$rows4;
+					$t3=$t3+$rows5;
+					$t4=$t4+count($gprs2);
+					$t5=$t5+count($gprs);
+					$t6=$t6+(count($gprs2) - count($gprs));
+					$category="";
+					$j=1;
+					?>
+					<tr>
+					<td><?php echo $kbt2; ?> </td>
+					<td><?php echo $rows33; ?> </td>
+					<td><?php echo $rows4; ?></td>
+					<td><?php echo $rows5; ?></td>
+					<td><?php echo count($gprs2); ?></td>
+					<td> <span style="color:red" > <?php echo count($gprs); ?> </span> /  <span style="color:green" > <?php echo count($gprs2) - count($gprs) ; ?> </span>
+					<br/>
+					</td>
+					<td>
+					
+					<table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;margin:5px;">
+					<tr>
+					<td style="font-weight:bold;">
+					Item
+					</td>
+					<td style="font-weight:bold;">
+					Substitute
+					</td>
+					<td style="font-weight:bold;">
+					Qty
+					</td>
+					</tr>
+					
+					<?php
+					$sql3 = "select substitute,item_id  from supervision where ddate='".$kbt."' and substitute!=' ' ";
+					$rows3 = $connection->fetchAll($sql3); 
+				    foreach ($rows3 as $value3) {
+					
+					    $sel_itmes="select name from mg_sales_flat_order_item where item_id='".$value3["item_id"]."'";
+						$itmes=$connection->fetchOne($sel_itmes);
+						$sel_product_id="select product_id from mg_sales_flat_order_item where item_id='".$value3["item_id"]."'";
+						$product_id=$connection->fetchOne($sel_product_id); 
+						
+						$sel_order_id="select order_id from mg_sales_flat_order_item where item_id='".$value3["item_id"]."'";
+						$order_id=$connection->fetchOne($sel_order_id); 
+						
+						$order_combo = Mage::getModel('sales/order')->load($order_id);
+                        
+						$product = Mage::getModel('catalog/product');
+						$product->setId($product_id);
+						$categoryIds = $product->getResource()->getCategoryIds($product);
+						
+						$sel_qty_ordered="select qty_ordered from mg_sales_flat_order_item where item_id='".$value3["item_id"]."'";
+						$qty_ordered=$connection->fetchOne($sel_qty_ordered); 
+						
+						 /* $sel_main_cats='SELECT cc.entity_id 
+						FROM mg_catalog_category_entity cc
+						JOIN mg_catalog_category_product cp ON cc.entity_id = cp.category_id
+						WHERE cp.product_id =  '.$product_id.' ';
+						$main_cats=$connection->fetchAll($sel_main_cats); */
+						
+						
+						
+						
+					    ?>
+						<tr>
+						<td style="color:red;width:270px">
+						<?php echo $itmes; ?><br/>
+						( <?php  echo $Incrementid = $order_combo->getIncrementId(); ?> )
+						
+						<br/>
+						<span style="color:green;font-weight:bold;"> ( <?php echo $order_combo->getCustomerName(); ?> ) </span>
+						 
+						<span style="color:grey;font-weight:bold;">
+						<br/>
+						Categories :- 
+						<br/>
+						
+						<?php $namec=""; $last_cat=""; foreach ($categoryIds as $category_id) {
+						
+						
+                        $_cat = Mage::getModel('catalog/category')->setStoreId(Mage::app()->getStore()->getId())->load($category_id);
+						
+						$path = $_cat->getPath();
+						
+						$tempg = explode("/184/",$_cat->getPath());
+						$temph = explode("/141/",$_cat->getPath());
+						
+						 $namec.=$_cat->getName()."->";
+						
+						$topcat2 = $_cat->getName();
+                        
+						
+						if($tempg[1]=="" && $temph[1]=="")
+						{    
+						
+						
+						 
+						  
+						   if($_cat->getLevel()==7)
+						   {
+						   $last_cat=$_cat->getPath();
+						   }
+						   
+						   else if($_cat->getLevel()==6)
+						   {
+						   $last_cat=$_cat->getPath();
+						   }
+						   
+						   else if($_cat->getLevel()==5)
+						   {
+						   $last_cat=$_cat->getPath();
+						   }
+						   
+						   else if($_cat->getLevel()==4)
+						   {
+						   $last_cat=$_cat->getPath();
+						   }
+						   
+						   
+						   else if($_cat->getLevel()==3)
+						   {
+						   $last_cat=$_cat->getPath();
+						   }
+						   
+						   else if($_cat->getLevel()==2)
+						   {
+						    $last_cat=$_cat->getPath()."/";
+						   }
+						   
+						   
+						   echo $_cat->getName()."- level :".$_cat->getLevel().".<br/>";  
+						   
+						   if($_cat->getLevel()==2)
+						   {
+						      $tocat=$category_id;
+						   }
+						   if($_cat->getLevel()==2)
+						   {
+						      $tocat=$category_id;
+						   }
+							
+							
+					      }	
+						  
+						  
+						
+							
+							
+                        } 
+						
+						//echo $last_cat;
+						 $mebo=explode("/",$last_cat);
+						 $topcat2= Mage::getModel('catalog/category')->load($mebo[2]);
+						// echo $topcat2->getName(); 
+						 
+						  if($topcat2->getName()!="Organic & Natural" && $topcat2->getName()!="Local & Specialty" && $topcat2->getName()!="Gift Card" && $topcat2->getName()!="Default Category" )
+						  {
+						 $cateogry.=$topcat2->getName()."-".$mebo[2]."%";
+						 }
+						 
+						 $sub[$countrrr]=$itmes."*".$last_cat;
+						 $countrrr++;
+						 $congo=explode("/",$last_cat);
+						 
+						     $sql3df = "select item_id  from supervision where ddate='".$kbt."' and item_id='".$value3["item_id"]."' group by item_id,cust";
+					         $rows3df = $connection->fetchAll($sql3df); 
+					         $tod=count($rows3df);
+							 
+							
+							 
+							 $sql3df = "select item_id  from supervision where ddate='".$kbt."' and item_id='".$value3["item_id"]."' and status!='found' ";
+					         $rows3df = $connection->fetchAll($sql3df); 
+					         $nf=count($rows3df);
+							 $fff=str_replace("'","",$itmes);
+							 $insert="insert into ss set name='".$fff."',cat='".$congo[2]."',ss4='".$product_id."',ord='".$tod."',nf='".$nf."'";
+							 $connection->query($insert);
+							 
+						?>
+						</span>
+						</td>
+						<td style="color:green;width:540px">
+						<?php echo $value3["substitute"]; ?>
+						</td>
+						<td style="color:black;width:60px">
+						<?php echo round($qty_ordered,2); ?>
+						</td>
+						</tr>
+					<?php
+					}
+					?>
+					</table>
+					</td>
+					</tr>
+					<?php
+				      }
+					  arsort($sub);
+					
+					 $till=count($sub);
+					 
+					  $garray=explode("%",$cateogry);
+					  $vals = array_count_values($garray);
+					  arsort($vals);
+					  // $vals=explode("%",$cateogry);
+				   ?>
+				   <tr style="font-weight:bold;">
+				   <th>Date</th>
+				   <th>Items packed </th>
+				   <th>Items (Subs)</th>
+				   <th>Items (No Subs)</th>
+				   <th> Orders</th>
+				   <th> Order (Subs/Nosubs) </th>
+				   <th style="width:600px;">Categories</th>
+     			   </tr>
+				   
+				   <tr style="font-weight:bold;color:green;">
+				    <td> Total : </td>
+					<td><?php echo $t1; ?></td>
+					<td><?php echo $t2; ?></td>
+					<td><?php echo $t3; ?></td>
+					<td><?php echo $t4; ?></td>
+					<td><?php echo $t5; ?> / <?php echo $t6; ?></td>
+					<td>
+					<?php 
+					    while (list($key, $value) = each($vals)) {
+						if($key!="" && $value!="")
+						{
+						  $check = explode("Default Category-",$key);
+						  if($check[1]=="")
+						  {
+						     $temp9=explode("-",$key);
+						      $ww="/".$temp9[1]."/";
+						 
+						      if($temp9[1]>=1) { 
+						       echo "<div style='width:600px;text-decoration:underline;' >
+						  <a href='javascript:void(0);' onClick='doshow(".$temp9[1].")'>$temp9[0] - $value</a></div>";
+						  ?>
+						  <div style="margin-left:15px;display:none;" id="div<?php echo $temp9[1]; ?>">
+						  <?php
+								      $sel_order_data="select name,count(ss4) as drf ,sum(nf) as snf ,sum(ord) as sord from ss where cat='".$temp9[1]."' group by name order by drf desc";
+									  $order_data=$connection->fetchAll($sel_order_data);
+									  $pp=0;
+									   foreach ($order_data as $orderdata) {
+									   
+									      $pp++;
+									       ?>
+										   
+										   <div> <?php echo $pp; ?> ) . <?php echo $orderdata["name"]; ?> ( S:- <?php echo $orderdata["drf"]; ?> ) <!-- ( N:- <?php echo $orderdata["snf"]; ?> ) ( Ord:- <?php echo $orderdata["sord"]; ?> ) --> </div>
+										  
+										  <?php 
+										   $rr++;
+									   }
+									   
+							echo '</div>';
+							
+							}
+							?>
+							
+									   
+						<?php		
+						  }
+						  
+						} 
+                     }
+					?> 
+					</td>
+					</tr>
+					
+		  </table>
+		  </div>
+		  <br/>
+		
+	<?php 
+	} ?>  
+	<script type="text/javascript">
+       	 //<![CDATA[
+        	var filterFormSubmit  = new varienForm('filter_form');
+         //]]>
+        </script> 
+		
+		<script type="text/javascript">
+		function doshow(id)
+		{
+		   jQuery('#div'+id).toggle();
+		}
+		</script>
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script> 
+</body>
+</html>

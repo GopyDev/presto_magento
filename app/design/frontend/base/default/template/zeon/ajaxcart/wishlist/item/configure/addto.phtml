@@ -1,0 +1,41 @@
+<?php
+/**
+* zeonsolutions inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.zeonsolutions.com/shop/license-community.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * This package designed for Magento Community edition
+ * =================================================================
+ * zeonsolutions does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * zeonsolutions does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   design
+ * @package    base_default
+ * @version    0.0.1
+ * @copyright  @copyright Copyright (c) 2013 zeonsolutions.Inc. (http://www.zeonsolutions.com)
+ * @license    http://www.zeonsolutions.com/shop/license-community.txt
+ */
+?>
+
+<?php $_wishlistItem = $this->getWishlistItem(); ?>
+<?php $_wishlistSubmitUrl = $this->helper('wishlist')->getUpdateUrl($_wishlistItem); ?>
+<ul class="add-to-links">
+    <?php if ($this->helper('wishlist')->isAllow()) : ?>
+        <li><a href="javascript:void(0);" onclick="ajaxCart.addUpdate('ajaxcart/wishlist/updateItemOptions'); return false;" class="link-wishlist"><?php echo $this->__('Update Wishlist') ?></a></li>
+    <?php endif; ?>
+    <?php $_product = $this->getProduct(); ?>
+    <?php $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($_product); ?>
+    <?php if ($_compareUrl) : ?>
+        <li><span class="separator">|</span> <a href="javascript:void(0);" onclick="ajaxCart.addByUrl('<?php echo $_compareUrl ?>'); return false;" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+    <?php endif; ?>
+</ul>

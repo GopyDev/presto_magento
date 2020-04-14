@@ -1,0 +1,236 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php $_orders = $this->getOrders(); ?>
+<div class="page-title">
+    <h1><?php echo $this->__('My Orders') ?></h1>
+</div>
+<?php echo $this->getPagerHtml(); ?>
+<?php if($_orders->getSize()): ?>
+<table class="data-table" id="my-orders-table">
+    <col width="1" />
+    <col width="1" />
+    <col />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <thead>
+        <tr>
+            <th><?php echo $this->__('Order #') ?></th>
+            <th><?php echo $this->__('Order Date') ?></th>
+                            <th  style="width:115px"><?php echo $this->__('Delivery Date/Time')?></th>
+            <th><?php echo $this->__('Ship To') ?></th>
+            <th><span class="nobr"><?php echo $this->__('Order Total') ?></span></th>
+           <!-- <th><span class="nobr"><?php //echo $this->__('Order Status') ?></span></th>-->
+           <th><span class="nobr"><?php echo $this->__('Edit Date/Time') ?></span></th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $_odd = ''; ?>
+        <?php foreach ($_orders as $_order): ?>
+        <tr>
+            <td class="order-id"><?php echo $_order->getRealOrderId() ?></td>
+            <td class="order-date"><span class="nobr"><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></span></td>
+            <td><?php 
+					$resource = Mage::getSingleton('core/resource');
+					$readConnection = $resource->getConnection('core_read');
+					$table = $resource->getTableName('shipping_delivery_window');
+					$query = "select * from mg_shipping_delivery_window where order_number ='".$_order->getRealOrderId()."'";
+					 $result = $readConnection->fetchAll($query);
+				foreach($result as $row ){
+				
+						$a = explode('|',$row['window']);
+						$array = sizeof($a);
+						if($array == '2'){
+						//echo $row['window'];
+							
+							$a[1];
+							$date = str_replace('_','/',$a[1]);
+								list($dd,$mm,$yy) = explode("/", $date); 
+								$yy = substr($yy,2,4);
+								echo $mm.'/'.$dd.'/'.$yy;	
+							echo '<br />';	
+							$a[0];
+							$time = str_replace('_',':',$a[0]);
+							$time1 = str_replace('pm:','pm - ',$time);
+							echo $time1;
+							
+						} else{
+							$row['window'];
+							$date = str_replace('_','/',$row['window']);
+							//echo $date ;
+							
+							
+								list($dd,$mm,$yy) = explode("/", $date); 
+								$yy = substr($yy,2,4);
+							
+								echo $mm.'/'.$dd.'/'.$yy;			
+							}
+							}
+					
+					//print('<pre>');print_r($this->getRequest()->getParams());print('</pre>'); ?></td>
+            <td class="order-ship"><?php echo $_order->getShippingAddress() ? $this->htmlEscape($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
+            <td class="order-total"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
+         <?php /*?>   <td class="order-status"><em><?php echo $_order->getStatusLabel() ?></em></td><?php */?>
+         <td class="order-edit"><a href="<?php echo Mage::getBaseUrl().'Pulsestorm_Custompage/?ordernumber='.$_order->getIncrementId().'';?>">Edit</a></td>
+                   
+            <td>
+                <span class="nobr"><a href="<?php echo $this->getViewUrl($_order) ?>"><?php echo $this->__('View Order') ?></a>
+                    <?php /*<span class="separator">|</span><a href="<?php echo $this->getTrackUrl($_order) ?>"><?php echo $this->__('Track Order') ?></a>&nbsp;*/ ?>
+                    <?php if ($this->helper('sales/reorder')->canReorder($_order)) : ?>
+                    <span class="separator">|</span> <a href="<?php echo $this->getReorderUrl($_order) ?>" class="link-reorder"><?php echo $this->__('Reorder') ?></a>
+                <?php endif ?>
+                </span>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+<!--mehul add item table -->
+<?php
+
+
+
+
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+
+/* Get the customer data */
+$customer = Mage::getSingleton('customer/session')->getCustomer();
+/* Get the customer's email address */
+$customer_email = $customer->getEmail();
+
+}
+
+
+
+$collection = Mage::getModel('sales/order')
+                    ->getCollection()
+                      ->addAttributeToFilter('customer_email',array('like'=>$customer_email));
+
+foreach($collection as $order){
+    //do something
+    $order_id = $order->getId();
+
+
+
+$order = Mage::getModel("sales/order")->load($order_id); //load order by order id 
+
+$ordered_items = $order->getAllItems(); 
+
+foreach($ordered_items as $item){     //item detail     
+
+//echo $item->getItemId(); //product id     
+
+//echo $item->getSku();    
+ //echo $item->getQtyOrdered(); //ordered qty of item    
+
+// echo $item->getName();   
+
+ } 
+}
+
+?>
+<table class="data-table" id="my-orders-table">
+    <col width="1" />
+    <col width="1" />
+    <col />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <thead>
+        <tr>
+            <th><?php echo $this->__('Item Id') ?></th>
+			 <th><?php echo $this->__('Item Name') ?></th>
+            <th><?php echo $this->__('Item Sku') ?></th>
+            <th><?php echo $this->__('Item Qty') ?></th>
+			
+         
+        </tr>
+    </thead>
+    <tbody>
+        <?php $_odd = ''; ?>
+        <?php foreach ($_orders as $_order): ?>
+        <tr>
+            <td class="order-id"><?php echo $item->getItemId(); ?></td>
+			 <td class="order-total"><?php echo $item->getSku(); ?></td>
+			<td class="order-date"><?php echo $item->getName(); ?></td>  
+            <td class="order-ship"><?php  echo $item->getQtyOrdered();?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<!--mehul end item table -->
+
+
+
+<script type="text/javascript">decorateTable('my-orders-table');</script>
+<?php echo $this->getPagerHtml(); ?>
+<?php else: ?>
+    <p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif ?>
+
+
+
+
+
+
+
+
+<ul>
+<?php  /*
+    $OrderProducts = Mage::getResourceModel('sales/order_collection')
+                        ->addFieldToSelect('*')
+                        ->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+                        ->addFieldToFilter('state', array('in' => Mage::getSingleton('sales/order_config')->getVisibleOnFrontStates()))
+                        ->setOrder('created_at', 'desc');       
+
+                foreach($OrderProducts as $ord){            
+
+                    $o=Mage::getModel('sales/order')->load($ord->getId());  
+                    $items = $o->getAllItems(); ?>
+
+
+                    <?php foreach($items as $p){
+                          $p= Mage::getModel('catalog/product')->load($p->getId());
+                          ?>                         
+                        <li>
+                         <a href="<?php echo $p->getProductUrl()?>"><img class="recently-img" src="<?php echo $this->helper('catalog/image')->init($p, 'small_image')->keepFrame(false) ->keepAspectRatio(true)->resize(140) ?>" /></a>
+                      
+
+					  </li>  
+					
+
+          <?php }}
+
+
+*/  ?>
+</ul>
+

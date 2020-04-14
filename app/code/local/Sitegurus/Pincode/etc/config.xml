@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Sitegurus_Pincode>
+            <version>0.1.0</version>
+        </Sitegurus_Pincode>
+    </modules>
+    <frontend>
+        <routers>
+            <pincode>
+                <use>standard</use>
+                <args>
+                    <module>Sitegurus_Pincode</module>
+                    <frontName>pincode</frontName>
+                </args>
+            </pincode>
+        </routers>
+        <layout>
+            <updates>
+                <pincode>
+                    <file>pincode.xml</file>
+                </pincode>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<pincode>
+				<use>admin</use>
+				<args>
+					<module>Sitegurus_Pincode</module>
+					<frontName>pincode</frontName>
+				</args>
+			</pincode>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+			<pincode module="pincode">
+				<title>Manage Areawise Sales Report</title>
+				<sort_order>71</sort_order>               
+				<children>
+					<items module="pincode">
+						<title>Manage Pincodes</title>
+						<sort_order>0</sort_order>
+						<action>pincode/adminhtml_pincode</action>
+					</items>
+
+					<manage module="pincode">
+						<title>Sales Reports</title>
+						<sort_order>1</sort_order>
+						<action>pincode/adminhtml_pincode/salesreport</action>
+					</manage>
+				</children>
+			</pincode>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<Sitegurus_Pincode>
+							<title>Pincode Module</title>
+							<sort_order>10</sort_order>
+						</Sitegurus_Pincode>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<pincode>
+					<file>pincode.xml</file>
+				</pincode>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <pincode>
+                <class>Sitegurus_Pincode_Model</class>
+                <resourceModel>pincode_mysql4</resourceModel>
+            </pincode>
+            <pincode_mysql4>
+                <class>Sitegurus_Pincode_Model_Mysql4</class>
+                <entities>
+                    <pincode>
+                        <table>pincode</table>
+                    </pincode>
+                </entities>
+            </pincode_mysql4>
+        </models>
+        <resources>
+            <pincode_setup>
+                <setup>
+                    <module>Sitegurus_Pincode</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </pincode_setup>
+            <pincode_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </pincode_write>
+            <pincode_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </pincode_read>
+        </resources>
+        <blocks>
+            <pincode>
+                <class>Sitegurus_Pincode_Block</class>
+            </pincode>
+        </blocks>
+        <helpers>
+            <pincode>
+                <class>Sitegurus_Pincode_Helper</class>
+            </pincode>
+        </helpers>
+    </global>
+</config>

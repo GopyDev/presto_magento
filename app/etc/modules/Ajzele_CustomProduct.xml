@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Ajzele_CustomProduct>
+            <active>true</active> 
+            <codePool>local</codePool>
+			<!--<priority>1</priority>-->
+			<!--<depends>
+				<Webduo_Simpleupc/>
+			</depends>-->
+        </Ajzele_CustomProduct>
+    </modules>
+</config>

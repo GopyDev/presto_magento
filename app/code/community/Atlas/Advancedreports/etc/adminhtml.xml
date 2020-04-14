@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Atlas Extensions
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Atlas Commercial License
+ * that is available through the world-wide-web at this URL:
+ *
+ * @copyright   Copyright (c) 2015 Atlas Extensions
+ * @license     Commercial
+ */
+-->
+<config>
+    <menu>
+    <general translate="title" module="advancedreports">
+                <title>Atlas</title>
+                <sort_order>71</sort_order>
+           
+            <children>
+                <revenue translate="title" module="advancedreports">
+                    <title>Advanced Reports</title>
+                    <sort_order>90</sort_order>
+            
+                    <children>
+                        <orders translate="title" module="advancedreports" >
+                            <title>Revenue Report</title>
+                            <sort_order>1</sort_order>
+                            <action>advancedreports/report_revenue/orders</action>
+                        </orders>
+                        <product translate="title" module="advancedreports" >
+                            <title>Product Revenue</title>
+                            <sort_order>2</sort_order>
+                            <action>advancedreports/report_revenue/product</action>
+                        </product>
+                    </children>
+                </revenue>
+            </children>
+        </general>  
+	
+    </menu>
+    <acl>
+        <resources>
+         		<all>
+                    <title>Allow Everything</title>
+                </all>
+            <admin>
+                <children>
+					<general translate="title" module="advancedreports">
+						<title>Atlas</title>
+						<sort_order>71</sort_order>
+						
+						<children>
+							<revenue translate="title" module="advancedreports">
+							<title>Advanced Reports</title>
+							<sort_order>90</sort_order>
+							
+							<children>
+								<orders translate="title" module="advancedreports" >
+									<title>Revenue Report</title>
+									<sort_order>1</sort_order>
+									<action>advancedreports/report_revenue/orders</action>
+								</orders>
+								<product translate="title" module="advancedreports" >
+									<title>Product Revenue</title>
+									<sort_order>2</sort_order>
+									<action>advancedreports/report_revenue/product</action>
+								</product>
+							</children>
+							</revenue>
+						</children>
+					</general>  
+					
+					 <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <general translate="title" module="advancedreports">
+                                            <title>General</title>
+                                        </general>
+                                        <atlas_advancedreports>
+                                            <title>Contact Us</title>
+                                        </atlas_advancedreports>	
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+	           </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

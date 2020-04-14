@@ -1,0 +1,206 @@
+<?php
+$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+$catnamep='Dessert Recipes';
+$categories = Mage::getModel('catalog/category')
+			->getCollection()
+			->addAttributeToSelect('name')
+			->addAttributeToSelect('url_key')
+			->addAttributeToSort('path', 'asc')
+			->addFieldToFilter('is_active', array('eq'=>'1'))
+			->load()
+			->toArray();
+$io=0;
+foreach ($categories as $kkr ) {
+
+  $name[$io]=$kkr["name"];
+  $url[$io]=$kkr["url_key"];
+  
+  $io++;
+
+}
+
+// print_r($rows2gks);
+					 
+?>
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/AppetizerPhoto.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;">
+
+<select id="rep-snack" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="snack" onchange="gotor('snack');"> <option value="">Select Recipe</option> 
+<?php 
+for($j=0;$j<=$io;$j++) {
+    $mystring = $name[$j];
+    $temp=explode("- Appetizer/Snack Recipes",$mystring);
+	$oop=sizeof($temp);
+	if($oop>=2)
+	{
+?>
+<option value="http://www.prestofreshgrocery.com/<?php echo $url[$j]; ?>.html"><?php echo $temp[0]; ?></option>
+<?php
+  }
+}
+?>
+ </select>
+
+</div>
+</div>
+
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/BreakfastRecipes.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;">
+
+<select id="rep-break" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="break" onchange="gotor('break');"> <option value="">Select Recipe</option> 
+<?php 
+for($j=0;$j<=$io;$j++) {
+    $mystring = $name[$j];
+    $temp=explode("- Breakfast Recipes",$mystring);
+	$oop=sizeof($temp);
+	if($oop>=2)
+	{
+?>
+<option value="http://www.prestofreshgrocery.com/<?php echo $url[$j]; ?>.html"><?php echo $temp[0]; ?></option>
+<?php
+  }
+}
+?> </select>
+
+</div>
+</div>
+
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/BBQrecipeslogo.png" alt="" width="350" height="260" border="0" /></a>
+
+<div style="margin-top: 10px;">
+
+<select id="rep-grill" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="grill" onchange="gotor('grill');"> <option value="">Select Recipe</option> 
+<?php 
+for($j=0;$j<=$io;$j++) {
+    $mystring = $name[$j];
+    $temp=explode("- Grilling/BBQ Recipes",$mystring);
+	$oop=sizeof($temp);
+	if($oop>=2)
+	{
+?>
+<option value="http://www.prestofreshgrocery.com/<?php echo $url[$j]; ?>.html"><?php echo $temp[0]; ?></option>
+<?php
+  }
+}
+?> </select>
+
+</div>
+
+</div>
+
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/DessertsLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;">
+
+<select id="rep-desert" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="desert" onchange="gotor('desert');"> <option value="">Select Recipe</option> 
+<?php 
+for($j=0;$j<=$io;$j++) {
+    $mystring = $name[$j];
+    $temp=explode("- Dessert Recipes",$mystring);
+	$oop=sizeof($temp);
+	if($oop>=2)
+	{
+?>
+<option value="http://www.prestofreshgrocery.com/<?php echo $url[$j]; ?>.html"><?php echo $temp[0]; ?></option>
+<?php
+  }
+}
+?> </select>
+
+</div>
+</div>
+
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/DinnerRecipesLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;"><select id="rep-dinner" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="dinner" onchange="gotor('dinner');"> <option value="">Select Recipe</option> 
+<?php 
+for($j=0;$j<=$io;$j++) {
+    $mystring = $name[$j];
+    $temp=explode("- Dinner Recipes",$mystring);
+	$oop=sizeof($temp);
+	if($oop>=2)
+	{
+?>
+<option value="http://www.prestofreshgrocery.com/<?php echo $url[$j]; ?>.html"><?php echo $temp[0]; ?></option>
+<?php
+  }
+}
+?> 
+</select></div>
+</div>
+
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/HealthyRecipeLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;"><select id="rep-pp" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="pp" onchange="gotor('pp');"> <option value="">Select Recipe</option> 
+<?php 
+for($j=0;$j<=$io;$j++) {
+    $mystring = $name[$j];
+    $temp=explode("- Produce/Healthy Recipes",$mystring);
+	$oop=sizeof($temp);
+	if($oop>=2)
+	{
+?>
+<option value="http://www.prestofreshgrocery.com/<?php echo $url[$j]; ?>.html"><?php echo $temp[0]; ?></option>
+<?php
+  }
+}
+?> 
+</select></div>
+</div>
+
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/RecipeWinnerLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;"><select id="rep-winner" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="winner" onchange="gotor('winner');"> <option value="">Select Recipe</option>
+
+ <?php 
+for($j=0;$j<=$io;$j++) {
+    $mystring = $name[$j];
+    $temp=explode("- Winner Recipes",$mystring);
+	$oop=sizeof($temp);
+	if($oop>=2)
+	{
+?>
+<option value="http://www.prestofreshgrocery.com/<?php echo $url[$j]; ?>.html"><?php echo $temp[0]; ?></option>
+<?php
+  }
+}
+?> 
+ 
+ </select></div>
+</div>
+
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/SoupStewRecipesLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;"><select id="rep-soup" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="soup" onchange="gotor('soup');"> <option value="">Select Recipe</option>
+
+ <?php 
+for($j=0;$j<=$io;$j++) {
+    $mystring = $name[$j];
+    $temp=explode("- Soup/Stew Recipes",$mystring);
+	$oop=sizeof($temp);
+	if($oop>=2)
+	{
+?>
+<option value="http://www.prestofreshgrocery.com/<?php echo $url[$j]; ?>.html"><?php echo $temp[0]; ?></option>
+<?php
+  }
+}
+?> 
+ 
+ </select></div>
+</div>
+
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/SideDishRecipeLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;"><select id="rep-side" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="side" onchange="gotor('side');"> <option value="">Select Recipe</option>
+
+ <?php 
+for($j=0;$j<=$io;$j++) {
+    $mystring = $name[$j];
+    $temp=explode("- Side Dish Recipes",$mystring);
+	$oop=sizeof($temp);
+	if($oop>=2)
+	{
+?>
+<option value="http://www.prestofreshgrocery.com/<?php echo $url[$j]; ?>.html"><?php echo $temp[0]; ?></option>
+<?php
+  }
+}
+?> 
+ 
+ </select></div>
+</div>

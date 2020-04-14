@@ -1,0 +1,48 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php if ($this->isPossibleOnepageCheckout()):?>
+    
+    <?php
+	$cart = Mage::getSingleton('checkout/session');
+	$g_total = $cart->getQuote()->getGrandTotal();
+	$is_min_error = false;
+	$is_disabled = $this->isDisabled();
+	if($g_total < 50){
+		$is_min_error = true;
+		$is_disabled = false;
+		$des = Mage::getStoreConfig('sales/minimum_order/description');
+	?>
+    	<div class="popup-flexi" style="display:none; left:auto; margin-left:-100px; margin-top:-191px; top:auto; width:260px; background-color:#FFF2F2; border:3px solid #FF0000;"><h4 style="color:#FF0000">Minimum Order Amount Error!</h4><p style="color:#FF0000"><?php echo $des?></p><div class="popup-action"><button type="button" class="button" style="float:right;" onclick="accepted_min()"><span>Ok</span></button></div></div>
+    <?php }?>
+    
+    <button type="button" title="<?php echo $this->__('Proceed to Checkout') ?>" class="button btn-proceed-checkout btn-checkout<?php if ($this->isDisabled()):?> no-checkout<?php endif; ?> o-button"<?php if ($is_disabled):?> disabled="disabled"<?php endif; ?> <?php if($is_min_error){?> onclick="jQuery('.popup-flexi').show(); return false;" <?php }else{?>onclick="window.location='<?php echo $this->getCheckoutUrl() ?>';"<?php }?>><span><span><?php echo $this->__('Proceed to Checkout') ?></span></span></button>
+<?php endif?>
+<script type="text/javascript">
+function accepted_min(){
+	jQuery('.popup-flexi').hide();
+}
+</script>

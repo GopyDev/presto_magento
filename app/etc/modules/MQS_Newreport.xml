@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <MQS_Newreport>
+            <active>true</active>
+            <codePool>local</codePool>
+        </MQS_Newreport>
+    </modules>
+</config>

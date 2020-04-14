@@ -1,0 +1,192 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?> 
+<?php $_invoice = $this->getInvoice() ?>
+<?php $_order   = $this->getOrder() ?>
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:20px">
+    <thead>
+		<tr>
+            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px;padding:5px 9px 6px 9px;line-height:1em">Delivery Information:</th>
+            <th width="10"></th>
+            
+		</tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #eaeaea;border-bottom:1px solid #eaeaea;border-right:1px solid #eaeaea">
+            <?php       
+					 
+						$resource = Mage::getSingleton('core/resource');
+					$readConnection = $resource->getConnection('core_read');
+					$table = $resource->getTableName('shipping_delivery_window');
+					$query = "select * from mg_shipping_delivery_window where order_number ='".$_order->getRealOrderId()."'";
+					 $result = $readConnection->fetchAll($query);
+				foreach($result as $row ){
+				
+						$a = explode('|',$row['window']);
+						$array = sizeof($a);
+						if($array == '2'){
+						$a[1];
+							$date = str_replace('_','/',$a[1]);
+							list($dd,$mm,$yy) = explode("/", $date); 
+							$yy = substr($yy,2,4);
+							echo '<strong>Delivery date </strong>: '.$mm.'/'.$dd.'/'.$yy;	
+							echo '<br />';	
+							$a[0];
+							$time = str_replace('_',':',$a[0]);
+							$time1 = str_replace('pm:','pm - ',$time);
+							echo '<strong>Delivery Time </strong>: '.$time1;
+							
+						} else{
+							$row['window'];
+							$date = str_replace('_','/',$row['window']);
+							list($dd,$mm,$yy) = explode("/", $date);  
+							$yy = substr($yy,2,4);
+							echo '<strong>Delivery date </strong>: '. $mm.'/'.$dd.'/'.$yy;			
+							}
+							}
+							 //End Delivery date
+				?>
+            </td>
+            <td>&nbsp;</td>
+            
+        </tr>
+        <?php //if($result[0]['unattended_shipping'] == 'yes'){?>
+        <tr><td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #eaeaea;border-bottom:1px solid #eaeaea;border-right:1px solid #eaeaea"><strong>Unattended Shipping</strong>
+        <?php //print_r($result)?>
+        <label><?php echo $result[0]['unattended_shipping']?></label></td></tr><?php //} ?>
+	</tbody>
+</table>
+<?php if ($_invoice && $_order): ?>
+
+<table cellspacing="0" cellpadding="0" border="0" width="650" style="border:1px solid #EAEAEA;">
+    <thead>
+        <tr>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Item') ?></th>
+<?php /*?>            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Sku') ?></th>
+<?php */?>            <th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Qty') ?></th>
+            <th align="right" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Subtotal') ?></th>
+        </tr>
+    </thead>
+
+    <?php $i=0; foreach ($_invoice->getAllItems() as $_item): ?>
+    <?php if($_item->getOrderItem()->getParentItem()) continue; else $i++; ?>
+    <tbody<?php echo $i%2 ? ' bgcolor="#F6F6F6"' : '' ?>>
+        <?php echo $this->getItemHtml($_item) ?>
+    </tbody>
+    <?php endforeach; ?>
+
+    <tfoot>
+    <?php $_order   = $this->getOrder() ?>
+     <tr bgcolor="#F6F6F6">
+     	<td align="right" colspan="2" style="font-size:11px;border-bottom:1px dotted #cccccc;">Sub Total </td>
+     	<td align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"><?php echo '$'.number_format($_order['subtotal'],2);?></td>
+     </tr>
+     <tr bgcolor="#F6F6F6">
+     	<td align="right" colspan="2" style="font-size:11px;border-bottom:1px dotted #cccccc;">Delivery & Handling </td>
+     	<td align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"><?php echo '$'.number_format($_order['base_shipping_amount'],2);?></td>
+     </tr>
+     <?php
+						  $_order = $this->getOrder();
+						  $quote_id = $_order->getQuoteId();
+						  $resource = Mage::getSingleton('core/resource');
+						  $readConnection = $resource->getConnection('core_read');
+						  $table = $resource->getTableName('shipping_delivery_window');
+						  $shipcharge = $readConnection->fetchCol('SELECT shipcharge  FROM ' . $table .' WHERE quote_id LIKE '.$quote_id.'');
+						 
+						?>
+                <?php if($shipcharge[0] != ''){?>
+                
+                <tr  bgcolor="#F6F6F6">
+                    <td align="right" colspan="2" style="font-size:11px;border-bottom:1px dotted #cccccc;">
+                 	Additional Delivery Fee for Overnight Processing
+                    </td>
+                    <td align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"><?php echo '$'.number_format($shipcharge[0],2);?></td>
+                </tr>
+                <?php } ?>
+     <?php //if($_order['base_shipping_tax_amount'] != '0.0000'){?>
+     <tr bgcolor="#F6F6F6">
+         <td align="right" colspan="2" style="font-size:11px;border-bottom:1px dotted #cccccc;">Tax  </td>
+         <td align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"> <?php echo '$'.number_format($_order['base_tax_amount'],2);?></td>
+	 </tr>
+     <?php //} ?>
+
+     
+     	<?php  $table1 = $resource->getTableName('shipping_delivery_window');
+	 $result1 = $readConnection->fetchCol('SELECT discount_amount  FROM ' . $table1 .' WHERE quote_id LIKE '.$quote_id.'');
+	 //if($result1[0] != '' ){
+		 if(($_order->getData('base_discount_amount') != '0.0000')){ ?>
+             <tr bgcolor="#F6F6F6">
+                <?php if($_order->getCouponCode()){?>
+                <td align="right" colspan="2" style="font-size:11px;padding:3px 0px;border-bottom:1px dotted #cccccc;"> <?php echo Mage::helper('sales')->__('Delivery Discount (%s)', $_order->getCouponCode()) ?></td>
+                <?php } else {?>
+                 <td align="right" colspan="2" style="font-size:11px;padding:3px 0px;border-bottom:1px dotted #cccccc;"> <?php echo Mage::helper('sales')->__('Delivery Discount ') ?></td>
+                <?php } ?>
+                <td  align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"><?php $discountammount = number_format($_order->getData('base_discount_amount'),2);
+				 $find = strpos($discountammount,'-');
+				 if ($find === false) {
+				
+					 echo  '-$'.$discountammount;
+					} else {
+						 echo str_replace('-','-$',$discountammount);
+					}?>
+                     </td>
+               
+             </tr>	 
+	 <?php }?>
+	  <!----- Rewards Point Discount ------>
+		 <!--	<tr bgcolor="#F6F6F6">
+     	<td align="right" colspan="2" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;">Point Discount:</td>
+        <td  align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;">
+		    <?php  		
+			
+			// $order->getRewardpointsEarn();
+			// $order->getRewardpointsDiscount();
+			//echo Mage::helper('rewardpoints/point')->getImageHtml(true);		
+
+			$p = $this->helper('rewardpoints/point')->format($_order->getRewardpointsEarn());
+		    $d = $this->helper('rewardpoints/point')->format($_order->getRewardpointsDiscount());
+			$rewardeddiscount = '$'.number_format($d,2);
+			//echo $p;
+			//echo $rewardeddiscount;
+           		
+		?>
+        </td>		
+		
+	     </tr> -->
+      <!------- ------>
+	 
+	 
+  	 <tr bgcolor="#F6F6F6">
+     	<td align="right" colspan="2" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;">Grand Total </td>
+		<td align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #cccccc;"><?php echo '$'.number_format($_order['base_total_invoiced'],2);?></td>
+     </tr>
+      
+		<?php //echo $_order->formatPrice($_invoice->getGrandTotal())  ?>
+        <?php echo $this->getChildHtml('invoice_totals')?>
+    </tfoot>
+</table>
+<?php endif; ?>

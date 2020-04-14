@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <pincode_adminhtml_pincode_index>
+        <reference name="content">
+            <block type="pincode/adminhtml_pincode" name="pincode" />
+        </reference>
+    </pincode_adminhtml_pincode_index>
+   <action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params></params></action>
+	<action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+	<action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+	<block type="core/html_calendar" name="head.calendar" as="calendar" template="page/js/calendar.phtml"></block>
+</layout>

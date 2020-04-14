@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * AShop Slider
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the AccessshopThemes.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.accessshopThemes.com
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @copyright 	Copyright (c) 2015 Accessshop (http://www.accessshopThemes.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Accessshop Block
+ * 
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @author  	AccessShop Developer
+ */
+-->
+<layout version="0.1.0">
+    <slidermanager_adminhtml_slidermanager_index>
+        <reference name='head'>
+            <action method="setTitle" translate="title"><title>Slidermanager | Mangento Admin</title></action>
+        </reference>
+        <reference name="content">
+            <block type="slidermanager/adminhtml_slidermanager" name="slidermanager" />
+        </reference>
+    </slidermanager_adminhtml_slidermanager_index>
+    <slidermanager_adminhtml_bannermanager_index>
+        <reference name='head'>
+            <action method="setTitle" translate="title"><title>Slidermanager | Mangento Admin</title></action>
+        </reference>
+        <reference name="content">
+            <block type="slidermanager/adminhtml_bannermanager" name="bannermanager" />
+        </reference>
+    </slidermanager_adminhtml_bannermanager_index>
+    <slidermanager_adminhtml_bannermanager_custom>      
+        <block type="core/text_list" name="root">           
+            <block type="slidermanager/adminhtml_bannermanager_edit_tab_custom" name="slider.edit.tab.custom"/>                                          
+            <block type="adminhtml/widget_grid_serializer" name="related_grid_serializer">                
+                <action method="initSerializerBlock">
+                    <grid_block_name>slider.edit.tab.custom</grid_block_name>
+                    <data_callback>getSelectedSliderBanners</data_callback>
+                    <hidden_input_name>slider_banner</hidden_input_name>
+                    <reload_param_name>banner</reload_param_name>
+                </action>                
+                <action method="addColumnInputName">
+                    <input_name>order_banner_slider</input_name>
+                </action>
+            </block>         
+        </block>                                 
+    </slidermanager_adminhtml_bannermanager_custom>
+    <slidermanager_adminhtml_bannermanager_customgrid>        
+        <block type="core/text_list" name="root" output="toHtml">            
+            <block type="slidermanager/adminhtml_bannermanager_edit_tab_custom" name="slider.edit.tab.custom"/>            
+        </block>
+    </slidermanager_adminhtml_bannermanager_customgrid>
+</layout>

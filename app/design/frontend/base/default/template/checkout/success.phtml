@@ -1,0 +1,227 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<!-- <ul class="opc-progress opc-success" id="opc_checkout">
+	<li class="opc-checkout-cart-active"><strong>Success</strong></li>
+</ul>
+<br clear="all" />
+<div class="page-title">
+    <h1><?php echo $this->__('Thank You!') ?></h1>
+</div> -->
+<br />
+<br  />
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+
+<?php if ($this->getOrderId()):?>
+<?php if ($this->getCanViewOrder()) :?>
+    <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+<?php  else :?>
+    <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
+<?php endif;?>
+    <p><?php echo $this->__('You will receive an order confirmation email with details of your order.') ?></p>
+<?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
+    <p>
+        <?php // echo $this->__('We look forward to seeing you soon!') ?>
+        <?php echo $this->getChildHtml() ?>
+    </p>
+<?php endif;?>
+<?php endif;?>
+
+<?php if ($this->getAgreementRefId()): ?>
+    <p><?php echo $this->__('Your billing agreement # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getAgreementUrl()), $this->escapeHtml($this->getAgreementRefId())))?></p>
+<?php endif;?>
+
+<?php if ($profiles = $this->getRecurringProfiles()):?>
+<?php
+	// add this code for subscription product notifier
+	foreach($profiles as $cust_profile):
+				
+				$connection = Mage::getModel('core/resource')->getConnection('core_read');
+				
+				$cust_query1 = "select amount FROM `mg_aw_sarp2_profile` where  reference_id = '".$cust_profile->reference_id."' ";
+				
+				$cust_fetch_result1=$connection->fetchAll($cust_query1);
+				if($cust_fetch_result1[0]['amount'] == '89')
+				{
+					$templateId = 12;
+					$sender = Array('name' => Mage::getStoreConfig('trans_email/ident_general/name'),
+					'email' => Mage::getStoreConfig('trans_email/ident_general/email'));
+					$store = Mage::app()->getStore();
+					$vars = Array('my_var' => $my_var,'another_var' => 12);
+					$translate  = Mage::getSingleton('core/translate');
+					$customer = Mage::getSingleton('customer/session')->getCustomer();
+					$email = $customer->getEmail();     
+					Mage::getModel('core/email_template')->sendTransactional($templateId,
+                                                         $sender,
+														 $email,
+                                                         $name,
+                                                         $vars,
+                                                         $store->getId()); 
+
+					$translate->setTranslateInline(true);
+					
+				}
+				else
+				{
+					
+					$templateId = 13;
+					$sender = Array('name' => Mage::getStoreConfig('trans_email/ident_general/name'),
+					'email' => Mage::getStoreConfig('trans_email/ident_general/email'));
+					$store = Mage::app()->getStore();
+					$vars = Array('my_var' => $my_var,'another_var' => 13);
+					$translate  = Mage::getSingleton('core/translate');
+					$customer = Mage::getSingleton('customer/session')->getCustomer();
+					$email = $customer->getEmail();     
+					Mage::getModel('core/email_template')->sendTransactional($templateId,
+                                                         $sender,
+														 $email,
+                                                         $name,
+                                                         $vars,
+                                                         $store->getId()); 
+
+					 $translate->setTranslateInline(true);
+					
+				}
+				
+		endforeach;
+
+
+?>
+<p><?php echo $this->__('Your recurring payment profiles:'); ?></p>
+<ul class="disc">
+<?php foreach($profiles as $profile):?>
+	<?php
+	/********************************
+		Update Subscription
+		Date: 26/10/2015
+	/********************************/
+				$connection = Mage::getModel('core/resource')->getConnection('core_read');
+				
+				$query1 = "select * FROM `mg_aw_sarp2_profile` where  reference_id = '".$profile->reference_id."' ";
+				$fetch_result1=$connection->fetchAll($query1);
+				
+				$customer_id = $fetch_result1[0]['customer_id'];
+				
+				$query2 = "select * FROM `mg_aw_sarp2_profile` where  customer_id = ".$customer_id." AND status LIKE 'active' ";
+				$fetch_result2=$connection->fetchAll($query2);
+				
+				$CountRecord=count($fetch_result2);
+				
+				
+				if($CountRecord ==2){
+					foreach($fetch_result2 as $result){
+						if( $result['amount'] == '89'){
+							$query4 = "Update mg_aw_sarp2_profile set status = 'suspended' where  customer_id = ".$customer_id." AND status LIKE 'active' AND amount = 89 ";
+								$result4 = $connection->query($query4);
+						}
+					}
+				}
+	
+	?>
+<?php $profileIdHtml = ($this->getCanViewProfiles() ? sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getProfileUrl($profile)), $this->escapeHtml($this->getObjectData($profile, 'reference_id'))) : $this->escapeHtml($this->getObjectData($profile, 'reference_id')));?>
+    <li><?php echo $this->__('Payment profile # %s: "%s".', $profileIdHtml, $this->escapeHtml($this->getObjectData($profile, 'schedule_description')))?></li>
+<?php endforeach;?>
+</ul>
+<?php endif;?>
+
+<div style="margin-top:20px;color:green;">
+<div>
+You can also get the following items delivered from our partners! Click below for more information.
+</div>
+</div>
+
+<div style="margin-top:20px;color:green;text-align:center;">
+
+<a href="http://click.linksynergy.com/fs-bin/click?id=XrzmaobMNRc&offerid=209195.10001633&type=4&subid=0"><IMG alt="wine.com" border="0" src="http://cache.wine.com/images/affiliates/linkshare/728x90_90u20.jpg" width="90%" style="max-width:544px;"></a>
+
+<br/>
+<br/>
+
+<!-- <a href="http://click.linksynergy.com/fs-bin/click?id=XrzmaobMNRc&offerid=349436.106&subid=0&type=4"><IMG border="0"   alt="FTD.com" src="http://ad.linksynergy.com/fs-bin/show?id=XrzmaobMNRc&bids=349436.106&subid=0&type=4&gridnum=1" width="90%" style="max-width:544px;" ></a> -->
+
+
+<!--<a href="http://click.linksynergy.com/fs-bin/click?id=XrzmaobMNRc&offerid=327415.10000627&subid=0&type=4&LSNSUBSITE=LSNSUBSITE"><img border="0"   alt="GourmetGiftBaskets.com" src="http://ad.linksynergy.com/fs-bin/show?id=XrzmaobMNRc&bids=327415.10000627&subid=0&type=4&gridnum=0"   style="max-width:544px;" ></a>-->
+
+<a href="http://click.linksynergy.com/fs-bin/click?id=XrzmaobMNRc&offerid=327415.10000724&subid=0&type=4&LSNSUBSITE=LSNSUBSITE"><IMG border="0"   alt="GourmetGiftBaskets.com" src="http://ad.linksynergy.com/fs-bin/show?id=XrzmaobMNRc&bids=327415.10000724&subid=0&type=4&gridnum=1"></a>
+
+
+
+</div>
+<div class="buttons-set">
+    <button type="button" class="button o-button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+</div>
+<?php 
+$b=0;
+$order_id = $this->escapeHtml($this->getOrderId()); 
+$order = Mage::getModel('sales/order')->load($order_id, 'increment_id');
+$ordered_items = $order->getAllItems();
+foreach($ordered_items as $item){    
+
+       
+		if($item->getQtyOrdered()>10)
+		{
+				$Proid = $item->getItemId(); //product id     
+				$Sku = $item->getSku();     
+				$Qty = $item->getQtyOrdered();    
+				$Name =  $item->getName(); 
+				$b=1;
+		}
+
+} 
+
+ 
+  if($b==1)
+  {
+             $to = "support@prestofreshgrocery.com";
+			 $subject = "Large Qty Order no. ".$order['increment_id'];
+			 $txt = "Customer :".$order["customer_firstname"]." ".$order['customer_lastname']."<br/>";
+			 
+			 
+			 foreach($ordered_items as $item){    
+
+					if($item->getQtyOrdered()>10)
+					{
+					        
+						    $txt.="Order Items :<br/>";
+							
+							$txt.= "<br/>";
+							$txt.= "<br/>";
+							
+							$txt.= "Item : ".$item->getName()."<br/>";
+							$txt.= "Qty : ".$item->getQtyOrdered()."<br/>";
+							$txt.= "<br/>";
+					}
+
+              } 
+
+			 
+			 $headers = "MIME-Version: 1.0" . "\r\n";
+             $headers.= "Content-type:text/html;charset=UTF-8" . "\r\n";
+			 $headers.= "From: Large Order@prestofreshgrocery.com" . "\r\n";
+			 mail($to,$subject,$txt,$headers);
+  }
+?> 

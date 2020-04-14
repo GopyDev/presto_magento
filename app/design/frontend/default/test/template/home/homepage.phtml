@@ -1,0 +1,106 @@
+<style>
+.newssidebar {
+   border-radius: 5px;
+    border-top: 5px solid #CCCCCC;
+    box-shadow: 0 3px 3px #999999;
+    clear: both;
+    left: 25px;
+    margin-left: 10px;
+    margin-top: 20px;
+    padding: 10px;
+    position: relative;
+    top: 20px;
+    width: 211px;}
+	.clcopyright{ display:none}
+
+.company-block > h1  , .newssidebar h2{
+    border-bottom: 1px solid #CCCCCC;
+    padding-bottom: 5px;
+}
+.company-block {
+    border-radius: 5px;
+    border-right: 5px none;
+    border-top: 5px solid #CCCCCC;
+    box-shadow: 0 3px 3px #999999;
+    left: 35px;
+    padding: 10px;
+    position: relative;
+    top: 39px;
+    width: 211px;
+}
+.company-block .block-content , .newssidebar .news-item{
+    padding-top: 10px;
+}
+</style>
+<?php
+$rootcatId= Mage::app()->getStore()->getRootCategoryId();
+$categories = Mage::getModel('catalog/category')->getCollection()->addFieldToFilter('include_in_menu', 1)->addAttributeToFilter('level',2)->addAttributeToSelect('*');
+
+$featured = Mage::getModel('catalog/product')->getCollection()->addAttributeToSelect('entity_id')->addAttributeToFilter('featured', true);
+$special = Mage::getModel('catalog/product')->getCollection()->addAttributeToSelect('entity_id')->addAttributeToFilter('special', true);
+
+$p_helper = $this->helper('catalog/image');
+?>
+<div class="home-left-col">
+	<?php echo $this->getLayout()->createBlock('bannerslider/bannerslider')->setTemplate('bannerslider/bannerslider.phtml')->toHtml();?>
+	
+    <div class="home-cat">
+	<ul>
+    	<?php foreach($categories as $category){?>
+        	<li><span></span><a href="<?php echo $category->getUrl()?>"><?php echo $category->getName()?></a></li>
+        <?php }?>
+    </ul>
+    <br clear="all" />
+    <div class="prod-bottom">
+	<?php foreach($featured as $product){?>
+    	<?php $p = Mage::getModel('catalog/product')->load($product->getId())?>
+        <div class="prod-tab">
+    		<span class="prod-img"><a title="<?php echo $p->getName()?>" href="<?php echo $p->getProductUrl()?>"><img src="<?php echo $p_helper->init($p, 'image', $p->getImage())->resize(220, 146)?>" alt="<?php echo $p->getName()?>" /></a></span>
+        	<span class="prod-cont">
+        		<span class="prod-name"><a href="<?php echo $p->getProductUrl()?>"><?php echo $p->getName()?></a></span>
+        		<span class="prod-price">
+				<?php
+				$product_block = new Mage_Catalog_Block_Product;
+				echo $product_block->getPriceHtml($p);
+				unset($product_block);
+				?>
+                </span>
+        	</span>
+    	</div>
+    <?php }?>
+	</div>
+</div>
+</div>
+
+<div class="sidebar-right">
+	<?php echo $this->getLayout()->getBlock("cart_sidebar")->toHtml()?>
+	<?php echo $this->getLayout()->createBlock("sales/reorder_sidebar")->setTemplate("sales/reorder/sidebar.phtml")->toHtml()?>
+    <div class="newssidebar">
+   
+    <?php echo $this->getLayout()->createBlock('clnews/news')->setTemplate('clnews/list.phtml')->toHtml(); ?>
+ 
+    </div>
+    <div class="c
+	<?php /*?><?php echo $this->getLayout()->createBlock("sales/order_recent")->setTemplate("home/recent-orders.phtml")->toHtml()?><?php */?>
+	<?php //echo $this->getLayout()->createBlock("reports/product_viewed")->setData('page_size', 15)->setTemplate("reports/home_product_viewed.phtml")->toHtml()?>
+</div>
+
+<?php /*?><div class="sidebar-right">
+	<div class="col-sidebar specials">
+		<h1>Specials</h1>
+		<?php foreach($special as $product){?>
+	    	<?php $p = Mage::getModel('catalog/product')->load($product->getId())?>
+	        <div class="row-1">
+	        	<a title="<?php echo $p->getName()?>" href="<?php echo $p->getProductUrl()?>"><img src="<?php echo $p_helper->init($p, 'image', $p->getImage())->resize(188, 141)?>" alt="<?php echo $p->getName()?>" /></a>
+				<span class="prod-name"><a href="<?php echo $p->getProductUrl()?>"><?php echo $p->getName()?></a></span>
+				<?php
+				$product_block = new Mage_Catalog_Block_Product;
+				echo $product_block->getPriceHtml($p);
+				unset($product_block);
+				?>
+				<span class="price-label">Old price:<span class="old-price">$30.00</span></span>
+				<span class="price-label">Price:<span class="new-price">$27.00</span></span>
+			</div>
+	    <?php }?>
+	</div>
+</div><?php */?>

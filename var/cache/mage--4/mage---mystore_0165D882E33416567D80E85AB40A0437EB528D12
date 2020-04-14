@@ -1,0 +1,585 @@
+
+<div class="nav-bar">
+<!-- menu start -->
+<ul id="nav">
+<li  class=" active  level0"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/dashboard/index/key/$dashboard/index$/"   class="active"><span>Dashboard</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Sales</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_order/index/key/$sales_order/index$/"   class=""><span>Orders</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_invoice/index/key/$sales_invoice/index$/"   class=""><span>Invoices</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_shipment/index/key/$sales_shipment/index$/"   class=""><span>Shipments</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_creditmemo/index/key/$sales_creditmemo/index$/"   class=""><span>Credit Memos</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Archive Sales</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_archive/order/key/$sales_archive/order$/"   class=""><span>Orders</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_archive/invoice/key/$sales_archive/invoice$/"   class=""><span>Invoices</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_archive/creditmemo/key/$sales_archive/creditmemo$/"   class=""><span>Credit Memos</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_archive/shipment/key/$sales_archive/shipment$/"   class=""><span>Shipments</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Backups Deleted Sales</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_backup/sales/key/$sales_backup/sales$/"   class=""><span>Sales</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_backup/comments/key/$sales_backup/comments$/"   class=""><span>Comments</span></a>
+</li>
+</ul>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_transactions/index/key/$sales_transactions/index$/"   class=""><span>Transactions</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_recurring_profile/index/key/$sales_recurring_profile/index$/"   class=""><span>Recurring Profiles (beta)</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_billing_agreement/index/key/$sales_billing_agreement/index$/"   class=""><span>Billing Agreements</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/checkout_agreement/index/key/$checkout_agreement/index$/"   class=""><span>Terms and conditions</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent last level1"> <a href="#"  onclick="return false" class=""><span>Tax</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/tax_rule/index/key/$tax_rule/index$/"   class=""><span>Manage Tax Rules</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/tax_rate/index/key/$tax_rate/index$/"   class=""><span>Manage Tax Zones &amp; Rates</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/tax_rate/importExport/key/$tax_rate/importExport$/"   class=""><span>Import / Export Tax Rates</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/tax_class_customer/index/key/$tax_class_customer/index$/"   class=""><span>Customer Tax Classes</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/tax_class_product/index/key/$tax_class_product/index$/"   class=""><span>Product Tax Classes</span></a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Catalog</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/catalog_product/index/key/$catalog_product/index$/"   class=""><span>Manage Products</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/ajaxifiedProductEdit/index/key/$ajaxifiedProductEdit/index$/"   class=""><span>Ajaxified Product Edit</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/catalog_category/index/key/$catalog_category/index$/"   class=""><span>Manage Categories</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Attributes</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/catalog_product_attribute/index/key/$catalog_product_attribute/index$/"   class=""><span>Manage Attributes</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/catalog_product_set/index/key/$catalog_product_set/index$/"   class=""><span>Manage Attribute Sets</span></a>
+</li>
+</ul>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/urlrewrite/index/key/$urlrewrite/index$/"   class=""><span>URL Rewrite Management</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/catalog_search/index/key/$catalog_search/index$/"   class=""><span>Search Terms</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Reviews and Ratings</span></a>
+<ul >
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level2"> <a href="#"  onclick="return false" class=""><span>Customer Reviews</span></a>
+<ul >
+<li  class="  level3"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/catalog_product_review/pending/key/$catalog_product_review/pending$/"   class=""><span>Pending Reviews</span></a>
+</li>
+<li  class="  last level3"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/catalog_product_review/index/key/$catalog_product_review/index$/"   class=""><span>All Reviews</span></a>
+</li>
+</ul>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/rating/index/key/$rating/index$/"   class=""><span>Manage Ratings</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Tags</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/tag/index/key/$tag/index$/"   class=""><span>All Tags</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/tag/pending/key/$tag/pending$/"   class=""><span>Pending Tags</span></a>
+</li>
+</ul>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sitemap/index/key/$sitemap/index$/"   class=""><span>Google Sitemap</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Mobile</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/mobile/index/key/$mobile/index$/"   class=""><span>Manage Apps</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/mobile/history/key/$mobile/history$/"   class=""><span>Submission History</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/mobile/template/key/$mobile/template$/"   class=""><span>Message Templates</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/mobile/queue/key/$mobile/queue$/"   class=""><span>Message Queue</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Customers</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/customer/index/key/$customer/index$/"   class=""><span>Manage Customers</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="https://www.prestofreshgrocery.com/index.php/ugiftcertadmin/adminhtml_cert/index/key/$adminhtml_cert/index$/"   class=""><span>Gift Certificates</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/ugiftcertadmin/adminhtml_pdf/index/key/$adminhtml_pdf/index$/"   class=""><span>PDF Printout Settings</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/ugiftcertadmin/adminhtml_cert/importing/key/$adminhtml_cert/importing$/"   class=""><span>Gift Certificate Import</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/ugiftcertadmin/adminhtml_cert/report/key/$adminhtml_cert/report$/"   class=""><span>Gift Certificate Report</span></a>
+</li>
+</ul>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/customer_group/index/key/$customer_group/index$/"   class=""><span>Customer Groups</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/customer_online/index/key/$customer_online/index$/"   class=""><span>Online Customers</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Promotions</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/promo_catalog/index/key/$promo_catalog/index$/"   class=""><span>Catalog Price Rules</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/promo_quote/index/key/$promo_quote/index$/"   class=""><span>Shopping Cart Price Rules</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/ajaxcartpro_admin/adminhtml_promo/index/key/$adminhtml_promo/index$/"   class=""><span>AJAX Cart Pro Rules</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Newsletter</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/newsletter_template/index/key/$newsletter_template/index$/"   class=""><span>Newsletter Templates</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/newsletter_queue/index/key/$newsletter_queue/index$/"   class=""><span>Newsletter Queue</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/newsletter_subscriber/index/key/$newsletter_subscriber/index$/"   class=""><span>Newsletter Subscribers</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/newsletter_problem/index/key/$newsletter_problem/index$/"   class=""><span>Newsletter Problem Reports</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Interaktingslider</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/interaktingslider/admin_slide/new/key/$admin_slide/new$/"   class=""><span>Add New Slide</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/interaktingslider/admin_slide/index/key/$admin_slide/index$/"   class=""><span>Manage Slides</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/interaktingslider/admin_position/index/key/$admin_position/index$/"   class=""><span>Slides Positions</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Survey Manager</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/surveymanager/adminhtml_index/index/key/$adminhtml_index/index$/"   class=""><span>Manage Surveys</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/surveymanager/adminhtml_index/questions/key/$adminhtml_index/questions$/"   class=""><span>Manage Questions/Answers</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/details/index/key/$details/index$/"   class=""><span>Survey Report</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>CMS</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/cms_page/index/key/$cms_page/index$/"   class=""><span>Pages</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/cms_block/index/key/$cms_block/index$/"   class=""><span>Static Blocks</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/widget_instance/index/key/$widget_instance/index$/"   class=""><span>Widgets</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/poll/index/key/$poll/index$/"   class=""><span>Polls</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent last level1"> <a href="#"  onclick="return false" class=""><span>FAQ</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/faq/index/key/$faq/index$/"   class=""><span>Manage Items</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/faq_category/index/key/$faq_category/index$/"   class=""><span>Manage Categories</span></a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Reward Points</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/rewardpointsadmin/adminhtml_earning/index/key/$adminhtml_earning/index$/"   class=""><span>Earning Rates</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/rewardpointsadmin/adminhtml_spending/index/key/$adminhtml_spending/index$/"   class=""><span>Spending Rates</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/rewardpointsadmin/adminhtml_transaction/index/key/$adminhtml_transaction/index$/"   class=""><span>Transactions</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/rewardpoints/key/$system_config/edit$/"   class=""><span>Settings</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Subscriptions</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/aw_recurring_admin/adminhtml_subscription_type/index/key/$adminhtml_subscription_type/index$/"   class=""><span>Subscription Types</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/aw_recurring_admin/adminhtml_subscription/index/key/$adminhtml_subscription/index$/"   class=""><span>Manage Subscriptions</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Recurring Profiles</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/aw_recurring_admin/adminhtml_profile/index/status/active/key/$adminhtml_profile/index$/"   class=""><span>Active</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/aw_recurring_admin/adminhtml_profile/index/status/suspended/key/$adminhtml_profile/index$/"   class=""><span>Suspended</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/aw_recurring_admin/adminhtml_profile/index/status/cancelled/key/$adminhtml_profile/index$/"   class=""><span>Cancelled</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/aw_recurring_admin/adminhtml_profile/index/status/all/key/$adminhtml_profile/index$/"   class=""><span>All</span></a>
+</li>
+</ul>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/aw_sarp2/key/$system_config/edit$/"   class=""><span>Configuration</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Requested Zipcode</span></a>
+<ul >
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/zipcode/adminhtml_zipcode/index/key/$adminhtml_zipcode/index$/"   class=""><span>Manage Requested Zipcode</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Testimonials</span></a>
+<ul >
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/testimonials_index/index/key/$testimonials_index/index$/"   class=""><span>Manage Testimonials</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Slidermanager</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/slidermanager/adminhtml_slidermanager/index/key/$adminhtml_slidermanager/index$/"   class=""><span>Manage Banners</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/slidermanager/adminhtml_bannermanager/index/key/$adminhtml_bannermanager/index$/"   class=""><span>Manage Sliders</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="https://www.prestofreshgrocery.com/index.php/gifts/adminhtml_gifts/index/key/$adminhtml_gifts/index$/"   class=""><span>Promotional Items</span></a>
+<ul >
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/gifts/adminhtml_gifts/index/key/$adminhtml_gifts/index$/"   class=""><span>Manage Rules</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Blog</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/blog_admin/manage_blog/new/key/$manage_blog/new$/"   class=""><span>Add Post</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/blog_admin/manage_blog/index/key/$manage_blog/index$/"   class=""><span>Posts</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/blog_admin/manage_comment/index/key/$manage_comment/index$/"   class=""><span>Comments</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/blog_admin/manage_cat/index/key/$manage_cat/index$/"   class=""><span>Categories</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/blog/key/$system_config/edit$/"   class=""><span>Settings</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Banner Slider</span></a>
+<ul >
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/bannerslider/adminhtml_bannerslider/index/key/$adminhtml_bannerslider/index$/"   class=""><span>Manage Banners</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Reports</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/dashreport/key/$adminhtml_sales/dashreport$/"   class=""><span>Dashboard Report</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/reportmanage/key/$adminhtml_sales/reportmanage$/"   class=""><span>Delivery Calendar</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/reportimanager/key/$adminhtml_sales/reportimanager$/"   class=""><span>Employee Report</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/ordrshreport/key/$adminhtml_sales/ordrshreport$/"   class=""><span>Order Support Report</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/ordrshreport5/key/$adminhtml_sales/ordrshreport5$/"   class=""><span>Daily Sales Report</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/proreport/key/$adminhtml_sales/proreport$/"   class=""><span>Request Product Change</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/scat/key/$adminhtml_sales/scat$/"   class=""><span>Sales By Category</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/newreport888/key/$adminhtml_sales/newreport888$/"   class=""><span>Route Plan Work Wave</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/sintax/adminhtml_myform/index/key/$adminhtml_myform/index$/"   class=""><span>Route Plan</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/reportimanage/key/$adminhtml_sales/reportimanage$/"   class=""><span>Specialty Department Report</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/newreport/key/$adminhtml_sales/newreport$/"   class=""><span>Substitute Report</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Jtech Reporting</span></a>
+<ul >
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level2"> <a href="#"  onclick="return false" class=""><span>Profit &amp; Loss Report</span></a>
+<ul >
+<li  class="  level3"> <a href="https://www.prestofreshgrocery.com/index.php/profitlossreport/manage/viewall/key/$manage/viewall$/"   class=""><span>Manage &amp; View Reports</span></a>
+</li>
+<li  class="  last level3"> <a href="https://www.prestofreshgrocery.com/index.php/profitlossreport/manage/viewattribute/key/$manage/viewattribute$/"   class=""><span>Manage Revenue &amp; Expenses</span></a>
+</li>
+</ul>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/marcore/settings/index/key/$settings/index$/"   class=""><span>Settings</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Sales</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_sales/sales/key/$report_sales/sales$/"   class=""><span>Orders</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_sales/tax/key/$report_sales/tax$/"   class=""><span>Tax</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_sales/invoiced/key/$report_sales/invoiced$/"   class=""><span>Invoiced</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_sales/shipping/key/$report_sales/shipping$/"   class=""><span>Delivery</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_sales/refunded/key/$report_sales/refunded$/"   class=""><span>Refunds</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_sales/coupons/key/$report_sales/coupons$/"   class=""><span>Coupons</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/paypal_reports/index/key/$paypal_reports/index$/"   class=""><span>PayPal Settlement Reports</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Sales By Customer</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/salesreport/adminhtml_sales/newreport2/key/$adminhtml_sales/newreport2$/"   class=""><span>Sales By Customer</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/order/index/key/$order/index$/"   class=""><span>Customer Source Report</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/order/index/key/$order/index$/"   class=""><span>Customer Detail Report</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/orders/index/key/$orders/index$/"   class=""><span>Discount Report</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/discount/index/key/$discount/index$/"   class=""><span>Flexible Delivery Report</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Shopping Cart</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_shopcart/product/key/$report_shopcart/product$/"   class=""><span>Products in carts</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_shopcart/abandoned/key/$report_shopcart/abandoned$/"   class=""><span>Abandoned carts</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Products</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_sales/bestsellers/key/$report_sales/bestsellers$/"   class=""><span>Bestsellers</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_product/sold/key/$report_product/sold$/"   class=""><span>Products Ordered</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_product/viewed/key/$report_product/viewed$/"   class=""><span>Most Viewed</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_product/lowstock/key/$report_product/lowstock$/"   class=""><span>Low stock</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Tags</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_tag/customer/key/$report_tag/customer$/"   class=""><span>Customers</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_tag/product/key/$report_tag/product$/"   class=""><span>Products</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_tag/popular/key/$report_tag/popular$/"   class=""><span>Popular</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Reviews</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_review/customer/key/$report_review/customer$/"   class=""><span>Customers Reviews</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_review/product/key/$report_review/product$/"   class=""><span>Products Reviews</span></a>
+</li>
+</ul>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report/search/key/$report/search$/"   class=""><span>Search Terms</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/report_statistics/index/key/$report_statistics/index$/"   class=""><span>Refresh Statistics</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>News</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/clnews/adminhtml_news/new/key/$adminhtml_news/new$/"   class=""><span>Add News Article</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/clnews/adminhtml_news/index/key/$adminhtml_news/index$/"   class=""><span>News Manager</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/clnews/adminhtml_category/index/key/$adminhtml_category/index$/"   class=""><span>Categories</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/clnews/adminhtml_comment/index/key/$adminhtml_comment/index$/"   class=""><span>Comments</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/clnews/key/$system_config/edit$/"   class=""><span>Settings</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Search</span></a>
+<ul >
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/searchindex_index/index/key/$searchindex_index/index$/"   class=""><span>Manage Search Indexes</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/searchlandingpage_page/index/key/$searchlandingpage_page/index$/"   class=""><span>Manage Landing Pages</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/searchsphinx_synonym/index/key/$searchsphinx_synonym/index$/"   class=""><span>Dictionary of synonyms</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/searchsphinx_stopword/index/key/$searchsphinx_stopword/index$/"   class=""><span>Dictionary of stopwords</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/searchindex_validation/index/key/$searchindex_validation/index$/"   class=""><span>Validate Search Results</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/searchindex_report/index/key/$searchindex_report/index$/"   class=""><span>Search Terms</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/searchsphinx/key/$system_config/edit$/"   class=""><span>Settings</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>System</span></a>
+<ul >
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>IWD Extensions</span></a>
+<ul >
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/iwd_ordermanager/key/$system_config/edit$/"   class=""><span>Order Manager</span></a>
+<ul >
+<li  class="  level3"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/confirm/log/key/$confirm/log$/"   class=""><span>Log Operations</span></a>
+</li>
+<li  class="  last level3"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/iwd_ordermanager/key/$system_config/edit$/"   class=""><span>Extension Configuration</span></a>
+</li>
+</ul>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/iwdall/adminhtml_support/index/key/$adminhtml_support/index$/"   class=""><span>Support</span></a>
+</li>
+</ul>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_account/index/key/$system_account/index$/"   class=""><span>My Account</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Magestore Extensions</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/magenotificationcerts/key/$system_config/edit$/"   class=""><span>License Certificates</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/magenotificationsecure/key/$system_config/edit$/"   class=""><span>License Keys</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/magenotification/adminhtml_feedback/index/key/$adminhtml_feedback/index$/"   class=""><span>Extension Feedbacks</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/notification/index/key/$notification/index$/"   class=""><span>Notifications</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/magenotification/adminhtml_magenotification/index/key/$adminhtml_magenotification/index$/"   class=""><span>Magestore</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/notification/index/key/$notification/index$/"   class=""><span>System</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Tools</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_backup/index/key/$system_backup/index$/"   class=""><span>Backups</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/smtp_log/index/key/$smtp_log/index$/"   class=""><span>SMTPPro - Email Log</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/usimpleupadmin/adminhtml_module/index/key/$adminhtml_module/index$/"   class=""><span>Unirgy Installer</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/mstcore_validator/index/key/$mstcore_validator/index$/"   class=""><span>Mirasvit Extensions Validator</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Web Services</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/api_user/index/key/$api_user/index$/"   class=""><span>SOAP/XML-RPC - Users</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/api_role/index/key/$api_role/index$/"   class=""><span>SOAP/XML-RPC - Roles</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/api2_role/index/key/$api2_role/index$/"   class=""><span>REST - Roles</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/api2_attribute/index/key/$api2_attribute/index$/"   class=""><span>REST - Attributes</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/oauth_consumer/index/key/$oauth_consumer/index$/"   class=""><span>REST - OAuth Consumers</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/oauth_authorizedTokens/index/key/$oauth_authorizedTokens/index$/"   class=""><span>REST - OAuth Authorized Tokens</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/oauth_admin_token/index/key/$oauth_admin_token/index$/"   class=""><span>REST - My Apps</span></a>
+</li>
+</ul>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_design/index/key/$system_design/index$/"   class=""><span>Design</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Import/Export</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/import/index/key/$import/index$/"   class=""><span>Import</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/export/index/key/$export/index$/"   class=""><span>Export</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_convert_gui/index/key/$system_convert_gui/index$/"   class=""><span>Dataflow - Profiles</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_convert_profile/index/key/$system_convert_profile/index$/"   class=""><span>Dataflow - Advanced Profiles</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_currency/index/key/$system_currency/index$/"   class=""><span>Manage Currency</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_currency/index/key/$system_currency/index$/"   class=""><span>Rates</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_currencysymbol/index/key/$system_currencysymbol/index$/"   class=""><span>Symbols</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Full Page Cache</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/fpccrawler_url/index/key/$fpccrawler_url/index$/"   class=""><span>Crawler URLs</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/fpccrawlerlogged_url/index/key/$fpccrawlerlogged_url/index$/"   class=""><span>Crawler URLs for logged in users</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/fpccrawler/key/$system_config/edit$/"   class=""><span>Crawler Settings</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/edit/section/fpc/key/$system_config/edit$/"   class=""><span>Settings</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/fpc_optimalConfiguration/index/key/$fpc_optimalConfiguration/index$/"   class=""><span>Suggest Optimal Configuration</span></a>
+</li>
+</ul>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_email_template/index/key/$system_email_template/index$/"   class=""><span>Transactional Emails</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_variable/index/key/$system_variable/index$/"   class=""><span>Custom Variables</span></a>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Permissions</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/permissions_user/index/key/$permissions_user/index$/"   class=""><span>Users</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/permissions_role/index/key/$permissions_role/index$/"   class=""><span>Roles</span></a>
+</li>
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/permissions_variable/index/key/$permissions_variable/index$/"   class=""><span>Variables</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/permissions_block/index/key/$permissions_block/index$/"   class=""><span>Blocks</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Magento Connect</span></a>
+<ul >
+<li  class="  level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/extension_local/index/key/$extension_local/index$/"   class=""><span>Magento Connect Manager</span></a>
+</li>
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/extension_custom/index/key/$extension_custom/index$/"   class=""><span>Package Extensions</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level1"> <a href="#"  onclick="return false" class=""><span>Ajaxified Product Edit</span></a>
+<ul >
+<li  class="  last level2"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/ajaxifiedProductEdit_manageGridViews/index/key/$ajaxifiedProductEdit_manageGridViews/index$/"   class=""><span>Manage Grid Views</span></a>
+</li>
+</ul>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/cache/index/key/$cache/index$/"   class=""><span>Cache Management</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/process/list/key/$process/list$/"   class=""><span>Index Management</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/crondoctor/index/key/$crondoctor/index$/"   class=""><span>Cron Doctor</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_store/index/key/$system_store/index$/"   class=""><span>Manage Stores</span></a>
+</li>
+<li  class="  level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/sales_order_status/index/key/$sales_order_status/index$/"   class=""><span>Order Statuses</span></a>
+</li>
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/prestomanager/system_config/index/key/$system_config/index$/"   class=""><span>Configuration</span></a>
+</li>
+</ul>
+</li>
+<li onmouseover="Element.addClassName(this,'over')" onmouseout="Element.removeClassName(this,'over')" class="  parent level0"> <a href="#"  onclick="return false" class=""><span>Sale Reports</span></a>
+<ul >
+<li  class="  last level1"> <a href="https://www.prestofreshgrocery.com/index.php/simpleupc/pick/index/key/$pick/index$/"   class=""><span>Order/Item Pick Reports</span></a>
+</li>
+</ul>
+</li>
+</ul>
+<!-- menu end -->
+
+    <a id="page-help-link" href="http://www.magentocommerce.com/gethelp/en_US/Mage_Adminhtml/dashboard/index/">Get help for this page</a>
+    <script type="text/javascript">jQuery('page-help-link').target = 'magento_page_help'</script>
+
+</div>

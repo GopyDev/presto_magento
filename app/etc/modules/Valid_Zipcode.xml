@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Valid_Zipcode>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Valid_Zipcode>
+    </modules>
+</config>

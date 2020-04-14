@@ -1,0 +1,274 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<style>
+.first-section {
+    border: 1px solid #cecece;
+    border-radius: 11px;
+    padding: 10px;
+}
+.expand {
+    border: 1px solid #ccc;
+    border-radius: 11px;
+    margin-top: 10px;
+    padding: 11px;
+}
+.wide {
+    border: 1px solid #ccc;
+    border-radius: 11px;
+    margin-top: 10px;
+    padding: 10px;
+}
+.buttons-set{margin-top:13px!important;}
+</style>
+<?php $contactForm = Mage::getSingleton('core/session')->getData('contactForm'); 
+print_r($contactForm);
+?>
+<?php $contactForm = $contactForm ? $contactForm : new Varien_Object(); ?>
+<?php $contactForm->setName( (strlen($contactForm->getName()) > 0 ? $contactForm->getName() : $this->helper('contacts')->getUserName()) ); ?>
+<?php $contactForm->setEmail( (strlen($contactForm->getEmail()) > 0 ? $contactForm->getEmail() : $this->helper('contacts')->getUserEmail()) ); ?>
+
+<script type='text/javascript'>
+jQuery(function(){
+var overlay = jQuery('<div id="overlay"></div>');
+jQuery('.close').click(function(){
+jQuery('.popup').hide();
+overlay.appendTo(document.body).remove();
+return false;
+});
+
+jQuery('.x').click(function(){
+jQuery('.popup').hide();
+overlay.appendTo(document.body).remove();
+return false;
+});
+
+jQuery('.click').click(function(){
+overlay.show();
+overlay.appendTo(document.body);
+jQuery('.popup').show();
+return false;
+});
+});
+</script>
+<style type="text/css">
+#overlay {
+/*position: fixed;*/
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: #000;
+filter:alpha(opacity=70);
+-moz-opacity:0.7;
+-khtml-opacity: 0.7;
+opacity: 0.7;
+z-index: 100;
+display: none;
+}
+.content a{
+text-decoration: none;
+}
+.popup{
+width: 100%;
+margin: 0 auto;
+display: none;
+position: absolute;
+z-index: 10000;
+}
+.content{
+min-width: 600px;
+width: 600px;
+min-height: 150px;
+margin: 100px auto;
+background: #f3f3f3;
+position: relative;
+z-index: 1000;
+padding: 10px;
+border-radius: 5px;
+box-shadow: 0 -4px 21px #000;
+/*box-shadow: 0 2px 5px #000;*/
+}
+.content p{
+clear: both;
+color: #555555;
+text-align: justify;
+}
+.content p a{
+color: #6f9e15;
+font-weight: bold;
+}
+.content .x{
+float: right;
+height: 35px;
+left: 22px;
+position: relative;
+top: -25px;
+width: 34px;
+}
+.content .x:hover{
+cursor: pointer;
+}
+.close{margin-top:30px;opacity:1 !important;}
+</style>
+<div class='popup'  style="background: transparent none repeat scroll 0px 0px;" >
+<div class='content'>
+<!--<img src='http://www.developertips.net/demos/popup-dialog/img/x.png' alt='quit' class='x' id='x' /> -->
+
+<p style="padding:10px;">
+<!--<b>Please call 216-282-7664 to report an issue with your delivery.</b><br/>
+If it is outside of 9a-5p on Monday-Friday, please either leave a voicemail or send an email to <a href="mailto:support@prestofreshgrocery.com">support@prestofreshgrocery.com</a>. The on call supervisor will receive your message and follow up as needed. Thank you!<br/><br/>
+ <a href='' class="close" style='color:#65ae01;font-family: "Open Sans",sans-serif;font-size:14px; '>Close</a>-->
+ 
+ <b>Please call 216-397-8564 to report an issue with your delivery.</b><br/>
+If it is outside of 10a-6p on Monday-Friday, please either leave a voicemail or send an email via our  <a href="http://www.prestofreshgrocery.com/contacts">Contact Us</a> Page. The on call supervisor will receive your message and follow up as needed. Thank you!<br/><br/>
+ <a href='' class="close" style='color:#65ae01;font-family: "Open Sans",sans-serif;font-size:14px; '>Close</a>
+</p>
+</div>
+</div>  
+
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<?php if($_REQUEST['q']!=1 || $_REQUEST['q']=='' ){?>
+<div class="page-title" style="display:none;">
+    <h1><?php echo Mage::helper('contacts')->__('Contact Us') ?></h1>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    var RecaptchaOptions = {
+        theme : '<?php echo $this->getCaptchaTheme(); ?>',
+        lang : '<?php echo $this->getCaptchaLang(); ?>',
+    };
+//]]>
+</script>
+<form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">
+    <div class="fieldset">
+        <h2 class="legend" style="display:none;"><?php echo Mage::helper('contacts')->__('Contact Information') ?></h2>
+		<div class="page-title">
+				<br>
+			 <h1>Please complete the below form and we will respond within 1 business day.<br/><br/>
+			 <div id='container'><h3 style="margin-bottom:0px;">Please <a href='' class='click'>click here</a> if you need to report an issue with your delivery.</h3></div>
+			 </h1>
+		</div>
+        <ul class="form-list" style="margin-top:45px;">
+			<div class="first-section">
+            <li class="fields">
+                <div class="field">
+                    <label for="name" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Name') ?></label>
+                    <div class="input-box">
+                        <input name="name" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>" value="<?php echo $this->htmlEscape($contactForm->getName()) ?>" class="input-text required-entry" type="text" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="email" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Email') ?></label>
+                    <div class="input-box">
+                        <input name="email" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>" value="<?php echo $this->htmlEscape($contactForm->getEmail()) ?>" class="input-text required-entry validate-email" type="text" />
+                    </div>
+                </div>
+            </li>
+            <li>
+                <label for="telephone"><?php echo Mage::helper('contacts')->__('Telephone') ?></label>
+                <div class="input-box">
+                    <input name="telephone" id="telephone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" value="<?php echo $this->htmlEscape($contactForm->getTelephone()) ?>" class="input-text" type="text" />
+                </div>
+            </li>
+            <li class="wide">
+                <label for="comment" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Comment') ?></label>
+                <div class="input-box">
+                    <textarea name="comment" id="comment" title="<?php echo Mage::helper('contacts')->__('Comment') ?>" class="required-entry input-text" cols="5" rows="3"><?php echo $this->htmlEscape($contactForm->getComment()) ?></textarea>
+                </div>
+            </li>
+            <p class="required" style="text-align: left !important;"><?php echo Mage::helper('contacts')->__('* Required Fields') ?></p>  
+			</div>
+                <!--Add custom filed  -->
+                <div class="expand">
+                <h3 style="padding:10px 0"><?php echo Mage::helper('contacts')->__("If you are reporting a technical issue, please fill out the below fields")?></h3>
+                    <li class="fields">
+                    <div class="field" style="margin-right:30px">
+                     <label for="browser"><?php echo Mage::helper('contacts')->__('Browser') ?></label>
+                    
+                         <div class="input-box">
+                                   <select name="browser">
+                                       <option value="">--Select Option--</option>
+                                       <option value="Firefox">Firefox</option>
+                                       <option value="Chrome">Chrome</option>
+                                       <option value="Safari">Safari</option>
+                                       <option value="Opera">Opera</option>
+                                       <option value="Internet Explorer">Internet Explorer</option>
+                                   </select>
+                                 
+                         </div>
+                    </div>
+                    <div class="field">
+                          <label for="browserversion"><?php echo Mage::helper('contacts')->__('Browser version') ?></label>
+         
+                         <div class="input-box">
+                                   <input class="input-text" type="text" name="browserversion" value="" />
+                         </div>
+                    </div>
+                    </li>
+                    <li class="fields">
+                    <div class="field" style="margin-right:30px">
+                          <label for="Machine"><?php echo Mage::helper('contacts')->__('Machine') ?></label>
+         
+                         <div class="input-box">
+                                   <select name="machine">
+                                    <option value="">--Select Option--</option>
+                                    <option value="Windows">Windows</option>
+                                    <option value="Linux">Linux</option>
+                                    <option value="Linux">Mac OS</option>
+                                   
+                                   </select>
+                         </div>
+                    </div>
+                     <div class="field">
+                          <label for="issue"><?php echo Mage::helper('contacts')->__('What Steps Led To The Issue?') ?></label>
+                         <div class="input-box">
+                                  <textarea name="issue" id="issue" title="<?php echo Mage::helper('contacts')->__('Issue') ?>" class="input-text" cols="2" rows="3"></textarea>
+                         </div>
+                    </div>
+                    </li>
+                </div>
+                 
+                <!-- end-->
+            <li class="wide">
+                <div class="input-box">
+                    <?php echo str_replace('http:','https:',$this->getCaptchaCode()); ?>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-set">
+       
+        <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
+        <button type="submit" title="<?php echo Mage::helper('contacts')->__('Submit') ?>" class="button"><span><span><?php echo Mage::helper('contacts')->__('Submit') ?></span></span></button>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var contactForm = new VarienForm('contactForm', true);
+//]]>
+</script>
+<?php }?>

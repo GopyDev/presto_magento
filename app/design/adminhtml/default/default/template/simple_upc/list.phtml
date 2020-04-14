@@ -1,0 +1,116 @@
+<script type="text/javascript">
+var menu = '';
+document.observe("dom:loaded", function() {
+	new Ajax.Request('<?php echo $this->getBaseUrl()?>simpleupc/products/menu', {
+			method: 'get',
+			requestHeaders: {Accept: 'application/json'},
+			onLoading: function(){},
+			onSuccess: function(r){
+				var json = r.responseText.evalJSON(true);
+				menu = json.menu;
+				$$('.cats').each(function(l){
+					$(l).update('<option value="">Select Category</option>'+menu);
+				});
+			}
+		});	
+});
+</script>
+<?php
+$products = $this->getProducts();
+?>
+
+<div class="content-header">
+    <h3 class="icon-head head-adminhtml-import">Import Products</h3>
+    <p class="form-buttons">
+    	<button style="" onclick="setLocation('<?php echo $this->getBack();?>')" class="scalable back" type="button" title="Back"><span><span><span>Back</span></span></span></button>
+        <button style="" onclick="setLocation(window.location.href)" class="scalable " type="button" title="Reset"><span><span><span>Reset</span></span></span></button>
+    </p>
+</div>
+
+
+<div class="entry-edit">
+    <form enctype="multipart/form-data" method="post" action="<?php echo $this->getPosturl()?>" id="upc_form" name="upc_products">
+    	<div>
+        	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+        </div>
+           	<?php if(count($products)==0){?>
+                
+           <?php }else{?>
+                <div class="grid">
+                <table cellspacing="0" class="form-list">
+            	<thead>
+                	<tr class="headings">
+                    	<th>Image</th>
+                        <th>Brand</th>
+                        <th>Manufacturer</th>
+                        <th>UPC Category</th>
+                        <th>Container</th>
+                        <th>Size</th>
+                        <th>Units</th>
+                        <th>UPC</th>
+                        <th>Description</th>
+                        <th>Ingredients</th>
+                        <th>Price</th>
+                        <th>Special Price</th>
+                        <th>Qty</th>
+                        <th>Category</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                	<?php foreach($products as $product){?> 
+                    <?php if($product['success']){?>
+                    	<tr>
+       						<?php
+							$thumb_url = '';
+                            $imageURL = '';
+							if($product['images']['success']){
+								$images = $product['images']['result'];
+								$thumb_url = $images['imageThumbURL'];
+								$imageURL = $images['imageURL'];
+							}
+                            ?>
+                            <td><?php //print_r($product)?><img src="<?php echo $thumb_url?>" height="100" /></td>
+                            <td><?php echo $product['result']['brand']?></td>
+                            <td><?php echo $product['result']['manufacturer']?></td>
+                            <td><?php echo $product['result']['category']?></td>
+                            <td><?php echo $product['result']['container']?></td>
+                            <td><?php echo $product['result']['size']?></td>
+                            <td><?php echo $product['result']['units']?></td>
+                            <td><?php echo $product['result']['upc']?></td>
+                            <td><?php echo $product['result']['description']?></td>
+                            <td><?php echo $product['result']['ingredients']?></td>
+                        	<td><input style="width:50px" type="text" name="products[<?php echo $product['result']['upc']?>][price]" class="required-entry" /></td>
+                            <td><input style="width:50px" type="text" name="products[<?php echo $product['result']['upc']?>][special_price]" /></td>
+                            <td><input style="width:50px" type="text" name="products[<?php echo $product['result']['upc']?>][qty]" class="required-entry" /></td>
+                            <td><select class="cats validate-select" style="width:150x;" name="products[<?php echo $product['result']['upc']?>][category]" id="cat_[<?php echo $product['result']['upc']?>]"><option value="">Select Category</option></select><?php //echo cat($categories, $product['result']['upc'])?></td>
+                            <td>
+                            	<input type="hidden" name="products[<?php echo $product['result']['upc']?>][brand]" value="<?php echo $product['result']['brand']?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][manufacturer]" value="<?php echo $product['result']['manufacturer']?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][container]" value="<?php echo $product['result']['container']?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][upc_category]" value="<?php echo $product['result']['category']?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][size]" value="<?php echo $product['result']['size']?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][upc]" value="<?php echo $product['result']['upc']?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][units]" value="<?php echo $product['result']['units']?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][description]" value="<?php echo $product['result']['description']?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][ingredients]" value="<?php echo $product['result']['ingredients']?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][imageURL]" value="<?php echo $imageURL?>" />
+                                <input type="hidden" name="products[<?php echo $product['result']['upc']?>][imageThumbURL]" value="<?php echo $thumb_url?>" />
+                            </td>
+                        </tr>
+                    <?php }else{?>
+                    	<td colspan="15">Fail <?php print_r($product)?></td>
+                    <?php }?>	
+					<?php }?>
+            		<tr>
+                    	<td colspan="15"><br /><button class="scalable save" type="submit" title="Save Products"><span><span><span>Save Products</span></span></span></button></td>
+                    </tr>
+                    </tbody>
+        		</table>
+                </div>
+            <?php }?>
+	</form>
+</div>
+<script type="text/javascript">
+    var upc_form = new varienForm('upc_form');
+</script>

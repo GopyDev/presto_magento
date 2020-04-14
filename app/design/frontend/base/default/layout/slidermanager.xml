@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * AShop Slider
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the AccessshopThemes.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.accessshopThemes.com
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @copyright 	Copyright (c) 2015 Accessshop (http://www.accessshopThemes.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Accessshop Block
+ * 
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @author  	AccessShop Developer
+ */
+-->
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+           <!-- <action method="addItem"><type>skin_css</type><stylesheet>css/accessshop/slidermanager/sequencejs-theme.modern-slide-in-accessshop.css</stylesheet></action>
+            <action method="addItem"><type>skin_css</type><stylesheet>css/accessshop/slidermanager/accessshop-custom.css</stylesheet></action>
+            <action method="addItem"><type>skin_css</type><stylesheet>css/accessshop/slidermanager/accessshop-responsive.css</stylesheet></action> -->
+            <action method="addItem"><type>skin_js</type><name>js/jquery-2.1.1.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/jquery.sequence.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/sequencejs-options.modern-slide-in.js</name></action>
+        </reference>
+    </default>
+    <cms_index_index>
+        <reference name="content">
+            <block type="slidermanager/slidermanager" name="slidermanager" as="slidermanager" before="-" template="slidermanager/slidermanager.phtml">
+                <action method="addData"><data><slidermanager_id>1</slidermanager_id></data></action>
+            </block>
+        </reference>
+    </cms_index_index>
+</layout>

@@ -1,0 +1,104 @@
+<div class="entry-edit custom-options product-custom-options">
+    <div class="entry-edit-head">
+        <h4>Add Answers</h4>
+        <div class="right"><button style="" onclick="addClick();" class="scalable " type="button" id="add_button11"><span>Add Answers</span></button></div>
+    </div>
+    <div id="product_options_container" class="box">
+        <div id="product_options_container_top">
+            
+            <?php $counter = 1; ?>
+            <?php $list = ""; ?>
+            
+            <?php foreach($this->getSurveyAnswerByQn($this->getRequest()->getParam('id')) as $answer) { ?>
+                <div id="survey_ans_id_<?php echo $counter ?>" class="option-box">
+                  <table cellspacing="0" cellpadding="0" class="option-header" id="product_option_2">                
+                    <thead>
+                      <tr>
+                        <th class="opt-title">Answer <?php echo $counter; ?></th>
+                        <th class="a-right">
+                          <button style="" onclick="removeAnswer('<?php echo $counter ?>')" class="scalable delete delete-product-option " type="button" id="Delete_Answers">
+                            <span>Delete Answers</span>
+                          </button>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                         <input type="text" id="survey_ans_id_<?php echo $counter ?>" name="survey_ans_id_<?php echo $counter ?>" value="<?php echo $answer->survey_ans_title ?>"/>  
+                         </td>                        
+                      </tr>
+                    </tbody>
+                  </table> 
+                </div>                   
+                <?php $list .= " " . $counter . ","; ?>
+                <?php $counter++; ?>
+            <?php } ?>
+            
+        </div>
+        <input type="hidden" value="<?php echo ($counter - 1) ?>" name="highestID" id="highestID">
+        <input type="hidden" value="<?php echo $list; ?>" name="answerList" id="answerList">
+    </div>
+</div>
+
+<script type="text/javascript">
+function addClick() {
+	//get the highest ID
+	var highestID = document.getElementById('highestID').value;
+	var newAnswer = document.getElementById('super_secret').innerHTML;
+	var newID = parseInt(highestID) + 1;
+        
+	newAnswer = newAnswer.replace(/id111/g, 'id_'+newID);
+	newAnswer = newAnswer.replace(/fakevalue/g, "");
+	
+	var divTag = document.createElement("div");
+	 
+	divTag.id = "div" + newID;
+	
+	divTag.innerHTML = newAnswer;
+        
+	document.getElementById('product_options_container_top').appendChild(divTag);
+	
+	document.getElementById('highestID').value = newID;
+	
+	document.getElementById('answerList').value += " " + newID + ",";
+}
+
+function removeAnswer(id) {
+        
+	var child = document.getElementById('survey_ans_id_' + id);
+	var parent = document.getElementById('product_options_container_top');
+	
+	parent.removeChild(child);
+	
+	var list = document.getElementById('answerList').value;
+	
+	document.getElementById('answerList').value = list.replace(" " + id + ",", "");
+}
+
+</script>
+
+<div id="super_secret" style="display: none">
+
+    <div id="survey_ans_id111" class="option-box">
+              <table cellspacing="0" cellpadding="0" class="option-header" id="product_option_2">                
+                <thead>
+                  <tr>
+                    <th class="opt-title">Answer <span id="cntr"></span></th>   
+                    <th class="a-right">
+                      <button style="" onclick="removeAnswer('id111')" class="scalable delete delete-product-option " type="button" id="Delete_Answer">
+                        <span>Delete Answers</span>
+                      </button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input type="text" id="survey_ans_id111" name="survey_ans_id111" value=""/>                        
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+      </div>
+</div>

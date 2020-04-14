@@ -1,0 +1,95 @@
+<?php
+/**
+ * AShop Slider
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the AccessshopThemes.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.accessshopThemes.com
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @copyright 	Copyright (c) 2015 Accessshop (http://www.accessshopThemes.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Accessshop Block
+ *
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @author  	AccessShop Developer
+ */
+ ?>
+ <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'/>
+ <?php
+$version=Mage::getVersion();
+$version=explode('.',$version);
+?>
+    <div class="<?php echo ($version[1]<9)?"lower":"higher";?>">
+    <?php
+        $slider_id=$this->getData('slidermanager_id');
+        $data = Mage::getModel('slidermanager/slidermanager')->getCollection()->addFieldToFilter('bannermanager_id',$slider_id);
+        $data->addFieldToFilter('status','1');
+        $dataOne=Mage::getModel('slidermanager/bannermanager')->getCollection()->addFieldToFilter('bannermanager_id',$slider_id);
+        $status=0;
+        $count=count($data);
+        foreach($dataOne as $rowOne)
+        {
+            $status=$rowOne->getStatus();
+        }
+        if($status==1&&$count>0)
+        {
+        ?>
+            <div class="sequence-theme">
+                <div id="sequence">
+                    <img class="sequence-prev" src="<?php echo $this->getSkinUrl('css/accessshop/images/bt-prev.png');?>" alt="Previous Frame" />
+                    <img class="sequence-next" src="<?php echo $this->getSkinUrl('css/accessshop/images/bt-next.png');?>" alt="Next Frame" />
+                    <ul class="sequence-canvas">
+                    <?php
+                    foreach($data as $row)
+                    {
+                    ?>
+                			<li class="animate-in" style="background-repeat: no-repeat; background-image: url(<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'slidermanager/'.$row->getBackgroundImage();?>);">
+                				<div class="<?php echo ($version[1]<9)?"slider-wrapper-old":"slider-wrapper";?> slider-wrapper-div">
+                                    <h2 class="title"><?php echo $row->getTitle();?></h2>
+                    				<h3 class="subtitle"><?php echo $row->getContent();?></h3>
+                                    <?php
+                                        if($row->getLinkButton()=='1')
+                                        {
+                                    ?>
+                                            <a class="link" href="<?php echo $row->getLink();?>" target="<?php echo $row->getTarget();?>">
+                                                <?php echo ucwords($row->getButtonTitle());if($row->getButtonTitle()==''){echo 'Button';}?>
+                                            </a>
+                                    <?php
+                                        }
+                                    ?>
+                				    <img class="model" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'slidermanager/'.$row->getFilename(); ?>" alt="<?php echo $row->getTitle();?>" />
+                                </div>
+                			</li>
+                    <?php
+                    }
+                    ?>
+                    </ul>
+                    <ul class="sequence-pagination">
+                		<?php
+                         for($i=0;$i<count($data);$i++)
+                         {
+                        ?>
+                            <li><?php echo $i;?></li>
+                        <?php
+                         }
+                        ?>
+                	</ul>
+                </div>
+            </div>
+        <?php
+        }
+        ?>
+    </div>

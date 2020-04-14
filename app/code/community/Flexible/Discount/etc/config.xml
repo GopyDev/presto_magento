@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <modules>
+        <Flexible_Order>
+            <version>0.0.0.1</version>
+        </Flexible_Order>
+    </modules>
+ 
+    <global>
+        <models>
+            <flexible_discount>
+                <class>Flexible_Discount_Model</class>
+                <resourceModel>flexible_discount_resource</resourceModel>
+            </flexible_discount>
+        </models>
+ 
+        <resources>
+            <flexible_discount_setup>
+                <setup>
+                    <module>Flexible_Discount</module>
+                </setup>
+            </flexible_discount_setup>
+        </resources>
+ 
+        <blocks>
+            <flexible_discount>
+                <class>Flexible_discount_Block</class>
+            </flexible_discount>
+        </blocks>
+ 
+        <helpers>
+            <flexible_discount>
+                <class>Flexible_discount_Helper</class>
+            </flexible_discount>
+        </helpers>
+    </global>
+ 
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <flexible_discount before="Mage_Adminhtml">Flexible_Discount_Adminhtml</flexible_discount>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config> 
+

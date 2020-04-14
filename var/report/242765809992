@@ -1,0 +1,11 @@
+a:4:{i:0;s:63:"SQLSTATE[HY000]: General error: 2006 MySQL server has gone away";i:1;s:1241:"#0 /home/prestofr/public_html/lib/Zend/Db/Adapter/Pdo/Abstract.php(305): PDO->beginTransaction()
+#1 /home/prestofr/public_html/lib/Zend/Db/Adapter/Abstract.php(495): Zend_Db_Adapter_Pdo_Abstract->_beginTransaction()
+#2 /home/prestofr/public_html/lib/Varien/Db/Adapter/Pdo/Mysql.php(219): Zend_Db_Adapter_Abstract->beginTransaction()
+#3 /home/prestofr/public_html/app/code/core/Mage/Core/Model/Resource/Abstract.php(76): Varien_Db_Adapter_Pdo_Mysql->beginTransaction()
+#4 /home/prestofr/public_html/app/code/core/Mage/Core/Model/Abstract.php(313): Mage_Core_Model_Resource_Abstract->beginTransaction()
+#5 /home/prestofr/public_html/app/code/core/Mage/Cron/Model/Observer.php(125): Mage_Core_Model_Abstract->save()
+#6 /home/prestofr/public_html/app/code/core/Mage/Core/Model/App.php(1339): Mage_Cron_Model_Observer->dispatch(Object(Varien_Event_Observer))
+#7 /home/prestofr/public_html/app/code/core/Mage/Core/Model/App.php(1318): Mage_Core_Model_App->_callObserverMethod(Object(Zero1_Crondoctor_Model_Observer), 'dispatch', Object(Varien_Event_Observer))
+#8 /home/prestofr/public_html/app/Mage.php(447): Mage_Core_Model_App->dispatchEvent('default', Array)
+#9 /home/prestofr/public_html/cron.php(46): Mage::dispatchEvent('default')
+#10 {main}";s:11:"script_name";s:0:"";s:4:"skin";s:5:"admin";}

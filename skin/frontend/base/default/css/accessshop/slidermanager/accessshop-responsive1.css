@@ -1,0 +1,192 @@
+/*
+/**
+ * AShop Slider
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the AccessshopThemes.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.accessshopThemes.com
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @copyright 	Copyright (c) 2015 Accessshop (http://www.accessshopThemes.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Accessshop Block
+ * 
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @author  	AccessShop Developer
+ */
+ /* Carousel */
+
+ @media(max-width: 1024px){
+
+ 	#sequence .slider-wrapper{
+ 		margin-left: -460px !important;
+    width: 913px !important;
+ 	}
+
+ 	.animate-in .model{
+ 		left: 50%;
+ 	}
+ 	.col2-left-layout #sequence .slider-wrapper, .col2-right-layout #sequence .slider-wrapper{
+ 		margin-left: -337px;
+    width: 674px;
+ 	}
+ 	.col3-layout #sequence .slider-wrapper{
+ 		 margin-left: -225px !important;
+    width: 438px !important;
+
+ 	}
+ 	.col2-left-layout .animate-in .model, .col2-right-layout .animate-in .model {
+     left: 51%;
+    width: 270px;
+}
+
+.col3-layout .animate-in .model {
+    left: 50% !important;
+    width: 215px !important;
+}
+
+.col2-left-layout .subtitle, .col2-right-layout .subtitle {
+    font-size: 18px;
+}
+.col3-layout .subtitle {
+    font-size: 16px !important;
+}
+.col2-left-layout .title,.col2-right-layout .title {
+    font-size: 40px;
+}
+
+ }
+
+
+ @media(min-width: 768px) and (max-width: 980px){
+
+ 	#sequence .slider-wrapper {
+ 		margin-left: -322px !important;
+ 		width: 656px !important;
+ 	}
+ 	.col3-layout #sequence .slider-wrapper{
+ 		margin-left: -322px !important;
+ 		width: 656px !important;
+ 	}
+
+ 	.animate-in .model {
+ 		left: 32%;
+ 	}
+
+ 	#sequence .slider-wrapper .title {
+ 		font-size: 40px;
+ 		margin-top: 18%;
+ 	}
+ 	.subtitle {
+ 		font-size: 18px;
+ 	}
+ 	#sequence .slider-wrapper .model {
+ 		width: 42% !important;
+ 		top: 32%;
+ 	}
+ 	.animate-in .model {
+ 		left: 50% !important;
+ 	}
+ }
+
+ @media(max-width: 767px){
+ 	#sequence .slider-wrapper .model{
+ 		display: none;
+ 	}
+
+
+ 	#sequence .slider-wrapper {
+ 		left: 0 !important;
+    margin: 0 auto  !important;
+    width: 100%  !important;
+ 	}
+ 	.col2-left-layout #sequence .slider-wrapper,.col2-right-layout #sequence .slider-wrapper, .col3-layout #sequence .slider-wrapper{
+ 		left: 0 !important;
+    margin: 0 auto !important ;
+    width: 100% !important;
+ 	}
+ 	#sequence .slider-wrapper .title {
+ 		font-size: 40px;
+ 		margin-top: 18%;
+ 		left: 0;
+ 		width: 100%;
+ 		text-align: center;
+ 	}
+ 	.subtitle {
+ 		font-size: 18px;
+ 		left: 0 !important;
+    padding: 0 12%;
+    text-align: center;
+    width: 100%;
+ 	}
+
+ 	.col3-layout #sequence .slider-wrapper .subtitle {
+ 		font-size: 18px !important;
+ 		left: 0 !important;
+    padding: 0 12% !important;
+    text-align: center !important;
+    width: 100% !important;
+ 	} 
+
+ 	.link {
+    display: block;
+    float: none;
+    left: 0 !important;
+    margin: 5% auto 0;
+    position: static;
+    text-align: center;
+    width: 19%;
+}
+ } 
+
+  @media(max-width: 480px){
+
+  	.link {
+    width: 30%;
+    padding:0;
+}
+ 	#sequence .slider-wrapper .title {
+    margin-top: 23%;
+
+    }
+    .subtitle {
+    font-size: 16px;
+    padding: 0 15%;
+}
+.col3-layout #sequence .slider-wrapper .subtitle{
+	font-size: 16px !important;
+	 padding: 0 15% !important;
+} 
+.sequence-prev{
+	left: 0;
+}
+ .sequence-next{
+ 	right: 0;
+ }
+  }
+
+  @media(max-width: 320px){
+#sequence .slider-wrapper .title {
+	font-size: 30px;
+}
+    .subtitle {
+    font-size: 14px;
+    padding: 0 18%;
+}
+	.link{
+		margin-top: 10%;
+	}
+
+  }

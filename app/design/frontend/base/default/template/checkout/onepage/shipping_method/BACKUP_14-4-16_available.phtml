@@ -1,0 +1,1090 @@
+ <?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+?>
+<style type="text/css" >
+.flexible-timing strong.ordered_window {
+background-color: #efefef;
+margin-top: 0 !important;
+}
+/*.FreeShipping { display:none}*/
+
+
+</style>
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl()?>css/jquery-ui.css" />
+<?php /*?><script src="<?php echo $this->getSkinUrl()?>js/jquery-1.10.2.js"></script><?php ?><?php */?>
+
+<script src="<?php echo $this->getSkinUrl()?>js/jquery-ui.js"></script>
+
+ <script>
+jQuery(function() {
+    jQuery("#accordion").show().accordion({
+        active: false,
+        autoHeight: false,
+        navigation: true,
+        collapsible: true
+    });
+    });
+    </script>
+<!-- Accordian Css and script-->
+<?php  
+
+date_default_timezone_set('America/New_York');
+
+$quote = Mage::getModel('checkout/cart')->getQuote();
+if(!function_exists('t_to_h')){
+	function t_to_h($hr){
+		//check if its more than hrs
+		$hr = number_format($hr, 2);
+		if(strstr($hr, '.')){
+			$t = explode('.', $hr);
+			$s = (60 / 100) * $t[1];
+			if($s >= 60){
+				$td = $s - 60; 
+				$ht = $t[0] + 1;
+				
+				if($td < 10){
+					$td = "0".ltrim($td, '0');
+				}
+				if($ht < 10){
+					$ht = "0".ltrim($ht, '0');
+				}
+				$ft = $ht.':'.$td;
+			}else{
+				$td = $s;
+				if($s < 10){
+					$td = "0".ltrim($s, '0');
+				}
+				$ht = $t[0];
+				if($t[0] < 10){
+					$ht = "0".ltrim($t[0], '0');
+				}
+				$ft = $ht.':'.$td;
+			}
+		}else{
+			if($hr < 10){
+				$hr = "0".ltrim($hr, '0');
+			}
+			$ft = $hr.":00";
+		}
+		return date('h:ia', strtotime($ft));
+	}
+}
+?>
+<style>
+.discount-delevery{
+	 background-color: #65ae01;
+    border-radius: 5px;
+    color: white;
+    font-size: 18px;
+    margin: 0 auto;
+    padding: 10px;
+    text-align: center;
+    width: 85%;
+	
+}
+.inner-div{
+	border-bottom: 1px solid #777;
+    border-left: 1px solid #777;
+    border-radius: 5px;
+    border-right: 1px solid #777;
+    margin: 0 auto;
+    padding: 11px;
+    width: 84%;
+}
+.date{
+	float: left;
+    font-size: 14px;
+    width: 24%;
+	color:#7b7b7b !important;
+}
+.time{
+	float: right;
+    font-size: 14px;
+    margin: 0 auto;
+     width: 73%;
+	color:#7b7b7b;
+}
+#unattended_shipping{
+	top: 49px !important;
+}
+.popup-flexi p{
+	text-transform: initial !important;
+}
+.popup-action > label {
+    font-weight: bold;
+}
+</style>
+	<?php
+		$customerData = Mage::getSingleton('customer/session')->getCustomer();
+				$customer_id = $customerData->getId();
+				$customerData['group_id'];
+				$groupdata = Mage::getModel('customer/group')->load($customerData['group_id']);
+				$is_shipping = $groupdata['is_shipping'] ;
+				$hour = date("H:i:s");
+				$returnHour = t_to_h($hour);
+				//echo "Return hour is ".$returnHour;
+				//echo "Is shipping is ".$is_shipping;
+				if($is_shipping == 0){
+	?>
+ <p style="color:red;font-weight:bold;font-size:13px;"><?php echo $this->__('Please note: if a delivery window is missing, it is sold out for that day. We apologize for any inconvenience should this be the case.') ?></p>
+	<?php
+				}
+	?>
+ 
+ <?php
+ /****************************
+	Dated: 5/1/2016
+ /*****************************/
+ //$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+	//$new_db_resource = Mage::getSingleton('core/resource');
+	//$connection = $new_db_resource->getConnection('prestofr_stage');
+	$connection = new PDO("mysql:host=localhost;dbname=prestofr_stage", "prestofr_stage", "GiAZ8sc7gpJS");
+	/*******************************************
+		Checking Preso Subscriber or not
+  /******************************************/
+  $customerData = Mage::getSingleton('customer/session')->getCustomer();
+  $customerId = $customerData->getId();
+  $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+  $sql= "SELECT * FROM mg_aw_sarp2_profile WHERE customer_id = '".$customerData->getId()."' AND `status` LIKE 'active'";
+  $results = $connection->fetchAll($sql);
+  
+  /*********************************
+		Checking Flexible Delivery 
+		Checked or Not 
+		In User Group
+  /********************************/
+  $roleId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+			$role = Mage::getSingleton('customer/group')->load($roleId)->getData('customer_group_code');
+			$role = strtolower($role);
+			$sql= "SELECT choose_delivery_address FROM mg_customer_group WHERE customer_group_id  = '".$roleId."' AND choose_delivery_address = 1";
+			
+			$Custresults = $connection->fetchAll($sql);
+			$CustValue = $Custresults[0]['choose_delivery_address'];
+			//echo "<br/>Cust Value is ".$CustValue;
+	/**************************************
+		End checking flexible Delivery
+	/**************************************/
+	if( (!$results) && ($CustValue == 1) ){
+	echo "<br/>";
+  
+			$cart = Mage::getSingleton('checkout/cart');
+			$quote = $cart->getQuote();
+			$shippingAddress = $quote->getShippingAddress();
+			$zip = $shippingAddress->getPostcode();
+			
+			$qryAmnt = $connection->query("SELECT value FROM mg_core_config_data WHERE path = 'customcartdiscount/customcartdiscount_group/discount' ");
+			$Amnt = $qryAmnt->fetchAll(PDO::FETCH_ASSOC);
+			
+			$DISCOUNTAMOUNT = $Amnt[0]['value'];
+			//echo "Amount is ". $DISCOUNTAMOUNT;  
+			
+			$qryWINDOW = $connection->query("SELECT value FROM mg_core_config_data WHERE path = 'customcartdiscount/customcartdiscount_group/maxdiscount' ");
+			//$WIND = $connection->fetchAll($qryWINDOW);
+			$WIND   = $qryWINDOW->fetchAll(PDO::FETCH_ASSOC);
+			$MAXWINDOW = $WIND[0]['value'];
+			//echo "MAx window is ". $MAXWINDOW;  
+			
+			//$connection2 = new PDO("mysql:host=localhost;dbname=prestofr_stage", "prestofr_stage", "GiAZ8sc7gpJS");
+			
+			$qryAll = $connection->query("SELECT window, ord.status, wind.order_number
+			FROM mg_sales_flat_order_address as address,
+			mg_sales_flat_order as ord,
+			mg_shipping_delivery_window as wind
+			WHERE
+			address.postcode = '".$zip."'
+			AND address.address_type = 'shipping'
+			AND
+			address.parent_id = ord.entity_id
+			AND (ord.status = 'processing' OR ord.status = 'pending')
+			AND ord.increment_id = wind.order_number GROUP BY (wind.order_number) Order by ord.entity_id DESC limit 0,50");
+			$datas  = $qryAll->fetchAll(PDO::FETCH_ASSOC); 
+			//$datas = $connection->fetchAll($qry);
+			$data_array = array();
+			$temp_dataArray = array();
+			foreach($datas as $data){
+				$data_array[] .= $data['window'];
+			}
+			
+			
+			$final_array = array_unique($data_array);
+			
+			$checkingCount = false;
+			foreach($final_array as $data1){
+					list($time,$date) = explode("|",$data1);
+					$originalDate = str_replace("_","-",date($date));
+					$today_date =  date("Y-m-d");
+					if( Date('Y-m-d', strtotime($originalDate)) >= $today_date ){
+						$checkingCount = true;
+					}
+			}
+			
+				if(!empty($final_array) && ($checkingCount == true) ){
+				echo "<div class='discount-delevery'>Select one of the below dates & times and receive a delivery discount</div> ";
+				echo "<div class='inner-div'>";
+				//sort($final_array);
+				foreach($final_array as $data1){
+					$checking = checkMaxDiscount($data1);
+					if($checking <$MAXWINDOW){
+					list($time,$date) = explode("|",$data1);
+					$originalDate = str_replace("_","-",date($date));
+					$today_date =  date("Y-m-d");
+					
+					if( Date('Y-m-d', strtotime($originalDate)) >= $today_date ){
+						$checkingCount = checkCount($data_array);
+						
+						if($checkingCount[$data1] <=$MAXWINDOW){
+							
+							if($returnHour>=7){
+							$currentDate = date("d-m-Y");
+							//echo "Current date".$currentDate;
+							if($currentDate != $originalDate){
+								$newDate = date("jS F Y", strtotime($originalDate));
+								$newtime = str_replace("pm_","pm - ",$time);
+								$newtime = str_replace("_",":",$newtime);
+								echo "<span class='date'>".$newDate."</span>";
+								echo "<span class='time'>".$newtime."</span>";
+								echo "<br/>";
+							}
+						}else{
+						//echo "Going else";
+						$newDate = date("jS F Y", strtotime($originalDate));
+						$newtime = str_replace("pm_","pm - ",$time);
+							$newtime = str_replace("_",":",$newtime);
+							echo "<span class='date'>".$newDate."</span>";
+							echo "<span class='time'>".$newtime."</span>";
+							echo "<br/>";
+						}
+					 }
+						
+					}
+				 } // Close if checking Max window	
+			  }  // Close for loop.
+				echo "</div>";	
+			}
+	} // Close main condition.
+
+
+function checkMaxDiscount($date){
+	$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+	list($time,$date) = explode("|",$date);
+	$Finaldate = $time.'|'.trim($date);
+	$qry = "select count(*)  from `mg_shipping_delivery_window` where window = '".$Finaldate."' LIMIT 0,50 ";
+	$Results = $connection->fetchAll($qry);
+	$CountMax = $Results[0]['count(*)'];
+	return $CountMax;
+}
+
+	
+	function checkCount($final_array){
+		$tempArray = array();
+		foreach($final_array as $Tempdata){
+		list($time,$date) = explode("|",$Tempdata);
+		$originalDate = str_replace("_","-",date($date));
+		$today_date =  date("Y-m-d");
+		if( Date('Y-m-d', strtotime($originalDate)) >= $today_date ){
+				
+				$tempArray[] .=$Tempdata;
+				
+		}
+	}
+	
+		return (array_count_values($tempArray));
+		
+	}
+	
+ ?>
+<?php /** @var $this Mage_Checkout_Block_Onepage_Shipping_Method_Available */ ?>
+<?php 
+$customer_id= $this->getCustomer()->getId();
+$customer = Mage::getModel('customer/customer')->load($customer_id);
+$customer_code = $customer['group_id'];//$customer->getCustomerGroupId();
+$group_data = Mage::getModel('customer/group')->load($customer_code);
+$regionModel = Mage::getModel('directory/region')->loadByCode($group_data['customer_state'], $group_data['customer_country']);
+$regionId = $regionModel->getId();
+$region = Mage::getModel('directory/region')->load($regionId);
+$countryModel = Mage::getModel('directory/country')->loadByCode($group_data['customer_country']);
+$countryName = $countryModel->getName();
+$region_name = $region->getName(); 
+$customer_day = $group_data['date'];
+
+?>
+<input type="hidden"  id="delivery_allow" name="delivery_allow" value="<?php echo $group_data['choose_delivery_address'];?>" /> 
+<?php
+$day_starting_time = Mage::getStoreConfig('simpleupc/delivery_window/day_starting_time');
+$day_ending_time = Mage::getStoreConfig('simpleupc/delivery_window/day_ending_time');
+$number_of_windows = (Mage::getStoreConfig('simpleupc/delivery_window/number_of_windows')) ? Mage::getStoreConfig('simpleupc/delivery_window/number_of_windows') : 5 ;
+$number_of_days = (Mage::getStoreConfig('simpleupc/delivery_window/number_of_days')) ? Mage::getStoreConfig('simpleupc/delivery_window/number_of_days') : 5 ;
+$delivery_limit = (Mage::getStoreConfig('simpleupc/delivery_window/number_of_orders')) ? Mage::getStoreConfig('simpleupc/delivery_window/number_of_orders') : 5 ;
+
+$delivery_batch = ($day_ending_time - $day_starting_time ) / $number_of_windows;
+$width = 910 / $number_of_windows;
+
+$delivery_on_sunday = Mage::getStoreConfig('simpleupc/delivery_window/hide_sunday');
+$delivery_on_monday = Mage::getStoreConfig('simpleupc/delivery_window/hide_monday');
+
+$flexible_popup_message = Mage::getStoreConfig('simpleupc/delivery_window/flexible_delivery_message');
+$unattended_popup_message = Mage::getStoreConfig('simpleupc/delivery_window/unattended_delivery_message');
+
+$flexible_discount_amount = Mage::getStoreConfig('simpleupc/delivery_window/flexible_delivery_discount');
+$ordered_discount_amount = Mage::getStoreConfig('simpleupc/delivery_window/same_delivery_window_discount');
+?>
+
+<style>
+.Display-Note{ display:none}
+.checkout-cart-index .Display-Note{ display:block}
+.display_0 .w-messages{ display:block}
+.display_1 .w-messages, .display_2 .w-messages, .display_3 .w-messages, .display_4 .w-messages, .display_5 .w-messages, .display_6 .w-messages, .display_7 .w-messages, .display_8 .w-messages, .display_9 .w-messages, .display_10 .w-messages{ display:none}
+.sp-methods .w-messages{ width:100%; padding:10px 0;}
+.sp-methods .w-messages div{width: 100%;margin: 0;}
+.flexible-timing li{width:<?php echo $width?>px}
+<!-- .flexible-timing-disabled li{width:<?php //echo $width?>px}-->
+.flexible-timing-disabled li {width: 210.5px;}</style>
+
+<?php
+$current_zip = Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress()->getPostcode();
+
+$order_zip = array();
+$d_w_t = array();
+
+$delivery_window_table = Mage::getSingleton('core/resource')->getTableName('shipping_delivery_window');
+$con = Mage::getSingleton('core/resource')->getConnection('core_read');
+$delivery_window = $con->fetchAll("select * from ".$delivery_window_table." WHERE date(added_on) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d',(strtotime(date('Y-m-d') . " +$number_of_days day")))."' and order_number != ''");
+foreach($delivery_window as $dw){
+	$dt_time = str_replace(array('|', '-'), array('_', '_'), $dw['window']);
+	$d_w_t[] = $dt_time;
+	if($dw['quote_id'] != ''){
+		try{
+			$order = Mage::getModel('sales/order')->loadByAttribute('quote_id', $dw['quote_id']);
+			if($order){
+				// $order_zip[$dt_time] = $order->getBillingAddress()->getPostcode();
+			}
+		}catch(Mage_Core_Exception $e) {
+            $e->getMessage();
+        }
+	}
+}
+
+$holidays = Mage::helper('simpleupc')->holidays();
+
+$inst = array_count_values($d_w_t);
+
+
+?>
+
+<?php //echo $start_time = date('h:i', strtotime('18:25'))?>
+
+<?php $_shippingRateGroups = $this->getShippingRates(); ?>
+<?php if (!$_shippingRateGroups): ?>
+    <p><?php echo $this->__('Sorry, no quotes are available for this order at this time.') ?></p>
+<?php else: ?>
+    <dl class="sp-methods">
+    <?php $shippingCodePrice = array(); ?>
+    <?php $_sole = count($_shippingRateGroups) == 1;
+	 $session = Mage::getSingleton('checkout/session');
+ $cart = Mage::getModel('checkout/session')->getQuote();
+foreach ($cart->getAllItems() as $item) {
+    $producttypeId = $item->getProduct()->getTypeId();
+ 
+}
+
+$fdate = date('Y-m-d H:i:s');
+$tdate = $group_data['date']; // Customer group order limit date
+$day1 = "next ".$tdate."";
+$nextDate1 = strtotime($day1);
+$weekNoNext1 = date('d-m-Y', $nextDate1);
+$end_order_date = $weekNoNext1;
+$next_end_date = date('d-m-Y', strtotime($end_order_date .'-1 day'));
+
+$day2 = "last ".$tdate."";
+$nextDate2 = strtotime($day2);
+$weekNoNext2 = date('d-m-Y', $nextDate2);
+$start_order_date = $weekNoNext2;
+
+$cur_day = date('D');echo '<br>';
+$groupday = str_replace('day','',$tdate);
+if($groupday == $cur_day){
+$groupday;
+$a = strtotime($groupday);
+$start_order_date = date('d-m-Y', $a);
+}
+
+$fromDate = date('Y-m-d', strtotime($start_order_date));echo '<br>'; 
+$toDate = date('Y-m-d', strtotime($end_order_date));
+//echo 'Start:'.$start_order_date;
+//echo 'end:'.$end_order_date;
+
+$orders = Mage::getModel('sales/order')->getCollection()->addAttributeToFilter('customer_group_id',$group_data['customer_group_id'])->addAttributeToFilter('created_at', array('from'=>$fromDate, 'to'=>$toDate));
+//echo 'Orders'.count($orders);echo '<br>';
+$group_data['customer_orderlimit'];
+$flag = 0;
+	foreach ($_shippingRateGroups as $code => $_rates): ?>
+		
+		<?php if($code == 'tablerate'){
+		if($producttypeId != 'customproduct'){
+			?>
+        	<?php
+            $H = date('H');
+			// New Deadline functionality 'display delivery window till next moring 7am nextday'
+			if($H < 7.00)
+				{
+					
+				$_k = 0;
+				}
+			else{
+					
+				$_k = 1;
+				}
+			//End New Deadline functionality
+			//Orignal Deadline  display delivery window till 1PM only.
+			//$_k = ($H > 12) ? 2 : 1;
+			//End
+			$_t = ($H > 12) ? ($number_of_days+2) : ($number_of_days+1);
+			
+			$k = $_k;
+			$t = $_t;
+			?> 
+            <?php
+			$is_sun = false;
+			$is_mon = false;
+			for($i = $_k; $i<$_t; $i++){
+            	$t_dt = strtolower(date('D',(strtotime(date('Y-m-d') . " +$i day"))));
+            	if($t_dt == 'sun'){
+					$is_sun = true;
+				}
+				if($t_dt == 'mon'){
+					$is_mon = true;
+				}
+			}
+			if($is_mon && $is_sun){
+				$t = $t+2;
+			}elseif($is_sun && !$is_mon){
+				$t = $t+1;
+			}
+			?>
+		<?php 
+			$timezone = date_default_timezone_set('America/New_York');
+			$date = new DateTime();
+			$nextday =  date('D', strtotime($date .' +1 day'));
+			$nextday = strtolower($nextday);
+			$date->setTimezone($timezone );
+		    $H = date('H');
+			$hour =  $date->format('H');
+			//echo 'date '. date('d-m-y');echo '<br />';
+			//echo 'time'.date('H i a') 
+			?>
+           
+             <div id="accordion">
+			<?php $l = 0; for($i = $k; $i<$t; $i++){?>
+            	<?php $dt = date('d_m_Y',(strtotime(date('Y-m-d') . " +$i day")))?>
+                <?php $_dt = date('d_m_Y',(strtotime(date('Y-m-d') . " +$i day")))?>
+                <?php $d_dt = strtolower(date('D',(strtotime(date('Y-m-d') . " +$i day"))))?>
+                <?php $day_date = date('Y-m-d',(strtotime(date('Y-m-d') . " +$i day")))?>
+                <?php //Add by xoom?>
+				<?php
+                $days1 = substr($customer_day, 0, 3);
+                $group_customer_day =  ucfirst($days1);
+                $group_customer_day = ucfirst(strtolower($group_customer_day));
+                $selectdate = strpos($customer_days,$group_customer_day);
+                if($selectdate === false){
+                    $select = '';
+                }else{
+                    $customer_days;
+                    $group_customer_Date = date("d_m_Y", strtotime($customer_days));
+                    $select = $group_data['time'];
+                }
+                ?>
+<?php 
+
+?>
+                <?php  if(($group_data['is_shipping'] == '0'  && $group_data['choose_delivery_address'] == '0') ||($group_data['is_shipping'] == '1'  && $group_data['choose_delivery_address'] == 
+				'0')) {
+                if($window == 0){
+                $window++;
+                $day = "next ".$group_data['date']."";
+                $nextDate = strtotime($day);
+                $weekNo = date('m-d-y');
+                $weekNoNext = date('m-d-Y', $nextDate);
+				
+				//$cur_time = date('H:a');
+				//$current_Date = date('d/m');
+				//$weekNoNext =  date('d/m', $nextDate);
+				?>
+              <?php  if(($group_data['customer_orderlimit'] <= count($orders) && $group_data['customer_orderlimit'] != '' && $group_data['customer_orderlimit'] != '0')   )
+						{ ?>
+							
+							<input type="hidden" name="cantorder"  id="cantorder"  value="1"/>
+							<?php echo  "We're sorry – we are sold out for the upcoming delivery date. Your cart will remain full and you will be able to place your order for the following delivery after this delivery date has passed. We apologize for any inconvenience! ";
+							   ?>
+                <?php   }else{
+					//echo  count($orders);
+							$currentTime = date('h:i:s');
+							$h = date("h");
+							$Day = date('l');
+							$limitDay = ucfirst($group_data['date']);
+							/*echo "<br>***************************<br>";
+							echo "<br>current time is ".$currentTime.'<br>';
+							echo "<br>***************************</br>";
+							echo "<br>Week Next is ".$weekNoNext.','.$limitDay.'<br>';;
+							echo "<br>***************************</br>";
+							echo "<br>Today day is ".$Day.'<br>';
+							echo "<br>***************************</br>";*/
+							if($limitDay == $Day){
+								//echo "Going in condition for limit day";
+								/*echo "<br/> H value is ".$h;
+								echo "<br/>";*/
+								if($h==12){
+									$temp = str_replace('-','/',$weekNoNext);
+									$time = strtotime($temp);
+									$newformat = date('Y-m-d',$time);
+									$weekNoNext = date('m-d-Y', strtotime('-7 days', strtotime($newformat))); 
+								}
+								else if($h<7){ // Condition for 7:00 AM
+									//echo "<br>";
+									$temp = str_replace('-','/',$weekNoNext);
+									$time = strtotime($temp);
+									$newformat = date('Y-m-d',$time);
+									$weekNoNext = date('m-d-Y', strtotime('-7 days', strtotime($newformat))); 
+									//echo "<br>".$newformat;
+									//echo "<br/> Final date is ". date('m-d-Y', strtotime('-7 days', strtotime($newformat)));  ;
+								}
+								else{
+									//echo "Going in more then 7";
+									
+								}
+							}
+						  echo "The next ".$group_data['customer_group_code']." delivery will be ".$group_data['date'].",".$weekNoNext." from ".$group_data['time'].". We'll see you at the designated drop off/pick up point at that time!";
+						 }
+				
+				
+					}     
+				
+                
+                ?>
+				
+               <?php //end?>
+                     <div style="display:none">
+                <?php } ?>  
+                
+                    <h2><dt>
+
+                	<strong class="s_m_time <?php if(($d_dt == 'sun' && !$delivery_on_sunday) || ($d_dt == 'mon' && !$delivery_on_monday) || (count($day_date)>0 && in_array($day_date, $holidays))){?>s_m_time-disabled<?php }?>"><?php echo date('l, j M,Y',(strtotime(date('Y-m-d') . " +$i day")));?></strong>
+                    </dt></h2>
+                    <div>
+                    <dt class="display_<?php echo $l++;?> flexible">
+                    <?php if(($d_dt == 'sun' && !$delivery_on_sunday) || ($d_dt == 'mon' && !$delivery_on_monday) || (count($day_date)>0 && in_array($day_date, $holidays))){?>
+                    	<?php if(($d_dt == 'sun' && $delivery_on_sunday) || ($d_dt == 'mon' && $delivery_on_monday)){?>
+                        <?php if(in_array($day_date, $holidays)){
+								
+								}else{?>
+                        	<input type="checkbox" name="flexible_shipping" class="s_m_time_c" rel="<?php echo $_dt?>" id="<?php echo $dt?>" onclick="accept_flexi_shipping(this)" value="yes" />
+                    		<label for="<?php echo $dt?>">Flexible Delivery<?php //echo $this->escapeHtml($this->getCarrierName($code)) ?> - <?php echo '$'.$flexible_discount_amount.' Discount'?></label>
+
+                         <?php    
+							$_SESSION['delivery_window'];  
+							$_SESSION['flexible_shipping'];
+								if($_SESSION['flexible_shipping'] == 'yes'){
+									$fdate = str_replace('_','-',$_SESSION['delivery_window']);		
+								}
+									else
+								{
+									$select_delivery_window = $_SESSION['delivery_window'];
+									$sepratedate = explode('|',$select_delivery_window);
+									$fdate = str_replace('_','-',$sepratedate[1]);
+								}
+						 
+							if(($hour < 7.00) || ($hour >= 19.00) ){?>
+							
+									<div class="w-messages">
+										<div><span class="icon-i"></span>
+										<p style="color:#7b7b7b"><?php echo '<b>NOTE</b>  :  the delivery fee for this day is $12.95 for non-PrestoPremier members. Please choose a later date for a standard delivery fee.';?></p>
+										</div>
+									</div>
+							<?php }  //}?>
+                        <?php } }?>
+                    <?php }else{?> 
+                    	<?php 
+						if(!in_array($day_date, $holidays) || ($d_dt != 'mon' && $delivery_on_monday) || ($d_dt != 'sun' && $delivery_on_sunday) ){?>			
+						<input type="checkbox" name="flexible_shipping" class="s_m_time_c" rel="<?php echo $_dt?>" id="<?php echo $dt?>" onclick="accept_flexi_shipping(this)" value="yes" />
+                    	<label for="<?php echo $dt?>">Flexible Delivery<?php //echo $this->escapeHtml($this->getCarrierName($code)) ?> - <?php echo '$'.$flexible_discount_amount.' Discount'?></label>
+                        <?php }?>
+                         <?php    
+							$_SESSION['delivery_window']; 
+				 			$_SESSION['flexible_shipping']; 
+								if($_SESSION['flexible_shipping'] == 'yes'){
+									$fdate = str_replace('_','-',$_SESSION['delivery_window']);		
+								}
+									else
+								{
+									$select_delivery_window = $_SESSION['delivery_window'];
+									$sepratedate = explode('|',$select_delivery_window);
+									$fdate = str_replace('_','-',$sepratedate[1]);
+								}
+						
+	 						
+								if(($hour < 7.00) || ($hour >= 19.00) ){?>
+							
+									<div class="w-messages">
+										<div><span class="icon-i"></span>
+										<p style="color:#7b7b7b"><?php echo '<b>NOTE</b>  :  the delivery fee for this day is $12.95 for non-PrestoPremier members. Please choose a later date for a standard delivery fee.';?></p>
+										</div>
+									</div>
+							<?php } ?>
+                	<?php }?>
+                </dt>
+                <?php if(($d_dt == 'sun' && !$delivery_on_sunday) || ($d_dt == 'mon' && !$delivery_on_monday) || (count($day_date)>0 && in_array($day_date, $holidays)) ){?>
+        		<?php	//Mage::log($delivery_on_monday,null,'delivery_on_monday.log')?>
+                    <ul title="Please choose a week day delivery window. We delivery in week days only." class="flexible-timing-disabled">
+                		<?php $start = $day_starting_time?>
+						<?php for($j = 1; $j <= $number_of_windows; $j++){?>
+                        	<?php $end = $start + $delivery_batch?>
+                            <?php $start_time = t_to_h($start)?>
+                            <?php if($j == $number_of_windows){ $end = $day_ending_time; }?>
+                            <?php $end_time = t_to_h($end)?>
+                        	<li><strong><?php echo $start_time?> - <?php echo $end_time?></strong></li>
+							<?php $start = $end?>
+						<?php }?>
+                    </ul>
+            	<?php }else{?>
+                <?php	//Mage::log($delivery_on_monday,null,'delivery_on_monday2.log')?>
+                	<ul class="flexible-timing">
+                		<?php $start = $day_starting_time?>
+						<?php for($j = 1; $j <= $number_of_windows; $j++){?>
+                        	<?php $end = $start + $delivery_batch?>
+                            <?php $start_time = t_to_h($start)?>
+                            <?php if($j == $number_of_windows){ $end = $day_ending_time; }?>
+                            <?php $end_time = t_to_h($end)?>
+                        	<?php $time_arg = str_replace(array(':','-'), array('_', '_'), $start_time.'-'.$end_time);?>
+                            <?php if(in_array($time_arg.'_'.$_dt, $d_w_t) && ($order_zip[$time_arg.'_'.$_dt]) && $group_data['choose_delivery_address'] == 0 && $group_data['is_shipping'] == ''){?>
+                           <li>
+                            <?php } else {
+							
+							
+							  $resource = Mage::getSingleton('core/resource');
+     
+							/**
+							 * Retrieve the read connection
+							 */
+							$readConnection = $resource->getConnection('core_read');
+							 
+							$query = "SELECT count(id) as abc FROM " . $resource->getTableName('shipping_delivery_window')." where window='".$time_arg."|".$_dt."'";
+							
+							/**
+							 * Execute the query and store the results in $results
+							 */
+							$results = $readConnection->fetchAll($query);
+							 
+	                       
+							?>
+                            <li id="<?php echo $time_arg.'_'.$_dt?>" <?php if($results[0][abc]>=$delivery_limit) { ?> style="display:none;" <? } ?>  >
+							<?php }?>
+                          <?php /*?> <strong <?php echo (in_array($time_arg.'_'.$_dt, $d_w_t) && ($order_zip[$time_arg.'_'.$_dt]==$current_zip)) ? 'class="ordered_window flexible-timing-disabled"' : ''?>    <?php if(in_array($time_arg.'_'.$_dt, $d_w_t) && ($order_zip[$time_arg.'_'.$_dt]==$current_zip)){?> onclick="alert('We are sorry this delivery window is sold out');"<?php } else{?>onclick="delivery_window_set(this, '<?php echo $time_arg?>|<?php echo $_dt?>')" <?php } ?>><?php echo $start_time?> - <?php echo $end_time?>---"</strong></li>
+  </li> 
+							<?php $start = $end?>   
+<?php */?>
+                        <?php /*?><strong <?php echo (in_array($time_arg.'_'.$_dt, $d_w_t) && ($order_zip[$time_arg.'_'.$_dt]==$current_zip)) ? 'class="ordered_window"' : ''?>  onclick="delivery_window_set(this, '<?php echo $time_arg?>|<?php echo $_dt?>')"><?php echo $start_time?> - <?php echo $end_time?></strong><?php */?>
+                   
+	<strong <?php echo (in_array($time_arg.'_'.$_dt, $d_w_t) && ($order_zip[$time_arg.'_'.$_dt]) && $group_data['choose_delivery_address'] == 0 ) ? 'class="ordered_window"' : ''?>  
+		 onclick="delivery_window_set(this, '<?php echo $time_arg?>|<?php echo $_dt?>')" <?php //} ?>><?php echo $start_time?> - <?php echo $end_time?></strong>  
+						<?php
+						/****************************
+								Print Discount
+								Below Window Tab
+						/****************************/
+						if(is_array($final_array)){
+							foreach($final_array as $data){
+								$checkingCount = checkCount($data_array);
+								if($checkingCount[$data] <=8){
+									if($data == $time_arg."|".$_dt){
+									echo "<span style='margin-bottom:10px; color:black;font-weight:bold;'>$".$DISCOUNTAMOUNT." Discount </span>";
+									echo "<input type='hidden' name='count_discount' value='1' />";
+									}
+									
+								}
+								
+						}
+							
+						}
+						
+						
+					?>
+         				</li>
+							<?php $start = $end?>
+                           
+						<?php }?>
+            		</ul>
+                <?php }?>
+                
+                </div>
+                
+                <?php //Add BY xooom ?>
+                <?php  if($group_data['is_shipping'] == '0'  && $group_data['choose_delivery_address'] == 0) {?>
+                        </div>
+			   <?php } ?>
+                <?php //end?>
+                
+			<?php }?>  </div>
+            
+            <dd style="display:none;">
+            
+            <?php $_SESSION['delivery_window'] = $_POST['delivery_window'];
+			$_SESSION['flexible_shipping']  = $_POST['flexible_shipping'];
+			 
+				$group_time = str_replace(":","_", $group_data['time']);
+				$group_time = str_replace(" - ","_", $group_time);
+				$weekNoNext = str_replace("-","_", $weekNoNext);
+				list($mm,$dd,$yy) = explode('_',$weekNoNext);
+				$weekNoNext = $dd .'_'.$mm.'_'.$yy;
+				 $group_time1 = $group_time.'|'.$weekNoNext;
+				 echo $group_data['time'];
+			?>
+            <?php if($group_data['choose_delivery_address'] == '0' && $group_data['choose_delivery_address'] != ''){
+			if($group_data['customer_orderlimit'] == 0){
+				$restriction = '';
+			}else if($group_data['customer_orderlimit'] <= count($orders)){
+				$restriction = 1;
+			} else{
+				$restriction = '';
+			}
+			?>
+           <input type="hidden" class="1" name="delivery_window" 
+            value="<?php if($group_time != '' && $restriction != '1' ){ echo $group_time1;}?>"  id="delivery_window_time" />
+            <?php }else{?>
+            <input class="2" type="hidden" name="delivery_window" value=""  id="delivery_window_time" />
+			<?php	} ?>
+            <input type="hidden" name="ordered_window" id="ordered_window" />
+         <ul>
+            <?php $_sole = $_sole && count($_rates) == 1; foreach ($_rates as $_rate): ?>
+            
+                <?php $shippingCodePrice[] = "'".$_rate->getCode()."':".(float)$_rate->getPrice(); ?>
+<?php /* $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+$customer_id = Mage::getSingleton('customer/session')->getCustomer()->getId();
+//Mage::log($customer_id,null,'test5.log');
+$productTable = 'mg_customer_subsciption';
+$query = "SELECT * FROM " . $productTable . " WHERE customer_id = '".$customer_id."'";
+$result = $connection->query($query);
+$row = $result->fetch();*/
+?>
+
+                <li class="<?php echo $_rate->getCode();?>">
+                   <?php if ($_rate->getErrorMessage()): ?>
+                    <ul class="messages"><li class="error-msg"><ul><li><?php echo $this->escapeHtml($_rate->getErrorMessage()) ?></li></ul></li></ul>
+                   <?php else: ?>
+                        <?php if ($_sole) : ?>
+                        <span class="no-display">
+                       	 <input name="shipping_method" class="<?php echo $_sole?>" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>" checked="checked" />
+                        
+                        </span>
+                            
+                        <?php else: ?>
+                     <input name="shipping_method" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>"
+					 <?php if($_rate->getCode()===$this->getAddressShippingMethod()) echo ' checked="checked"' ?>/>
+
+                        <?php if ($_rate->getCode() === $this->getAddressShippingMethod()): ?>
+                        <script type="text/javascript">
+                            //<![CDATA[
+                                lastPrice = <?php echo (float)$_rate->getPrice(); ?>;
+                            //]]>
+                        </script>
+                        <?php endif; ?>
+
+                        <?php endif; ?>
+                        <label for="s_method_<?php echo $_rate->getCode() ?>"><?php echo $this->escapeHtml($_rate->getMethodTitle()) ?>
+                        <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+                        <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
+                        <?php echo $_excl; ?>
+                        <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                            (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                        <?php endif; ?>
+                        </label>
+                   <?php endif ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        </dd>
+        <?php 
+			}
+		}else{?>
+<?php  $quote = Mage::getModel('checkout/cart')->getQuote();
+ $nonNominalItems = Mage::helper('aw_sarp2/quote')->getAllSubscriptionItemsFromQuote($quote);
+?>
+        	<dt <?php if($this->escapeHtml($this->getCarrierName($code)) == 'Free Shipping' && !$nonNominalItems){echo  'style="display:none"';}?> class="<?php  if($producttypeId != 'customproduct') {if($this->escapeHtml($this->getCarrierName($code)) == 'Free Shipping'){ echo 'FreeShipping';} }?>"><?php echo $this->escapeHtml($this->getCarrierName($code)) ?></dt>
+            <dd>
+                <ul <?php if($this->escapeHtml($this->getCarrierName($code)) == 'Free Shipping' && !$nonNominalItems){echo  'style="display:none"';}?> class="<?php if($this->escapeHtml($this->getCarrierName($code)) == 'Free Shipping'){ echo 'FreeShipping';}?>">
+                <?php $_sole = $_sole && count($_rates) == 1; foreach ($_rates as $_rate): ?>
+                    <?php $shippingCodePrice[] = "'".$_rate->getCode()."':".(float)$_rate->getPrice(); ?>
+                   
+                  
+                    <li>
+                       <?php if ($_rate->getErrorMessage()): ?>
+                        <ul class="messages"><li class="error-msg"><ul><li><?php echo $this->escapeHtml($_rate->getErrorMessage()) ?></li></ul></li></ul>
+                       <?php else: ?>
+                            <?php if ($_sole) : ?>
+                            <span class="no-display"><input name="shipping_method"   type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>" checked="checked" /></span>
+                            
+                            
+                            <?php else: ?>
+                            <input name="shipping_method"  checked="checked" type="radio" value="<?php echo $_rate->getCode() ?>" 
+                            id="s_method_<?php echo $_rate->getCode() ?>"<?php if($_rate->getCode()===$this->getAddressShippingMethod()) echo ' checked="checked"' ?> class="radio"/>
+    
+                            <?php if ($_rate->getCode() === $this->getAddressShippingMethod()): ?>
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                    lastPrice = <?php echo (float)$_rate->getPrice(); ?>;
+                                //]]>
+                            </script>
+                            <?php endif; ?>
+    
+                            <?php endif; ?>
+                            <label for="s_method_<?php echo $_rate->getCode() ?>"><?php echo $this->escapeHtml($_rate->getMethodTitle()) ?>
+                            <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+                            <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
+                            <?php echo $_excl; ?>
+                            <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                                (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                            <?php endif; ?>
+                            </label>
+                       <?php endif ?>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            </dd>
+        <?php }?>
+        
+    <?php     //************************ Order Limit ****************************************$group_data['customer_orderlimit'] <= count($orders) ||//
+		
+		//if( $group_data['customer_orderlimit'] <= count($orders) ){
+				//if($group_data['customer_orderlimit'] == ''){?>
+				
+		<?php	//	}
+		//	}else{echo 'ElseCOndition';
+		if($group_data['customer_orderlimit'] == 0){
+				$restriction = '';
+			}else if($group_data['customer_orderlimit'] <= count($orders)){
+				$restriction = 1;
+			} else{
+				$restriction = '';
+			}
+		
+		 		?>
+               <?php  $flag++; 
+			   if($restriction == ''){
+			   if($flag == 1){?>
+               <input type="hidden" name="cantorder"  id="cantorder"  value="0"/>
+               <?php continue; ?>
+                <?php } }
+		        
+		// ************************** Order Limit*****************************************//?>
+    <?php endforeach; ?>
+    </dl>
+<script type="text/javascript">
+//<![CDATA[
+    <?php if (!empty($shippingCodePrice)): ?>
+        var shippingCodePrice = {<?php echo implode(',',$shippingCodePrice); ?>};
+    <?php endif; ?>
+
+    $$('input[type="radio"][name="shipping_method"]').each(function(el){
+        Event.observe(el, 'click', function(){
+            if (el.checked == true) {
+                var getShippingCode = el.getValue();
+                <?php if (!empty($shippingCodePrice)): ?>
+                    var newPrice = shippingCodePrice[getShippingCode];
+                    if (!lastPrice) {
+                        lastPrice = newPrice;
+                        quoteBaseGrandTotal += newPrice;
+                    }
+                    if (newPrice != lastPrice) {
+                        quoteBaseGrandTotal += (newPrice-lastPrice);
+                        lastPrice = newPrice;
+                    }
+                <?php endif; ?>
+                checkQuoteBaseGrandTotal = quoteBaseGrandTotal;
+                return false;
+            }
+       });
+    });
+//]]>
+</script>
+<?php endif; ?>
+
+<script type="text/javascript">
+var window_instances = <?php echo json_encode($inst)?>;
+function accept_flexi_shipping(it){
+	jQuery('#flexible_flexi').remove();
+	if(jQuery(it).is(":checked")){
+		//alert('1');
+	<?php 	//Mage::log($quote->getGiftcertCode(),null,'giftcode.log'); ?>	
+var	giftcode = '<?php echo $quote->getGiftcertCode();?>';
+		
+	//	var x;
+		
+		/*if(giftcode){
+			
+			 if (confirm("Flexible Delivery cannot be chosen when a Gift Card is used. Would you like to continue? Continuing will remove your Flexible Delivery selection and you will need to choose a 2 hour delivery window. Thank you.") == true)	 {
+					// x = "You pressed OK!";
+				  	jQuery('.s_m_time_c').removeAttr('checked');
+					jQuery('#delivery_window_time').val('');
+				
+				} else {
+					//x = "You pressed Cancel!";
+					 //alert(x);
+					dd = jQuery(it).parent('dt');
+					jQuery(dd).append('<div style="display:block;" class="popup-flexi" id="flexible_flexi"><h4>Flexible Delivery</h4><p><?php //echo $flexible_popup_message?></p><div class="popup-action"><input type="checkbox" name="flexible_agreement" id="flexible_ship_agreement" /><label>I agree with terms</label><button type="button" class="button" style="float:right;" onclick="accepted_flexible()"><span>Ok</span></button></div></div>');
+				
+					jQuery('.s_m_time_c').removeAttr('checked');
+					
+					jQuery(it).attr('checked', 'checked');
+					
+					//unset timing
+					jQuery('.flexible-timing li strong').removeClass('selected');
+					delivery_window_selected = false;
+					jQuery('#delivery_window_time').val(jQuery(it).attr('rel'));
+					jQuery('#unattended_shipping').remove();
+				
+						 
+			 }
+				 
+				//	alert('Flexible Delivery Discount and Gift Card Discount cannot be used at same time. The Gift Card discount has been removed from your order.');
+			//jQuery('.s_m_time_c').removeAttr('checked');
+		}else{*/
+			dd = jQuery(it).parent('dt');
+			jQuery(dd).append('<div style="display:block;" class="popup-flexi" id="flexible_flexi"><h4>Flexible Delivery</h4><p><?php echo $flexible_popup_message?></p><div class="popup-action"><input type="checkbox" name="flexible_agreement" id="flexible_ship_agreement" /><label>I agree with terms</label><button type="button" class="button" style="float:right;" onclick="accepted_flexible()"><span>Ok</span></button></div></div>');
+		
+			jQuery('.s_m_time_c').removeAttr('checked');
+			
+			jQuery(it).attr('checked', 'checked');
+			
+			//unset timing
+			jQuery('.flexible-timing li strong').removeClass('selected');
+			delivery_window_selected = false;
+			jQuery('#delivery_window_time').val(jQuery(it).attr('rel'));
+			jQuery('#unattended_shipping').remove();
+		//}
+	}else{
+		//alert('2');
+		jQuery('#flexible_flexi').remove();
+		jQuery('.s_m_time_c').removeAttr('checked');
+	}
+	jQuery('#ordered_window').val('no');
+}
+
+function accepted_flexible(){
+	if(jQuery('#flexible_ship_agreement').is(":checked")){
+		jQuery('#flexible_flexi').remove();
+	}else{
+		alert('Please accept the terms!');
+	}
+}
+
+var delivery_window_selected = false;
+function delivery_window_set(it, _time){
+	
+	jQuery('.flexible-timing li strong').removeClass('selected');
+	jQuery('#unattended_shipping').remove();
+		//jQuery('#ordered_window').val('yes');
+	jQuery(it).addClass('selected');
+	
+	_li = jQuery(it).parent('li');
+	jQuery(_li).append('<div id="unattended_shipping"><input type="checkbox" onclick="unattanded(this)" id="unattended_shipping_input" name="unattended_shipping" value="yes" /><label for="unattended_shipping_input">Unattended Delivery</label><div class="popup-flexi" id="popup_flexi"><h4>Unattended Delivery</h4><p><?php echo $unattended_popup_message?></p><div class="popup-action"><input type="checkbox" name="agreement" id="unattended_ship_agreement" /><label>I agree with terms</label><button type="button" class="button" style="float:right;" onclick="accepted_unattended()"><span>Ok</span></button></div></div></div>');
+	
+	delivery_window_selected = true;
+	jQuery('#delivery_window_time').val(_time);
+	
+	jQuery('.s_m_time_c').removeAttr('checked');
+	
+	can_order = true;
+	if(jQuery(it).hasClass('ordered_window')){
+		
+	
+		//check order limit
+		__time = _time.replace('|', '_');
+		jQuery.each(window_instances, function(a,b){
+			if(__time == a){
+				if(parseInt(b) >= parseInt(<?php echo $delivery_limit?>)){
+					can_order = false;
+				}
+			}
+		});
+		
+		if(can_order){
+			
+			jQuery('#ordered_window').val('yes');
+			
+		}else{
+			//reset window
+			
+			delivery_window_selected = false;
+			jQuery('#delivery_window_time').val('');
+			
+			if(document.getElementById('delivery_allow').value != 1){
+				jQuery('#ordered_window').val('no');
+			}
+			jQuery(it).removeClass('selected');
+			if(document.getElementById('delivery_allow').value != 1){
+				alert('Sorry, this delivery window is sold out. Please choose another');
+			}
+			//alert('Delivery (<?php //echo $delivery_limit?>) limit exeeded! Please choose another delivery time');
+		}
+	}else{
+		jQuery('#ordered_window').val('no');
+	}
+}
+function unattanded(it){
+
+	if(jQuery(it).is(":checked")){
+		jQuery('#popup_flexi').show();
+	}else{
+		jQuery('#popup_flexi').hide();
+	}
+}
+
+function accepted_unattended(){
+	if(jQuery('#unattended_ship_agreement').is(":checked")){
+		jQuery('#popup_flexi').hide();
+	}else{
+		alert('Please accept the terms!'); 
+	}
+}
+
+function do_continue_shipping(){
+	if(jQuery('#delivery_window_time').val() == '' && !jQuery("[name='flexible_shipping']").is(":checked")){
+		
+		
+		if(document.getElementById('cantorder').value == '1'){
+		alert("We're sorry – we are sold out for the upcoming delivery date. Your cart will remain full and you will be able to place your order for the following delivery after this delivery date has passed. We apologize for any inconvenience!")
+		}else{
+		alert('Please Select a Delivery Window or Flexible Delivery!');
+		}
+	}else{
+	
+	if(document.getElementById('cantorder').value=='1'){
+		alert("We're sorry – we are sold out for the upcoming delivery date. Your cart will remain full and you will be able to place your order for the following delivery after this delivery date has passed. We apologize for any inconvenience!")
+		}else{
+		shippingMethod.save()
+		}
+	}	
+}
+</script>

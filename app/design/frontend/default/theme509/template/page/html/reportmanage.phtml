@@ -1,0 +1,1279 @@
+<?php
+$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+if(isset($_GET["pciker"]) && $_GET["pciker"]!="")
+{
+     if($_GET["pciker"]==1)
+	 {
+	     $picker_name = "Ariel";
+	 }
+	 else if($_GET["pciker"]==2)
+	 {
+	    $picker_name = "Desi";
+	 }
+	 else if($_GET["pciker"]==3)
+	 {
+	    $picker_name = "Jake";
+	 }
+	 else if($_GET["pciker"]==4)
+	 {
+	    $picker_name = "Rick";
+	 }
+	 else if($_GET["pciker"]==5)
+	 {
+	    $picker_name = "Mark";
+	 }
+?>
+<div style="border-bottom:3px solid #dfdfdf;margin-bottom:5px;" >
+<?php
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$url77 = explode("?pciker=",$currentUrl);
+?>
+<a href="<?php echo $url77[0]; ?>" > Back to Delivery Calendar </a>
+<br/>
+<h3 class="icon-head head-manage-blog" style="padding-left:0px;color:#eb5e00;">Pick Lists of <?php echo $_GET["ode"]; ?> for <?php echo $picker_name ; ?></h3>
+</div>
+<br/>
+<style>
+	.page
+	{
+	   width:90%;
+	}
+	td, th
+	{
+	   padding-top:5px !important;
+	   padding-left:5px !important;
+	   padding-right:5px !important;
+	   padding-bottom:5px !important;
+	   font-size:11px;
+	}
+	table
+	{
+	   border-collapse:collapse;
+	}
+	</style>
+   <script type="text/javascript">
+		function divprint24()
+		{
+            var divContents = jQuery("#o1").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title> Picking / Packing  List </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+    <a href="javascript:void(0);" onClick="divprint24();"> Print </a>
+    <br/>
+	<div id="o1">
+	<style>
+	@page
+	{
+		size: auto;   /* auto is the initial value */
+		margin-top: 15mm ;
+	}
+	</style>
+	<?php
+	$sql3e = "SELECT mei.value,msi.product_id,msi.qty_ordered as qotd,msi.name,msi.sku,msi.`order_id`,mop.picker_id,rr.value as val,rr2.value as sval,rr3.value as tval,rr4.value as uval,mcv.value as fname,mcv2.value as lname,rr2.store_id,
+    ( CASE rr2.value
+	WHEN 'Produce' THEN 1
+	WHEN '1' THEN 2
+	WHEN '2' THEN 3
+	WHEN '3' THEN 4
+	WHEN '4' THEN 5
+	WHEN '5' THEN 6
+	WHEN '6' THEN 7
+	WHEN '7' THEN 8
+	WHEN '8' THEN 9
+	WHEN '9' THEN 10
+	WHEN 'Bakery' THEN 11
+	WHEN 'Deli' THEN 12
+	WHEN 'F' THEN 13
+	WHEN 'R' THEN 14
+	ELSE 15
+	END ) as abc FROM `mg_sales_flat_order_item` msi
+						left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+						left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+						left join mg_order_picker mop on mog.`increment_id` = mop.`order_number`
+						left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251 and mei.store_id = 0
+						left join mg_catalog_product_entity_int rr on msi.product_id = rr.entity_id and rr.attribute_id =  252 and rr.store_id = 0
+						left join mg_catalog_product_entity_int qrr on msi.product_id = qrr.entity_id and qrr.attribute_id =  253 and rr.store_id = 0
+						left join mg_eav_attribute_option_value rr2 on rr.value = rr2.option_id and rr2.store_id = 0
+						left join mg_eav_attribute_option_value rr3 on mei.value = rr3.option_id and rr3.store_id = 0
+						left join mg_eav_attribute_option_value rr4 on qrr.value = rr4.option_id and rr4.store_id = 0
+						left join mg_customer_entity_varchar mcv on mog.customer_id = mcv.entity_id and mcv.attribute_id = 5
+						left join mg_customer_entity_varchar mcv2 on mog.customer_id = mcv2.entity_id and mcv2.attribute_id = 7
+						where msw.`window` LIKE '%".$_GET["ode"]."' and msi.base_row_total > 0 and mop.picker_id='".$_GET["pciker"]."' and ( mei.value=143 )  order by abc,rr3.value,rr4.value,msi.name" ;
+	?>
+	 <table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;font-size:11px;"  >
+				  <tr><td colspan=6 align="center"><b> Dry Pick List for Picker <?php echo $picker_name; ?> </b></td></tr>
+				  <tr>
+				  <!-- <th style="text-align:left;width:15px;">Sr.</th>
+				    <th style="text-align:left;width:75px;">Location</th>  -->
+<th style="text-align:left;width:430px;" >Product Name</th>
+				   <!-- <th style="text-align:left;width:25px;">Order</th> -->
+				   <th style="text-align:left;width:25px;">Qty</th> <th style="text-align:left;width:225px;">Customer Name</th>
+				   </tr>
+                   <?php
+                    $rows3e = $connection->fetchAll($sql3e);
+	                $green = 0;
+	                $bpil = 0;
+					$kbr="";
+					foreach ($rows3e as $value3e) {
+					$order4444 = Mage::getModel("sales/order")->load($value3e["order_id"]); //load order by order id
+                    $shipping_address = $order4444->getShippingAddress();
+					if($value3e["sval"]!=$kbr)
+					{
+					   echo "<tr><td colspan='3' style='text-align:center;font-weight:bold;'> Location : ".$value3e["sval"]."</td></tr>";
+					}
+					$kbr = $value3e["sval"];
+					$bpil = $bpil + $value3e["qotd"];
+					$green = $green + 1;
+					$qrt = explode(".",$value3e["qotd"]);
+?>
+                    <tr <?php if($qrt["0"]==2) { ?> style="background:#e0e0e0;font-weight:bold;" <?php } ?> <?php if($qrt["0"]>=3) { ?> style="background:#e0e0e0;font-weight:bold;font-style:italic;" <?php } ?> >
+
+					<td style="width:430px; <?php if($qrt["0"]==2) { ?> background:#e0e0e0;font-weight:bold;" <?php } ?> <?php if($qrt["0"]>=3) { ?> background:#e0e0e0;font-weight:bold;font-style:italic;" <?php } ?> "><?php echo $value3e["name"]; ?></td>
+
+					<td style="width:25px; <?php if($qrt["0"]==2) { ?> background:#e0e0e0;font-weight:bold;" <?php } ?> <?php if($qrt["0"]>=3) { ?> background:#e0e0e0;font-weight:bold;font-style:italic;" <?php } ?> "><?php echo $qrt["0"]; ?></td><td style="width:225px;"><?php echo $shipping_address["firstname"]; ?> <?php echo $shipping_address["lastname"]; ?></td>
+					</tr>
+               <?php
+					}
+                ?>
+
+</table>
+        <?php
+ $sql3eb = "SELECT mog.shipping_name,mcv.value as fname,mcv2.value as lname,msi.`order_id`,mog.customer_id  FROM `mg_sales_flat_order_item` msi
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					left join mg_order_picker mop on mog.`increment_id` = mop.`order_number`
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251 and mei.store_id = 0
+					left join mg_catalog_product_entity_int rr on msi.product_id = rr.entity_id and rr.attribute_id =  252 and rr.store_id = 0
+					left join mg_catalog_product_entity_int qrr on msi.product_id = qrr.entity_id and qrr.attribute_id =  253 and rr.store_id = 0
+					left join mg_eav_attribute_option_value rr2 on rr.value = rr2.option_id and rr2.store_id = 0
+					left join mg_eav_attribute_option_value rr3 on mei.value = rr3.option_id and rr3.store_id = 0
+					left join mg_eav_attribute_option_value rr4 on qrr.value = rr4.option_id and rr4.store_id = 0
+					left join mg_customer_entity_varchar mcv on mog.customer_id = mcv.entity_id and mcv.attribute_id = 5
+					left join mg_customer_entity_varchar mcv2 on mog.customer_id = mcv2.entity_id and mcv2.attribute_id = 7
+					where msw.`window` LIKE '%".$_GET["ode"]."' and msi.base_row_total > 0 and mop.picker_id='".$_GET["pciker"]."' and ( mei.value=141 or mei.value=143 )  group by mog.shipping_name,mog.`increment_id`";
+					  $rows3ek = $connection->fetchAll($sql3eb);
+	                  $green2 = 0;
+					foreach ($rows3ek as $value3ek) {
+
+					$order4444 = Mage::getModel("sales/order")->load($value3ek["order_id"]); //load order by order id
+                    $shipping_address = $order4444->getShippingAddress();
+
+					 $bpil = 0;
+   $sql3e = "SELECT mei.value,msi.product_id,msi.qty_ordered as qotd,msi.qty_ordered as qotd,msi.name,msi.sku,msi.`order_id`,mop.picker_id,rr.value as val,rr2.value as sval,rr3.value as tval,rr4.value as uval,mcv.value as fname,mcv2.value as lname FROM `mg_sales_flat_order_item` msi
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					left join mg_order_picker mop on mog.`increment_id` = mop.`order_number`
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251 and mei.store_id = 0
+					left join mg_catalog_product_entity_int rr on msi.product_id = rr.entity_id and rr.attribute_id =  252 and rr.store_id = 0
+					left join mg_catalog_product_entity_int qrr on msi.product_id = qrr.entity_id and qrr.attribute_id =  253 and rr.store_id = 0
+					left join mg_eav_attribute_option_value rr2 on rr.value = rr2.option_id and rr2.store_id = 0
+					left join mg_eav_attribute_option_value rr3 on mei.value = rr3.option_id and rr3.store_id = 0
+					left join mg_eav_attribute_option_value rr4 on qrr.value = rr4.option_id and rr4.store_id = 0
+					left join mg_customer_entity_varchar mcv on mog.customer_id = mcv.entity_id and mcv.attribute_id = 5
+					left join mg_customer_entity_varchar mcv2 on mog.customer_id = mcv2.entity_id and mcv2.attribute_id = 7
+					where msw.`window` LIKE '%".$_GET["ode"]."' and msi.base_row_total > 0 and mop.picker_id='".$_GET["pciker"]."' and ( mei.value=141 or mei.value=143 )  and msi.`order_id`  = '".$value3ek["order_id"]."' order by rr3.value,rr2.value desc,rr4.value desc,msi.name";
+?>
+
+   <br/>
+	<table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;<?php if($green2>=0) { echo 'page-break-before: always;'; } ?>font-size:11px;" >
+				   <tr><td colspan=3 align="center"><b>Dry List</b> <b> for customer <?php echo $shipping_address["firstname"]; ?> <?php echo $shipping_address["lastname"]; ?></b></td></tr>
+				   <tr>
+				    <!-- <th style="text-align:left;width:15px;">Sr.</th> -->
+				   <th style="text-align:left;width:600px;text-align:left;" >Product Name</th>
+				   <!-- <th style="text-align:left;width:75px;">Location</th>
+				   <th style="text-align:left;width:25px;">Order</th>
+				    <th style="text-align:left;width:225px;">Customer Name</th> -->
+				   <th style="text-align:left;width:100px;">Qty</th>
+				   </tr>
+                    <?php
+                    $rows3e = $connection->fetchAll($sql3e);
+	                $kbr = "";
+					foreach ($rows3e as $value3e) {
+					 $bpil = $bpil + $value3e["qotd"];
+					 $green = $green + 1;
+					 $qrt = explode(".",$value3e["qotd"]);
+					 if($value3e["tval"]!=$kbr)
+					  {
+					   echo "<tr><td colspan='3' style='text-align:center;font-weight:bold;'> Product Type : ".$value3e["tval"]."</td></tr>";
+					  }
+					$kbr = $value3e["tval"];
+?>
+                    <tr <?php if($qrt["0"]==2) { ?> style="background:#e0e0e0;font-weight:bold;" <?php } ?> <?php if($qrt["0"]>=3) { ?> style="background:#e0e0e0;font-weight:bold;font-style:italic;" <?php } ?> >
+					<td><?php echo $value3e["name"]; ?></td>
+					<!-- <td><?php echo $value3e["tval"]; ?></td>
+					<td><?php echo $green; ?></td>
+					<td><?php echo $value3e["sval"]; ?></td>
+					<td><?php echo $value3e["uval"]; ?></td>
+					<td><?php echo $value3e["fname"]; ?> <?php echo $value3e["lname"]; ?></td> -->
+					<td><?php echo $qrt["0"]; ?></td>
+					</tr>
+                <?php
+					}
+                 ?>
+<tr><td colspan="3" align="right">Total = <?php echo $bpil; ?> </td></tr>
+</table>
+<?php
+$green2 = $green2 + 1 ; } ?>
+    <?php
+  $sql3e = "SELECT mei.value,msi.product_id,msi.qty_ordered as qotd,msi.qty_ordered as qotd,msi.name,msi.sku,msi.`order_id`,mop.picker_id,rr.value as val,rr2.value as sval,rr3.value as tval,rr4.value as uval,mcv.value as fname,mcv2.value as lname,rr2.store_id,
+    ( CASE rr2.value
+	WHEN 'Produce' THEN 1
+	WHEN 'Dairy' THEN 2
+	WHEN 'Packed Meat' THEN 3
+	WHEN 'Cut Meat' THEN 4
+	WHEN 'Seafood' THEN 5
+	WHEN 'Bakery' THEN 6
+	WHEN 'Deli' THEN 7
+	ELSE 8
+	END ) as abc
+    FROM `mg_sales_flat_order_item` msi
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					left join mg_order_picker mop on mog.`increment_id` = mop.`order_number`
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251 and mei.store_id = 0
+					left join mg_catalog_product_entity_int rr on msi.product_id = rr.entity_id and rr.attribute_id =  252 and rr.store_id = 0
+					left join mg_catalog_product_entity_int qrr on msi.product_id = qrr.entity_id and qrr.attribute_id =  253 and rr.store_id = 0
+					left join mg_eav_attribute_option_value rr2 on rr.value = rr2.option_id and rr2.store_id = 0
+					left join mg_eav_attribute_option_value rr3 on mei.value = rr3.option_id and rr3.store_id = 0
+					left join mg_eav_attribute_option_value rr4 on qrr.value = rr4.option_id and rr4.store_id = 0
+					left join mg_customer_entity_varchar mcv on mog.customer_id = mcv.entity_id and mcv.attribute_id = 5
+					left join mg_customer_entity_varchar mcv2 on mog.customer_id = mcv2.entity_id and mcv2.attribute_id = 7
+					where msw.`window` LIKE '%".$_GET["ode"]."' and msi.base_row_total > 0 and mop.picker_id='".$_GET["pciker"]."' and ( mei.value=140 )  order by abc,sval,rr4.value";
+?>
+	<table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;page-break-before:always;font-size:11px;" >
+				   <tr><td colspan=6 align="center"><b>Cold Pick List for Picker <?php echo $picker_name; ?></b></td></tr>
+				   <tr >
+				  <!-- <th style="text-align:left;width:15px;">Sr.</th>
+				    <th style="text-align:left;width:75px;">Location</th>  -->
+<th style="text-align:left;width:430px;" >Product Name</th>
+				   <!-- <th style="text-align:left;width:25px;">Order</th> -->
+				   <th style="text-align:left;width:25px;">Qty</th> <th style="text-align:left;width:225px;">Customer Name</th>
+				   </tr>
+<?php
+					$rows3e = $connection->fetchAll($sql3e);
+					$green = 0;
+					$kbr = "";
+					foreach ($rows3e as $value3e) {
+					$order4444 = Mage::getModel("sales/order")->load($value3e["order_id"]); //load order by order id
+                    $shipping_address = $order4444->getShippingAddress();
+					if($value3e["sval"]!=$kbr)
+					{
+					   echo "<tr><td colspan='3' style='text-align:center;font-weight:bold;'> Location  :".$value3e["sval"]."</td></tr>";
+					}
+					$kbr = $value3e["sval"];
+					$bpil = $bpil + $value3e["qotd"];
+					$green = $green + 1;
+					$qrt = explode(".",$value3e["qotd"]);
+?>      <tr <?php if($qrt["0"]==2) { ?> style="background:#e0e0e0;font-weight:bold;" <?php } ?> <?php if($qrt["0"]>=3) { ?> style="background:#e0e0e0;font-weight:bold;font-style:italic;" <?php } ?> >
+					<!-- <td style="width:15px;"><?php echo $green; ?></td>
+					<td style="width:75px;"><?php echo $value3e["sval"]; ?></td>  -->
+					<td style="width:430px;"><?php echo $value3e["name"]; ?></td>
+					<!-- <td style="width:25px;"><?php echo $value3e["uval"]; ?></td> -->
+					<td style="width:25px;"><?php echo $qrt["0"]; ?></td><td style="width:225px;"><?php echo $shipping_address["firstname"]; ?> <?php echo $shipping_address["lastname"]; ?></td>
+					</tr>
+<?php
+	}
+?>
+ </table>
+		<?php
+		   $sql3e = "SELECT mei.value,msi.product_id,msi.qty_ordered as qotd,msi.name,msi.sku,msi.`order_id`,mop.picker_id,rr.value as val,rr2.value as sval,rr3.value as tval,rr4.value as uval,mcv.value as fname,mcv2.value as lname,rr2.store_id,
+    ( CASE rr2.value
+	WHEN '8' THEN 1
+	WHEN '9' THEN 2
+	WHEN 'Seafood' THEN 3
+	WHEN 'Packed Meat' THEN 4
+	WHEN 'Cut Meat' THEN 5
+	WHEN 'Dairy' THEN 6
+	ELSE 7
+	END ) as abc FROM `mg_sales_flat_order_item` msi
+
+							left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+							left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+							left join mg_order_picker mop on mog.`increment_id` = mop.`order_number`
+							left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251 and mei.store_id = 0
+							left join mg_catalog_product_entity_int rr on msi.product_id = rr.entity_id and rr.attribute_id =  252 and rr.store_id = 0
+							left join mg_catalog_product_entity_int qrr on msi.product_id = qrr.entity_id and qrr.attribute_id =  253 and rr.store_id = 0
+							left join mg_eav_attribute_option_value rr2 on rr.value = rr2.option_id and rr2.store_id = 0
+							left join mg_eav_attribute_option_value rr3 on mei.value = rr3.option_id and rr3.store_id = 0
+							left join mg_eav_attribute_option_value rr4 on qrr.value = rr4.option_id and rr4.store_id = 0
+							left join mg_customer_entity_varchar mcv on mog.customer_id = mcv.entity_id and mcv.attribute_id = 5
+							left join mg_customer_entity_varchar mcv2 on mog.customer_id = mcv2.entity_id and mcv2.attribute_id = 7
+							where msw.`window` LIKE '%".$_GET["ode"]."' and msi.base_row_total > 0 and mop.picker_id='".$_GET["pciker"]."' and ( mei.value=142 )  order by abc,rr3.value,rr2.value,rr4.value";
+		?>
+	<table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;page-break-before:always;font-size:11px;" >
+				  <tr <?php if($qrt["0"]==2) { ?> style="background:#e0e0e0;font-weight:bold;" <?php } ?> <?php if($qrt["0"]>=3) { ?> style="background:#e0e0e0;font-weight:bold;font-style:italic;" <?php } ?> ><td colspan=6 align="center"><b>Frozen Pick List for Picker <?php echo $picker_name; ?></b></td></tr>
+				  <tr>
+                   <th style="text-align:left;width:430px;" >Product Name</th>
+				   <th style="text-align:left;width:25px;">Qty</th>
+				   <!-- <th style="text-align:left;width:25px;">Order</th> -->
+				   <th style="text-align:left;width:225px;">Customer Name</th>
+				   </tr>
+                   <?php
+				    $rows3e = $connection->fetchAll($sql3e);
+					$green = 0;
+					$bpil = 0;
+					$kbr = "";
+					foreach ($rows3e as $value3e) {
+					$order4444 = Mage::getModel("sales/order")->load($value3e["order_id"]); //load order by order id
+                    $shipping_address = $order4444->getShippingAddress();
+					$bpil = $bpil + $value3e["qotd"];
+					$green = $green + 1;
+					$qrt = explode(".",$value3e["qotd"]);
+					 if($value3e["sval"]!=$kbr)
+					{
+					   echo "<tr><td colspan='3' style='text-align:center;font-weight:bold;'> Location : ".$value3e["sval"]."</td></tr>";
+					}
+					$kbr = $value3e["sval"];
+?>
+                    <tr <?php if($qrt["0"]==2) { ?> style="background:#e0e0e0;font-weight:bold;" <?php } ?> <?php if($qrt["0"]>=3) { ?> style="background:#e0e0e0;font-weight:bold;" <?php } ?> >
+					<!-- <td style="width:15px;"><?php echo $green; ?></td>
+					<td style="width:75px;"><?php echo $value3e["sval"]; ?></td> -->
+					<td style="width:430px;"><?php echo $value3e["name"]; ?></td>
+
+					<td style="width:25px;"><?php echo $qrt["0"]; ?></td>
+
+					<td style="width:225px;"><?php echo $shipping_address["firstname"]; ?> <?php echo $shipping_address["lastname"]; ?></td>
+					</tr>
+                  <?php
+					}
+                   ?>
+</table>
+<?php
+                    $sql3eb = "SELECT mog.shipping_name,mcv.value as fname,mcv2.value as lname,mog.customer_id, msi.`order_id` FROM `mg_sales_flat_order_item` msi
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					left join mg_order_picker mop on mog.`increment_id` = mop.`order_number`
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251 and mei.store_id = 0
+					left join mg_catalog_product_entity_int rr on msi.product_id = rr.entity_id and rr.attribute_id =  252 and rr.store_id = 0
+					left join mg_catalog_product_entity_int qrr on msi.product_id = qrr.entity_id and qrr.attribute_id =  253 and rr.store_id = 0
+					left join mg_eav_attribute_option_value rr2 on rr.value = rr2.option_id and rr2.store_id = 0
+					left join mg_eav_attribute_option_value rr3 on mei.value = rr3.option_id and rr3.store_id = 0
+					left join mg_eav_attribute_option_value rr4 on qrr.value = rr4.option_id and rr4.store_id = 0
+					left join mg_customer_entity_varchar mcv on mog.customer_id = mcv.entity_id and mcv.attribute_id = 5
+					left join mg_customer_entity_varchar mcv2 on mog.customer_id = mcv2.entity_id and mcv2.attribute_id = 7
+					where msw.`window` LIKE '%".$_GET["ode"]."' and msi.base_row_total > 0 and mop.picker_id='".$_GET["pciker"]."' and ( mei.value=140 or mei.value=142 or mei.value=144 or mei.value=145 or mei.value=146 )  group by mog.shipping_name,mog.`increment_id`";
+					$rows3ek = $connection->fetchAll($sql3eb);
+	                $green2 = 0;
+					foreach ($rows3ek as $value3ek) {
+
+					 $order4444 = Mage::getModel("sales/order")->load($value3ek["order_id"]); //load order by order id
+                    $shipping_address = $order4444->getShippingAddress();
+
+					 $bpil = 0;
+   $sql3e = "SELECT mei.value,msi.product_id,msi.qty_ordered as qotd,msi.qty_ordered as qotd,msi.name,msi.sku,msi.`order_id`,mop.picker_id,rr.value as val,rr2.value as sval,rr3.value as tval,rr4.value as uval,mcv.value as fname,mcv2.value as lname FROM `mg_sales_flat_order_item` msi
+
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					left join mg_order_picker mop on mog.`increment_id` = mop.`order_number`
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251 and mei.store_id = 0
+					left join mg_catalog_product_entity_int rr on msi.product_id = rr.entity_id and rr.attribute_id =  252 and rr.store_id = 0
+					left join mg_catalog_product_entity_int qrr on msi.product_id = qrr.entity_id and qrr.attribute_id =  253 and rr.store_id = 0
+					left join mg_eav_attribute_option_value rr2 on rr.value = rr2.option_id and rr2.store_id = 0
+					left join mg_eav_attribute_option_value rr3 on mei.value = rr3.option_id and rr3.store_id = 0
+					left join mg_eav_attribute_option_value rr4 on qrr.value = rr4.option_id and rr4.store_id = 0
+					left join mg_customer_entity_varchar mcv on mog.customer_id = mcv.entity_id and mcv.attribute_id = 5
+					left join mg_customer_entity_varchar mcv2 on mog.customer_id = mcv2.entity_id and mcv2.attribute_id = 7
+					where msw.`window` LIKE '%".$_GET["ode"]."' and msi.base_row_total > 0 and msi.base_row_total > 0 and mop.picker_id='".$_GET["pciker"]."' and ( mei.value=140 or mei.value=142 or mei.value=144 or mei.value=145 or mei.value=146 ) and msi.`order_id`  = '".$value3ek["order_id"]."' order by rr3.value,rr2.value desc,rr4.value desc,msi.name";
+?>
+   <br/>
+	<table border=1 cellpadding="5" cellspacing="5" style="font-size:11px;border-collapse:collapse;<?php if($green2>=0) { echo 'page-break-before: always;'; } ?>" >
+				   <tr><td colspan=3 align="center"><b>Cold/Frozen List</b> <b> for customer <?php echo $shipping_address["firstname"]; ?> <?php echo $shipping_address["lastname"]; ?></b></td></tr>
+				   <tr>
+				    <!-- <th style="text-align:left;width:15px;">Sr.</th> -->
+				   <th style="text-align:left;width:600px;text-align:left;" >Product Name</th>
+				   <!-- <th style="text-align:left;width:75px;">Location</th>
+				   <th style="text-align:left;width:25px;">Order</th>
+				    <th style="text-align:left;width:225px;">Customer Name</th> -->
+				   <th style="text-align:left;width:100px;">Qty</th>
+				   </tr>
+<?php
+                    $rows3e = $connection->fetchAll($sql3e);
+					$kbr="";
+					foreach ($rows3e as $value3e) {
+					 $bpil = $bpil + $value3e["qotd"];
+					 $green = $green + 1;
+					 $qrt = explode(".",$value3e["qotd"]);
+					 if($value3e["tval"]!=$kbr)
+					{
+					   echo "<tr><td colspan='3' style='text-align:center;font-weight:bold;'> Product Type : ".$value3e["tval"]."</td></tr>";
+					}
+					$kbr = $value3e["tval"];
+?>
+                    <tr <?php if($qrt["0"]==2) { ?> style="background:#e0e0e0;font-weight:bold;" <?php } ?> <?php if($qrt["0"]>=3) { ?> style="background:#e0e0e0;font-weight:bold;font-style:italic;" <?php } ?> >
+					<td><?php echo $value3e["name"]; ?></td>
+					<!-- <td><?php echo $value3e["tval"]; ?></td>
+					 <td><?php echo $green; ?></td>
+					<td><?php echo $value3e["sval"]; ?></td>
+					<td><?php echo $value3e["uval"]; ?></td>
+					<td><?php echo $value3e["fname"]; ?> <?php echo $value3e["lname"]; ?></td> -->
+					<td><?php echo $qrt["0"]; ?></td>
+					</tr>
+<?php
+	}
+?>
+<tr><td colspan="3" align="right">Total = <?php echo $bpil; ?> </td></tr>
+</table>
+<?php
+$green2 = $green2 + 1 ; } ?>
+</div>
+<br/>
+<script type="text/javascript">
+		function divprint242()
+		{
+            var divContents = jQuery("#o12").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title> Pick List </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+		function divprint2425()
+		{
+            var divContents = jQuery("#o124").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title> Pick List </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+    <br/>
+<?php
+}
+else
+{
+if(isset($_GET) &&  $_GET["oid"]=="" )
+{
+	while (list($key, $val) = each($_GET)) {
+
+	   if($key!="")
+	   {
+	           $sql22k = "SELECT order_id FROM mg_order_picker where `ordertext`='".$key."'";
+		       $rows22k = $connection->fetchOne($sql22k);
+
+			   if($rows22k=="")
+			   {
+			       $tt=explode("-",$key);
+
+				   $sql555556 = "SELECT `window` FROM `mg_shipping_delivery_window` where `order_number`='".$tt[1]."'";
+			       $rows555556 = $connection->fetchOne($sql555556);
+
+			       $sql3w  = "SELECT SUM(qty_ordered) FROM `mg_sales_flat_order_item` where `order_id`='".$tt[0]."'";
+			       $rows3w = $connection->fetchOne($sql3w);
+
+			       $insert="insert into mg_order_picker set `ordertext`='".$key."',order_id='".$tt[0]."',order_number='".$tt[1]."',picker_id='".$val."',window='".$rows555556."',items='".$rows3w."'";
+				   $connection->query($insert);
+			   }
+			   else
+			   {
+			        $tt=explode("-",$key);
+
+				    $sql3w  = "SELECT SUM(qty_ordered) FROM `mg_sales_flat_order_item` where `order_id`='".$tt[0]."'";
+			        $rows3w = $connection->fetchOne($sql3w);
+
+			        $update="update mg_order_picker set picker_id='".$val."',items='".$rows3w."' where `ordertext`='".$key."'";
+				    $connection->query($update);
+			   }
+	      }
+     }
+}
+?>
+<?php if(isset($_GET["oid"]) && $_GET["oid"]!="" ) {
+
+     $order = Mage::getModel('sales/order')->load($_GET["oid"], 'increment_id');
+	 $order->getAllVisibleItems();
+	 $address = $order->getShippingAddress();
+	  $address2 = $order->getBillingAddress();
+
+	 $orderValue = $order->getSubtotal();
+	 $orderValue2 = $order->getBaseGrandTotal();
+?>
+<style>
+.page
+{
+   width:90%;
+}
+
+td, th
+{
+   padding:5px !important;
+   font-size:12px;
+   color:#000;
+}
+
+table
+{
+   border-color:#000;
+}
+
+th
+{
+   color:#000;
+}
+</style>
+<div style="border-bottom:3px solid #dfdfdf;margin-bottom:5px;" >
+<h3 class="icon-head head-manage-blog" style="padding-left:0px;color:#eb5e00;">Order Details ( <?php echo $_GET["oid"]; ?> )</h3>
+<?php
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$url77 = explode("?oid=",$currentUrl);
+?>
+<a href="<?php echo $url77[0]; ?>" > Back to Delivery Calendar </a>
+</div>
+	 <b> Delivery Address :- </b>
+	             <?php echo $custName = $address->getName()."&nbsp;&nbsp;";
+				echo $custAddr = $address->getStreetFull()."&nbsp;&nbsp;";
+				echo $region2 = $address->getCity()."&nbsp;&nbsp;";
+				echo $region = $address->getRegion()."&nbsp;&nbsp;";
+				echo $country = $address["postcode"]; ?>
+	 <br/><br/><b> Billing Address :- </b>
+	  <?php echo $custName = $address2->getName()."&nbsp;&nbsp;";
+				echo $custAddr = $address2->getStreetFull()."&nbsp;&nbsp;";
+				echo $region2 = $address2->getCity()."&nbsp;&nbsp;";
+				echo $region = $address2->getRegion()."&nbsp;&nbsp;";
+				echo $country = $address2["postcode"]; ?>
+		<br/><br/>
+		<b> Customer :- </b>
+		<?php echo $custName; ?>
+		&nbsp; &nbsp;
+	  <?php
+	  		$sql55555 = "SELECT `window` FROM `mg_shipping_delivery_window` where `order_number`='".$_GET["oid"]."'";
+			$rows55555 = $connection->fetchOne($sql55555);
+			 $temp = explode("|",$rows55555);
+		 ?>
+		 <b> Delivery Date :- </b>
+		<?php if($temp[1]=="") { echo $temp[0]; } else { echo $temp[1]; } ?>
+		&nbsp; &nbsp;<b> Delivery Time :- </b>
+			 <?php if($temp[1]=="") { echo 'Flexible Time'; } else { echo $temp[0]; } ?>
+		 <br/><br/><b> Order Items </b>
+<?php
+
+   $value["order_number"] = $_GET["oid"];
+   if($value["order_number"]!="")
+		   {
+		       $sql2        = "SELECT entity_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows2 = $connection->fetchOne($sql2);
+			   echo "<br/>";
+
+				$sql3        = "SELECT mei.value,msi.product_id,msi.price,msi.row_total,msi.qty_ordered,msi.name,msi.sku FROM `mg_sales_flat_order_item` msi
+			    left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251
+			    where msi.`order_id`='".$rows2."' and msi.base_row_total > 0 ";
+
+			   $rows3 = $connection->fetchAll($sql3);
+
+			   ?>
+
+
+			   <table border=1 cellpadding="5" cellspacing="5" border="1" style="border-collapse:collapse" >
+
+			   <tr>
+
+			   <th >Product Name</th>
+			   <th>Sku</th>
+			   <th>Price</th>
+			   <th>Qty</th>
+			   <th>Subtotal</th>
+			   <th>Product Type</th>
+			   </tr>
+
+			   <?php
+			   foreach ($rows3 as $value3) {
+
+
+				$_resource = Mage::getSingleton('catalog/product')->getResource();
+				$optionValue1 = $_resource->getAttributeRawValue($value3["product_id"],'protype', Mage::app()->getStore());
+
+				 $product = Mage::getModel('catalog/product')->setStoreId($store_id)->setProtype($optionValue1);
+                $optionLabel1 = $product->getAttributeText('protype');
+
+
+				/* $optionValue2 = $_resource->getAttributeRawValue($value3["product_id"],'prolocation', Mage::app()->getStore());
+
+				$product = Mage::getModel('catalog/product')->setStoreId($store_id)->setProlocation($optionValue2);
+                $optionLabel2 = $product->getAttributeText('prolocation');
+
+				$optionValue3 = $_resource->getAttributeRawValue($value3["product_id"],'proorder', Mage::app()->getStore());
+
+				$product = Mage::getModel('catalog/product')->setStoreId($store_id)->setProorder($optionValue3);
+                $optionLabel3 = $product->getAttributeText('proorder'); */
+
+
+				$optionValue4 = $_resource->getAttributeRawValue($value3["product_id"],'vendor_product_id', Mage::app()->getStore());
+				// echo $optionValue;
+
+			   ?>
+
+			    <tr>
+				<td><?php echo $value3["name"]; ?></td>
+				<td><?php echo $value3["sku"]; ?></td>
+				<td>$<?php echo number_format($value3["price"], 2, '.', ''); ?></td>
+				<td><?php echo round($value3["qty_ordered"],0); ?></td>
+				<td>$<?php echo number_format($value3["row_total"], 2, '.', ''); ?></td>
+				<td><?php echo $optionLabel1; ?></td>
+				</tr>
+
+			   <?php
+			   }
+			   ?>
+
+			   <tr><td style="text-align:right;" colspan="5">
+			   <b>Subtoal : <br/>
+			   Grandtotal : <br/></b>
+			   </td>
+			   <td>
+			   $<?php echo number_format($orderValue, 2, '.', ''); ?>  <br/>
+			   $<?php echo number_format($orderValue2, 2, '.', ''); ?>  <br/>
+			   </td>
+			   </tr>
+			    </table>
+
+			   <?php
+		   }
+
+} else { ?>
+
+<?php
+
+      $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+?>
+
+
+<style>
+
+
+body>.wrapper
+{
+   background:none;
+   font-weight:bold;
+   color:#fff;
+   overflow:hidden;
+}
+
+.page
+{
+   width:90%;
+}
+
+td, th
+{
+   padding:5px !important;
+   font-size:12px;
+   color:#000;
+}
+
+table
+{
+   border-color:#000;
+}
+
+th
+{
+   color:#000;
+}
+
+</style>
+
+<div>
+<h3 class="icon-head head-manage-blog" style="padding-left:0px;color:#eb5e00;">Delivery Calendar</h3>
+</div>
+<form name="frmpick" id="frmpick" action="" method="GET"  >
+<table border=1 style="border-collapse:collapse;font-size:11px;">
+<tr>
+<th style="text-align:left;width:90px;"><b>Delivery Date</b></th>
+<th><b>Delivery Time</b></th>
+<th><b>Order Number</b></th>
+<th style="text-align:left;width:110px;"><b>Customer Name</b></th>
+<th style="text-align:left;width:360px;"><b>Delivery Address</b> </th>
+<th ><b>Picker</b> </th>
+<th style="text-align:left;width:40px;"><b>Item Qty.</b></th>
+<th style="text-align:left;width:320px;"><b> Assign / Change Picker</b></th>
+</tr>
+<?php
+
+	   $j=0;
+	   for($i=0;$i<=15;$i++){
+
+     $kbt = (date("d_m_Y",strtotime("+$i days")));
+	 $kbt2 = (date("m-d-Y",strtotime("+$i days")));
+
+	 $sql        = "SELECT m.* FROM `mg_shipping_delivery_window` m  where m.`window` LIKE '%".$kbt."' order by m.`window`";
+	 $rows = $connection->fetchAll($sql);
+	 $total_rows = count($rows);
+
+
+	 if($total_rows>0)
+	 {
+	    $j=$j+1;
+     }
+
+	 if($j%2==0)
+	 {
+	    $color='#fff';
+	 }
+	 else
+	 {
+	    $color='#cecece';
+	 }
+
+	  $check=explode("-",$kbt2);
+
+	$check2[$i] =  $check[1];
+
+
+	  foreach ($rows as $value) {
+	       if($value["order_number"]!="" && $value["order_number"]!='100003190')
+		   {
+		       $sql2        = "SELECT entity_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows2 = $connection->fetchOne($sql2);
+
+			   $sql22        = "SELECT customer_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows22 = $connection->fetchOne($sql22);
+
+			   $customer = "" ;
+			   $customer = Mage::getModel('customer/customer')->load($rows22);
+
+			   $sql222        = "SELECT entity_id FROM mg_sales_flat_order_grid where customer_id='".$rows22."' and increment_id!='".$value["order_number"]."'";
+		       $rows222 = $connection->fetchOne($sql222);
+
+
+			   $sqlstatus     = "SELECT status FROM mg_sales_flat_order_grid  where increment_id='".$value["order_number"]."'";
+		       $rowstatus = $connection->fetchOne($sqlstatus);
+
+			   $sql3        = "SELECT SUM(qty_ordered) FROM `mg_sales_flat_order_item` where `order_id`='".$rows2."'";
+			   $rows3 = $connection->fetchOne($sql3);
+			   $order = Mage::getModel("sales/order")->load($rows2); //load order by order id
+			   $address = $order->getShippingAddress();
+			   $temp = explode("|",$value['window']);
+			   $temp3 = explode(".",$rows3);
+			   $check22 = 0;
+
+			   if($customer->getId()!="813" && $customer->getId()!="1205" && $rowstatus!='canceled' )
+			   {
+	 ?>
+
+			   <tr style="background-color:<?php echo $color; ?>;">
+			   <td  <?php if($rows222 == "" ) {  echo 'style="color:#0041d7;font-weight:bold;font-size:12px;"'; } ?> ><?php echo $kbt2; ?></td>
+			   <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?> ><?php if($temp[1]=="") { echo 'Flexible Time'; } else { echo $temp[0]; } ?></td>
+			   <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?>>
+			   <a href="?oid=<?php echo $value['order_number'] ?>"  <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;text-decoration:underline;"'; } else {  echo 'style="color:#000;font-weight:bold;font-size:12px;text-decoration:underline;"'; } ?> >
+			   <?php echo $value['order_number']; ?>
+			   </a>
+			    </td>
+			   <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?> ><?php $custName = $address->getName(); ?> <?php if(trim($custName)=="") { echo $customer->getName(); } else { echo $custName; } ?>
+			   </td>
+			   <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?> >
+			    <?php
+				echo $custAddr = $address->getStreetFull()."&nbsp;&nbsp;";
+				echo $region2 = $address->getCity()."&nbsp;&nbsp;";
+				echo $region = $address->getRegion()."&nbsp;&nbsp;";
+				echo $country = $address["postcode"]; ?>
+				</td>
+				<td>
+				<?php $sql2g = "SELECT picker_id FROM mg_order_picker where order_number='".$value["order_number"]."'";
+		        $rows2g = $connection->fetchOne($sql2g);
+				if($rows2g!="")
+			     {
+					$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+					$url77 = explode("/",$currentUrl);
+            ?>
+				 <a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>index.php/salesreport/adminhtml_sales/reportmanage/key/<?php echo $url77[8]; ?>/?pciker=<?php echo $rows2g; ?>&ode=<?php echo $kbt; ?>">
+				 <?php
+				    $sql2gk = "SELECT name FROM mg_pickers where id='".$rows2g."'";
+		            echo $rows2gk = $connection->fetchOne($sql2gk);
+				 }
+			   ?>
+			   </a>
+				</td>
+				 <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?> ><?php echo $temp3[0]; ?> </td>
+				<td style="font-size:11px;">
+	 			 <?php
+				 $sql444  = "select * from mg_pickers where role!='driver' order by name";
+	             $rows444 = $connection->fetchAll($sql444);
+				 foreach ($rows444 as $value444) {
+				 $sqlwr="SELECT SUM(items) FROM mg_order_picker where picker_id='".$value444["id"]."' and window LIKE '%".$kbt."'";
+				 $rows3wr = $connection->fetchOne($sqlwr);
+				 if($rows3wr=="")
+				 {
+				   $rows3wr=0;
+				 }
+				 ?>
+				 <input onChange="pickfun();" type="radio" name="<?php echo $rows2; ?>-<?php echo $value['order_number']; ?>-pick" value="<?php echo $value444["id"]; ?>" /> <?php echo $value444["name"]; ?><?php echo "(".$rows3wr.")"; ?>
+				 <?php } ?>
+				</td>
+			   </tr>
+			   <?php
+
+			   }
+		   }
+	     }
+	  }
+  ?>
+<br/><br/>
+</table>
+</form>
+<div id="a">
+      <br/>
+	<div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Generate route plan");?></h3></td>
+            <td class="form-buttons"><button style="" onclick="filterFormSubmit.submit()" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Generate</span></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <?php /*?><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><?php */?>
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Delivery Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $_GET["from"]; ?>" id="sales_report_from" name="from" />
+                      <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif">
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_from",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_from_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	  <script type="text/javascript">
+       	 //<![CDATA[
+        	var filterFormSubmit  = new varienForm('filter_form');
+         //]]>
+        </script>
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script>
+	  <?php if(isset($_GET["from"])) {
+	    $bfrom = explode("/",$_GET["from"]);
+		$lfrom = $bfrom[1]."_".$bfrom[0]."_".$bfrom[2];
+	   ?>
+       <table border=1 style="border-collapse:collapse">
+		<tr>
+		<th><b>Delivery Address</b></th>
+		<th><b>Time Window</b></th>
+		<th><b>Order Date</b></th>
+		<th><b>Order Number</b></th>
+		</tr>
+<?php
+	   $srb = '{"name":"'.$_GET["from"].'-auto","horizonDays":1,"driversSpeedPercent":100,"orders":[';
+	   $j=0;
+	   for($i=0;$i<=0;$i++){
+     $kbt = $lfrom;
+	 $kbt2 = (date("m-d-Y",strtotime("+$i days")));
+	  // $pDate = strtotime($kbt2.'- 1 week');
+     // $pDate2 = date('Y-m-d',$pDate);
+	 $sql        = "SELECT m.* FROM `mg_shipping_delivery_window` m  where m.`window` LIKE '%".$kbt."' order by m.`window`";
+	 $rows = $connection->fetchAll($sql);
+	 $total_rows = count($rows);
+	 if($total_rows>0)
+	 {
+	    $j=$j+1;
+     }
+
+	 if($j%2==0)
+	 {
+	    $color='#fff';
+	 }
+	 else
+	 {
+	    $color='#cecece';
+	 }
+
+	  $check=explode("-",$kbt2);
+
+	$check2[$i] =  $check[1];
+
+	  foreach ($rows as $value) {
+	       if($value["order_number"]!="" && $value["order_number"]!='100003190' )
+		   {
+		       $sql2   = "SELECT entity_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows2  = $connection->fetchOne($sql2);
+			   $sql22  = "SELECT customer_id FROM mg_sales_flat_order_grid where increment_id='".$value["order_number"]."'";
+		       $rows22 = $connection->fetchOne($sql22);
+			   $sql222        = "SELECT entity_id FROM mg_sales_flat_order_grid where customer_id='".$rows22."' and increment_id!='".$value["order_number"]."'";
+
+
+			    $sqlstatus     = "SELECT status FROM mg_sales_flat_order_grid  where increment_id='".$value["order_number"]."'";
+		       $rowstatus = $connection->fetchOne($sqlstatus);
+
+		       $rows222 = $connection->fetchOne($sql222);
+			   $customer = Mage::getModel('customer/customer')->load($rows22);
+			   $sql3  = "SELECT SUM(qty_ordered) FROM `mg_sales_flat_order_item` where `order_id`='".$rows2."'";
+			   $rows3 = $connection->fetchOne($sql3);
+			   $order = Mage::getModel("sales/order")->load($rows2); //load order by order id
+			   $address = $order->getShippingAddress();
+			   $temp = explode("|",$value['window']);
+			   $temp3 = explode(".",$rows3);
+			   $check22 = 0;
+			   if($temp[0]=="01_00pm_03_00pm")
+			   {
+			      $startm = 780;
+				  $endm = 900;
+			   }
+			   else if($temp[0]=="03_00pm_05_00pm")
+			   {
+			      $startm = 900;
+				  $endm = 1020;
+			   }
+			   else if($temp[0]=="05_00pm_07_00pm")
+			   {
+			      $startm = 1020;
+				  $endm = 1140;
+			   }
+			   else if($temp[0]=="07_00pm_09_00pm")
+			   {
+			      $startm = 1140;
+				  $endm = 1260;
+			   }
+			   else
+			   {
+			       $startm = "780";
+				   $endm = "1260";
+			   }
+			   if($customer->getId()!="813" && $customer->getId()!="1205" && $customer->getId()!="1253" && $rowstatus!='canceled' )
+			   {
+			   ?>
+			   <tr style="background-color:<?php echo $color; ?>;">
+			   <td <?php if($rows222 == "" ) {  echo 'style="color:#1c60ff;font-weight:bold;font-size:12px;"'; } ?> >
+			    <?php
+				echo $custAddr = $address->getStreetFull()."&nbsp;&nbsp;";
+				echo $region2 = $address->getCity()."&nbsp;&nbsp;";
+				echo $region = $address->getRegion()."&nbsp;&nbsp;";
+				echo $country = $address["postcode"];
+				 if($i==0) {
+				  $ubr = $address->getStreetFull()." ".$address->getCity()." ".$address->getRegion()." ".$address["postcode"];
+				 $srb.='{ "name":"'.$value["order_number"].'", "serviceTimeMin": 15, ';
+$srb.='"location":{"address":"'.$ubr.'"},"eligibleDays":[1],"timeWindows":[{"startMin":'.$startm.',"stopMin":'.$endm.'}]},';
+				 }
+				?>
+				</td>
+				<td><?php if($temp[1]!="") { echo $temp[0]; } else { echo "Flexible Time"; } ?></td>
+				<td><?php if($temp[1]!="") { echo $temp[1]; } else { echo $temp[0]; } ?></td>
+				<td><?php echo $value['order_number']; ?></td>
+			   </tr>
+			   <?php
+			    }
+		     }
+	     }
+	  }
+
+	 $srb = rtrim($srb, ",");
+	 $srb.= ']}';
+
+	     $baseApiURL = "http://vrp.viamente.com/api/vrp/v2";
+         $key = '3320e017-0d1b-4c67-a8e6-40d0767cc55e';
+
+			if ($key == 'YOUR_API_KEY_HERE') {
+			  die("Please edit example.php at line \"\$key = 'YOUR_API_KEY_HERE';\" and replace YOUR_API_KEY_HERE with your API key");
+			}
+
+function assoc_array_from_json_file($fileName) {
+  global $jsonPath;
+  $str = '{
+  "name": "Example deliveries",
+  "label": "Your label text here",
+  "workingDayStartMin": 0,
+  "horizonDays": 2,
+  "driversSpeedPercent": 100,
+  "trafficProfile": {
+    "name": "Lancaster",
+    "description": "",
+    "trafficRegions": [{
+      "trafficLevelPercent": 50,
+      "region": [{
+        "lat": 34.707610,
+        "lng": -118.175640
+      }, {
+        "lat": 34.708033,
+        "lng": -118.231430
+      }, {
+        "lat": 34.661028,
+        "lng": -118.243618
+      }, {
+        "lat": 34.626004,
+        "lng": -118.216323
+      }, {
+        "lat": 34.631512,
+        "lng": -118.157100
+      }, {
+        "lat": 34.693356,
+        "lng": -118.151950
+      }, {
+        "lat": 34.700130,
+        "lng": -118.161220
+      }]
+    }]
+  },
+  "loadUnitType": "Goods",
+  "loadUnit2Type": "Pounds",
+  "subfleetID": "flt-11111111-2222-3333-4444-555555555555",
+  "orders": [{
+    "name": "Nelson Torgersen",
+    "loadUnits": 1,
+    "loadUnits2": 10,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "43534 Kirkland Ave, Lancaster, CA 93535, USA"
+    },
+    "eligibleDays": [1],
+    "timeWindows": [{
+      "startMin": 510,
+      "stopMin": 540
+    }],
+    "importance": "higher",
+    "skillsInclude": ["plumbing", "powertools"],
+    "skillsExclude": ["landscaping"],
+    "customFields": {
+      "orderID": "XY-1234",
+      "customerID": "AAA-9999",
+      "phoneNumber": "(987) 654-3210"
+    }
+  }, {
+    "name": "Jamie Rozman",
+    "loadUnits": 2,
+    "loadUnits2": 15,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "1027 W Newgrove St, Lancaster, CA 93534, USA"
+    },
+    "eligibleDays": [2],
+    "timeWindows": [{
+      "startMin": 375,
+      "stopMin": 450
+    }]
+  }, {
+    "name": "Jessie Blewett",
+    "loadUnits": 2,
+    "loadUnits2": 18,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "1235 W Kettering St, Lancaster, CA 93534, USA"
+    },
+    "eligibleDays": [1, 2],
+    "timeWindows": [{
+      "startMin": 510,
+      "stopMin": 570
+    }]
+  }, {
+    "name": "Marcie Ocon",
+    "importance": "highest",
+    "loadUnits": 1,
+    "loadUnits2": 7,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "45419 10th St W, Lancaster, CA 93534, USA"
+    },
+    "timeWindows": [{
+      "startMin": 390,
+      "stopMin": 390
+    }]
+  }, {
+    "name": "Earlene Saur",
+    "loadUnits": 2,
+    "loadUnits2": 22,
+    "serviceTimeMin": 0,
+    "location": {
+      "address": "44924 5th St E, Lancaster, CA 93535, USA"
+    },
+    "timeWindows": [{
+      "startMin": 510,
+      "stopMin": 600
+    }]
+  }, {
+    "name": "Clayton Hervey",
+    "loadUnits": 1,
+    "loadUnits2": 4,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "425 E Ave H 11, Lancaster, CA 93535, USA"
+    },
+    "timeWindows": [{
+      "startMin": 540,
+      "stopMin": 600
+    }]
+  }, {
+    "name": "Earnestine Harnett",
+    "loadUnits": 1,
+    "loadUnits2": 7,
+    "serviceTimeMin": 0,
+    "location": {
+      "address": "Earnestine Harnetts front door",
+      "lat": 34.66239,
+      "lng": -118.18351
+    },
+    "timeWindows": [{
+      "startMin": 510,
+      "stopMin": 660
+    }]
+  }, {
+    "name": "Nelson Lufkin",
+    "loadUnits": 3,
+    "loadUnits2": 38,
+    "serviceTimeMin": 0,
+    "location": {
+      "address": "43420 22nd St W, Lancaster, CA 93536, USA"
+    },
+    "timeWindows": [{
+      "startMin": 480,
+      "stopMin": 540
+    }]
+  }, {
+    "name": "Jerri Ertl",
+    "loadUnits": 3,
+    "loadUnits2": 32,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "44044 36th St W, Lancaster, CA 93536, USA"
+    },
+    "timeWindows": [{
+      "startMin": 450,
+      "stopMin": 510
+    }]
+  }]
+}';
+  return json_decode($str, true); // true = decode as associative array
+}
+
+function json_encode_ex($data) {
+  return json_encode($data, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
+}
+
+function json_indent($json) {
+  $result      = '';
+  $pos         = 0;
+  $strLen      = strlen($json);
+  $indentStr   = '  ';
+  $newLine     = "\n";
+  $prevChar    = '';
+  $outOfQuotes = true;
+
+  for ($i=0; $i<=$strLen; $i++) {
+    // Grab the next character in the string.
+    $char = substr($json, $i, 1);
+
+    // Are we inside a quoted string?
+    if ($char == '"' && $prevChar != '\\') {
+      $outOfQuotes = !$outOfQuotes;
+
+    // If this character is the end of an element,
+    // output a new line and indent the next line.
+    } else if(($char == '}' || $char == ']') && $outOfQuotes) {
+      $result .= $newLine;
+      $pos --;
+      for ($j=0; $j<$pos; $j++) {
+        $result .= $indentStr;
+      }
+    }
+
+    // Add the character to the result string.
+    $result .= $char;
+
+    // If the last character was the beginning of an element,
+    // output a new line and indent the next line.
+    if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
+      $result .= $newLine;
+      if ($char == '{' || $char == '[') {
+        $pos ++;
+      }
+
+      for ($j = 0; $j < $pos; $j++) {
+        $result .= $indentStr;
+      }
+    }
+
+    $prevChar = $char;
+  }
+  return $result;
+}
+
+
+function executeRest($url, $method, $key, $data = "") {
+  $headers = array(
+    'Accept: application/json',
+    'Content-Type: application/json'
+  );
+
+  $url .= '?key='.$key;
+
+  $handle = curl_init();
+  curl_setopt($handle, CURLOPT_URL, $url);
+  curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 10);
+  curl_setopt($handle, CURLOPT_TIMEOUT, 360);
+
+  switch($method)
+  {
+    case 'GET':
+    break;
+    case 'POST':
+    curl_setopt($handle, CURLOPT_POST, true);
+    curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
+    break;
+    case 'PUT':
+    curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
+    break;
+    case 'DELETE':
+    curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'DELETE');
+    break;
+  }
+  $response = curl_exec($handle);
+  $status = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+ /* echo "<br>Response status: ".$status."\n";
+  echo "<br>Response body: \n";
+  echo "<br><pre>".json_indent($response)."</pre>\n";
+  echo "<br><br>\n"; */
+  if(php_sapi_name() != "cli") {
+    flush();
+    ob_flush();
+  }
+  return json_indent($response);
+}
+         $routeplanRes = executeRest($baseApiURL."/routeplans", 'POST', $key, $srb);
+?>
+<br/><br/>
+</table>
+     <?php } ?>
+</div>
+<?php } } ?>
+<script type="text/javascript">
+    function pickfun()
+	{
+	   jQuery('#frmpick').submit();
+	}
+</script>

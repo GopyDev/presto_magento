@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Demac_ProductOrders>
+            <version>0.1.0</version>
+        </Demac_ProductOrders>
+    </modules>
+    <global>
+        <blocks>
+            <demac_productorders>
+                <class>Demac_ProductOrders_Block</class>
+            </demac_productorders>
+            <adminhtml>
+                <rewrite>
+                    <catalog_product_edit_tabs>Demac_ProductOrders_Block_Adminhtml_Catalog_Product_Edit_Tabs</catalog_product_edit_tabs>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+        <helpers>
+            <demac_productorders>
+                <class>Demac_ProductOrders_Helper</class>
+            </demac_productorders>
+        </helpers>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <demac_productorders before="Mage_Adminhtml">Demac_ProductOrders_Adminhtml</demac_productorders>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <demac_productorders>
+                    <file>demac/productorders.xml</file>
+                </demac_productorders>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

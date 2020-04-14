@@ -1,0 +1,211 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    Mage
+ * @package     Mage_Sales
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+
+class Mage_Sales_Model_Order_Invoice_Total_Discount extends Mage_Sales_Model_Order_Invoice_Total_Abstract
+{
+    public function collect(Mage_Sales_Model_Order_Invoice $invoice)
+    {
+        $invoice->setDiscountAmount(0);
+        $invoice->setBaseDiscountAmount(0);
+
+        $totalDiscountAmount     = 0;
+        $baseTotalDiscountAmount = 0;
+
+        /**
+         * Checking if shipping discount was added in previous invoices.
+         * So basically if we have invoice with positive discount and it
+         * was not canceled we don't add shipping discount to this one.
+         */
+        $addShippingDicount = true;
+        foreach ($invoice->getOrder()->getInvoiceCollection() as $previusInvoice) {
+            if ($previusInvoice->getDiscountAmount()) {
+                $addShippingDicount = false;
+            }
+        }
+
+        if ($addShippingDicount) {
+			
+			
+			
+			//print_r($previusInvoice);
+            $totalDiscountAmount     = $totalDiscountAmount + $invoice->getOrder()->getShippingDiscountAmount();
+            $baseTotalDiscountAmount = $baseTotalDiscountAmount + $invoice->getOrder()->getBaseShippingDiscountAmount();
+        }
+
+        /** @var $item Mage_Sales_Model_Order_Invoice_Item */
+        foreach ($invoice->getAllItems() as $item) {
+            $orderItem = $item->getOrderItem();
+            if ($orderItem->isDummy()) {
+                 continue;
+            }
+
+            $orderItemDiscount      = (float) $orderItem->getDiscountAmount();
+            $baseOrderItemDiscount  = (float) $orderItem->getBaseDiscountAmount();
+            $orderItemQty       = $orderItem->getQtyOrdered();
+
+            if ($orderItemDiscount && $orderItemQty) {
+                /**
+                 * Resolve rounding problems
+                 */
+                $discount = $orderItemDiscount - $orderItem->getDiscountInvoiced();
+                $baseDiscount = $baseOrderItemDiscount - $orderItem->getBaseDiscountInvoiced();
+                if (!$item->isLast()) {
+                    $activeQty = $orderItemQty - $orderItem->getQtyInvoiced();
+                    $discount = $invoice->roundPrice($discount / $activeQty * $item->getQty(), 'regular', true);
+                    $baseDiscount = $invoice->roundPrice($baseDiscount / $activeQty * $item->getQty(), 'base', true);
+                }
+
+                $item->setDiscountAmount($discount);
+                $item->setBaseDiscountAmount($baseDiscount);
+
+                $totalDiscountAmount += $discount;
+                $baseTotalDiscountAmount += $baseDiscount;
+            }
+		
+        }
+		//get base Discount amount and store in variable custom 
+		$totalDiscountAmount = $invoice->getOrder()->getBaseDiscountAmount();
+		$baseTotalDiscountAmount = $invoice->getOrder()->getBaseDiscountAmount(); 
+		
+        $invoice->setDiscountAmount($totalDiscountAmount);
+        $invoice->setBaseDiscountAmount($baseTotalDiscountAmount);
+		//End
+		//Get Entity id from order collection
+		$entity_id = $orderItem['order_id'];
+		
+		//
+		// Get Order id from order table and retrive all data from db with shiping charge
+		
+		
+		$resource = Mage::getSingleton('core/resource');
+		$readConnection = $resource->getConnection('core_read');
+		$table = $resource->getTableName('sales_flat_order');
+		$sql1 = "select * from mg_sales_flat_order where entity_id='".$entity_id."'";
+		$orderdata = $readConnection->fetchAll($sql1);
+		$giftcertcode = $orderdata['giftcert_code'];
+		
+		$nextdayfee = $_SESSION['ship_charge'];				
+		//end
+		$increment_id = $orderdata['increment_id'];
+		//get extra Shiping charge for nextday delivery query
+		
+		$resources = Mage::getSingleton('core/resource');
+		$readConnections = $resources->getConnection('core_read');
+		$tables = $resource->getTableName('sales_flat_order');
+		$sql2 = "select * from mg_shipping_delivery_window where order_number='".$increment_id."'";
+		$shipchargeval = $readConnections->fetchAll($sql2);
+		
+		//
+		// Check discount amount in minus
+	
+		$pos1 = strpos($totalDiscountAmount,'-');
+				if ($pos1 === false) {
+						$discountvalue1 = $totalDiscountAmount; 
+				}
+				else{
+						$discountvalue1 = str_replace('-','',$totalDiscountAmount);
+				}
+		//	
+	
+		$ordercollection = 	Mage::getModel('sales/order')->getCollection()->addAttributeToFilter('entity_id', $invoice->getData('order_id'));
+		//echo '<pre>';print_r($order->getData('increment_id'));
+		foreach($ordercollection as $order){
+			$orderid = $order['increment_id'];
+			}
+		$giftcert_code = $order->getData('giftcert_code');
+		$base_giftcert_amount = $order->getData('base_giftcert_amount');
+		
+		$query1 = "select shipcharge  from mg_shipping_delivery_window where order_number='".$orderid."'";
+		$ship_charge = $readConnections->fetchCol($query1);
+		
+		if($giftcert_code){
+		$subtotal = $invoice->getGrandTotal(); 
+		 $grandtotalgift = $subtotal + $ship_charge[0]; //If giftcode Used 
+		}else{
+		$subtotal = $invoice->getGrandTotal(); 
+		$grandtotal = ($subtotal + $nextdayfee);
+		}
+		
+		//echo 'nextdayfee'.$nextdayfee;
+		if(!empty($nextdayfee)){
+
+			 if($orderdata['coupon_code'] == 'chagrinfalls'){
+				//Mage::log('1',null,'1111111.log');
+					$invoice->setGrandTotal($grandtotal - $discountvalue1);
+					$invoice->setBaseGrandTotal($grandtotal -  $discountvalue1);
+					$invoice->setBaseTotalInvoiced($grandtotal);
+					$invoice->setTotalInvoiced($grandtotal);
+					$invoice->setAmountPaid($grandtotal);
+					$invoice->setBaseAmountPaid($grandtotal);
+					$invoice->setTotalDue($grandtotal);
+			
+				 }else{
+ 			//	Mage::log('2',null,'222222.log');
+					$invoice->setGrandTotal($grandtotal  - $discountvalue1);
+					$invoice->setBaseGrandTotal($grandtotal  - $discountvalue1);
+					$invoice->setBaseTotalInvoiced($grandtotal);
+					$invoice->setTotalInvoiced($grandtotal);
+					$invoice->setAmountPaid($grandtotal);
+					$invoice->setBaseAmountPaid($grandtotal);
+					$invoice->setTotalDue($grandtotal);
+			}
+		} else{
+			
+				//echo '3';
+				if($giftcert_code){
+					
+					$invoice->setGrandTotal($grandtotalgift- $discountvalue1);
+					$invoice->setBaseGrandTotal($grandtotalgift - $discountvalue1);
+					$invoice->setBaseTotalInvoiced($grandtotalgift);
+					$invoice->setTotalInvoiced($grandtotalgift);
+					$invoice->setAmountPaid($grandtotalgift);
+					$invoice->setBaseAmountPaid($grandtotalgift);
+					$invoice->setTotalDue($grandtotalgift);
+					
+					}
+					else{
+					$invoice->setGrandTotal($grandtotal - $discountvalue1);
+					$invoice->setBaseGrandTotal($grandtotal -  $discountvalue1);
+					$invoice->setBaseTotalInvoiced($grandtotal);
+					$invoice->setTotalInvoiced($grandtotal);
+					$invoice->setAmountPaid($grandtotal);
+					$invoice->setBaseAmountPaid($grandtotal);
+					$invoice->setTotalDue($grandtotal);
+						//	Mage::log($grandtotal,null,'grandtotal.log');
+					}
+			
+			}
+			
+			
+		//	Mage::log('Your Data :'.print_r($invoice->debug(), true), Zend_Log::DEBUG, 'invoicedata.log');
+
+		//}
+
+	//mysql_close($con);
+        return $this;
+    }
+}

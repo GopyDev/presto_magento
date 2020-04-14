@@ -1,0 +1,116 @@
+@media only screen and (min-width: 768px) {
+
+	.header-button {margin-left: 8px;}
+	.header-button > a {background-image: inherit !important;}
+	.header-button > a:before {	content: "\f103"; color: #9cc31f; font-size: 19px; float: right;  margin-right: 5px; line-height: 20px;}
+	.header-button > a:hover,
+	.header-button.active > a { color:#fff; }
+	.es-lang-class .header-button.currency-list {width: 52px;}
+
+}
+@media only screen and (max-width: 1400px) { 
+	#back-top {display: none !important;}
+
+}
+@media only screen and (min-width: 980px) and (max-width: 1199px) {
+	.product-view .product-shop {width:53%;}
+	.product-view .addthis_button_tweet {width:95px;}
+	.addthis_default_main .addthis_counter {clear:left;}
+	.addthis_mini_style .addthis_counter {clear:inherit;}
+	.box-up-sell .jcarousel-clip {width:660px;}
+	.box-up-sell ul li {width:187px !important; padding:12px; margin-right:9px;}
+	.products-ups.jcarousel-list .last {margin-right:9px;}
+	.mini-products-list .product-image {width:70px;}
+	.mini-products-list .product-name {width:135px;}
+	.block-related .product-name {width:120px;}
+	.block-poll .answer {width: 150px;}
+	.de-lang-class .row-product .email-friend,
+	.es-lang-class .row-product .email-friend {float: left; clear: left;}
+	.banner-block .banner-block-cont {top: 10px; left: 10px; width: 65%;}
+	#search_mini_form{ margin-top:28px; }
+	.sf-menu {width:100% !important; }
+.sf-menu .parentMenu a span {font-size: 14px !important;padding: 5px 16px 12px !important;}
+.header .welcome-msg {float:left !important; }
+.header .links li a { font-size: 13px !important;}
+.header .welcome-msg { font-size: 13px !important;}
+.header-container-top {padding:3px 0 12px 0 !important; }
+#search_mini_form {margin-top: 0 !important;}
+.header h1.logo {width: 239px !important;}
+}
+
+@media only screen and (min-width: 768px) and (max-width: 979px) {
+	.reorderlink { width:100%} 
+	.cart-collaterals .col2-set {float: none;width: 100%;}
+	.cart-collaterals .col2-set .col-1, .cart-collaterals .col2-set .col-2{ float:none; width:100%;}
+	body {font-size: 13px;}
+	.search-form{ margin-right:22px; }
+	.block-cart-header {/*clear: right; margin-right: 22px;*/ min-width: 244px;}
+	.header .welcome-msg {margin: 0 0 15px;}
+	.header .logo {  width: 272px; !important;}
+	.header h1.logo{min-width:30% !important;}
+	.order-buttons {display:none !important;}
+	.sorter .view-mode {padding-top:0;}
+	.account-login .registered-users .form-list input.input-text {width:326px;}
+	.cart .crosssell button.btn-cart {float:none; margin-bottom:10px;}
+	.cart .crosssell .add-to-links {float:none;}
+	.cart .crosssell .product-details button.button > span {font-size:11px;}
+	.cart .discount-form .input-box input { width:198px; }
+	.shipping .jqTransformSelectWrapper { width: 204px !important; }
+	.shipping .jqTransformSelectWrapper > div > span { font-size:11px; }
+	.form-list .input-box {width:225px;}
+	.cart .shipping .form-list li select option {width:174px;}
+	.cart .totals button.button > span { font-size:14px; }
+	.cart .totals table th,
+	.cart .totals table td { font-size:11px; padding: 15px 10px; }
+	.cart .totals table td+td { padding: 15px 10px; }
+	.cart .totals .price { font-size:18px; }
+	.mini-products-list .product-name {width:100%; margin:0; padding-top: 10px;}
+	
+	.products-grid .product-image {width:100%;}
+	.regular-price,
+	.products-grid li.item .minimal-price-link {float:none;}
+	.products-grid li.item .price-box.map-info a {float:none; padding:0; margin-top:2px;}
+	.products-grid li.item .regular-price,
+	.products-grid li.item .old-price { display:block; }
+	.products-grid li.item .ratings .rating-box { float:none; margin:0 auto 10px; }
+	.products-grid li.item .ratings .amount { float:none; display:block; text-align:center; margin:0; }
+	.product-shop .price-box {float:none;}
+	
+	.product-view .product-img-box .more-views li.item-4 {margin-left:0;}	
+	.product-view .product-img-box {float:none;width:310px;margin: 0 auto 30px;}
+	.product-view .product-shop {float:none;width:auto;}
+	.catalog-product-view .map-popup {left: 0 !important;}
+	.addthis_default_main .addthis_counter {clear:inherit;}
+	.block-layered-nav dd {padding-left:5px;}
+	
+	.my-account a {text-decoration:underline;}
+	.my-account a:hover {text-decoration:none;}
+	
+	.opc .field {width:267px;}
+	.opc .fields input,
+	.opc .field input {width:242px;}
+	.opc .fields select,
+	.opc .field select {width:248px;}
+	.opc .fields select option,
+	.opc .field select option {width:217px;}
+	.opc .form-list li.wide input.input-text {width:509px;}
+	.opc .name-middlename {width:149px;}
+	.opc .form-list .customer-name-suffix .name-lastname,
+	.opc .form-list .customer-name-middlename .name-firstname,
+	.opc .form-list .customer-name-middlename-suffix .name-firstname,
+	.opc .form-list .customer-name-middlename-suffix .name-lastname {width:118px;}
+	.opc .form-list .customer-name-prefix .name-firstname input.input-text,
+	.opc .form-list .customer-name-suffix .name-lastname input.input-text,
+	.opc .form-list .customer-name-middlename .name-firstname input.input-text,
+	.opc .form-list .customer-name-middlename-suffix .name-firstname input.input-text,
+	.opc .form-list .customer-name-middlename-suffix .name-lastname input.input-text {width:93px;}
+	.cart-collaterals .col2-set .col-1 {margin-right:15px;}
+	.cart .totals button.button span { font-size: 12px; padding: 0 5px; }
+	
+	.box-up-sell {height:auto;}
+	.box-up-sell h2 {font-size:12px;line-height:15px;}
+	.box-up-sell .jcarousel-clip {width:500px;}
+	.box-up-sell .jcarousel-next,
+	.box-up-sell .jcarousel-prev {top:10px;}
+	.box-up-sell ul li {margin-right:9px;width:141px !important; padding:8px;}
+	.box-up-sell ul.jcarousel-list li {margin-righ

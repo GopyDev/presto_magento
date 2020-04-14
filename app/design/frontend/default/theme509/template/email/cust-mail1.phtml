@@ -1,0 +1,25 @@
+
+<table cellspacing="0" cellpadding="0" border="0" width="650" style="border:1px solid #EAEAEA;">
+<thead>
+						<tr>
+							<th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px">Item</th>
+							<th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px">Price</th>
+							<th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px">Starting Date</th>
+						</tr>
+						
+						 
+					</thead>
+					<tbody>
+						<tr>
+							<td align="left" style="font-size:12px; padding:3px 9px;max-width:450px;">PrestoPremier Plus (Unlimited Free Delivery and Reduced Order Minimum of $25: $169/year )</td>
+							<td align="left"  style="font-size:12px; padding:3px 9px">$169</td>
+							<td align="left"  style="font-size:12px; padding:3px 9px">
+							<?php
+								$timezone = date_default_timezone_set('America/New_York');
+								$date = new DateTime();
+								echo $today = date('d-m-Y');
+							?>
+							</td>
+						</tr>
+					</tbody>
+					</table>

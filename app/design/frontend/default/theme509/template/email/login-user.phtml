@@ -1,0 +1,15 @@
+<?php
+if (Mage::getSingleton('customer/session')->isLoggedIn()) 
+{
+ 
+    // Load the customer's data
+    $customer = Mage::getSingleton('customer/session')->getCustomer();
+ 
+    $customer->getPrefix();
+    $customer->getName(); // Full Name
+    echo $customer->getFirstname(); // First Name
+    $customer->getMiddlename(); // Middle Name
+    $customer->getLastname(); // Last Name
+    $customer->getSuffix();
+}
+?>

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <!-- 1 -->
+        
+    </tabs>
+ 
+    <sections>
+        <general>
+            <!-- 2 -->
+            <label>General Information</label>
+            <groups>
+                <store_information>
+                    <fields>
+                        <!-- 3 -->
+                        <show_zip>
+                            <label>Show Zipcode</label>
+                            <frontend_type>text</frontend_type>
+                          	<sort_order>26</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_zip>
+                        <!-- 4 -->
+                        <merchant_vat_number>
+                            <depends>
+                                <show_vat>1</show_vat>
+                            </depends>
+                        </merchant_vat_number>
+                        <validate_vat_number>
+                            <depends>
+                                <show_vat>1</show_vat>
+                            </depends>
+                        </validate_vat_number>
+                    </fields>
+                </store_information>
+            </groups>
+        </general>
+        <!--5-->
+       <!-- <moneybookers>
+            <label>Phoenix Moneybookers</label>
+        </moneybookers>-->
+    </sections>
+	<!-- new tab-->
+	
+	
+	<!-- -->
+</config>

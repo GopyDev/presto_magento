@@ -1,0 +1,98 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product additional attributes template
+ *
+ * @see Mage_Catalog_Block_Product_View_Attributes
+ */
+?>
+<?php
+    $_helper = $this->helper('catalog/output');
+    $_product = $this->getProduct()
+?>
+<?php if($_additional = $this->getAdditionalData()): ?>
+
+<?php /*foreach ($_additional as $_data): ?>
+<?php $arr=$_helper->productAttribute($_product, $_data['value'], $_data['code']);?>
+<?php endforeach;*/?>
+    <?php /* ?><h2><?php echo $this->__('Additional Information') ?></h2><?php */ ?>
+    <h2><?php echo $this->__('Nutrition Information') ?></h2>
+	<div class="box-collateral-content">
+		<table class="data-table" id="product-attribute-specs-table">
+			<col width="25%" />
+			<col />
+			<tbody>
+            	<tr><th colspan="2">Serving Size <?php if($_product->getServingSize()==''){echo "No";}else{echo $_product->getServingSize();}?></th></tr>
+                <tr><th colspan="2">Serving Per Container <?php if($_product->getServingPerContainer()==''){echo "No";}else{echo $_product->getServingPerContainer();};?></th></tr>
+                <tr style="background:#000;"><th></th><td></td></tr>
+                <tr><th>Amount Per Serving</th><td></td></tr>
+                <tr><th>Calories <?php if($_product->getCaloriesPerServing()==''){echo "No";}else{echo $_product->getCaloriesPerServing();}?></th><td>Calories from Fat <?php if($_product->getFatCaloriesPerServing()==''){echo "No";}else{echo $_product->getFatCaloriesPerServing();}?></td></tr>
+                <tr style="background:#000;"><th></th><td></td></tr>
+                <tr><th></th><td>% Daily Value *</td></tr>
+                <tr><th>Total Fat <font style="font-weight:normal; color:#999;"><?php if($_product->getTotalFatPerServing()==''){echo "No";}else{echo $_product->getTotalFatPerServing();}?></font></th><td>&nbsp; <?php if($_product->getDvpTotalFat()==''){echo "No";}else{echo $_product->getDvpTotalFat();}?></td></tr>
+                <tr><th>Saturated Fat <font style="font-weight:normal; color:#999;"><?php if($_product->getSatFatPerServing()==''){echo "No";}else{echo $_product->getSatFatPerServing();}?></font></th><td>&nbsp;<?php if($_product->getDvpSaturatedFat()==''){echo "No";}else{echo $_product->getDvpSaturatedFat();}?></td></tr>
+                <tr><th colspan="2">Trans Fat <font style="font-weight:normal; color:#999;"><?php if($_product->getTransFatPerServing()==''){echo "No";}else{echo $_product->getTransFatPerServing();}?></font></th></tr>
+                
+                <tr><th>Cholesterol <font style="font-weight:normal; color:#999;"><?php if($_product->getCholesterolPerServing()==''){echo "No";}else{echo $_product->getCholesterolPerServing();}?></font></th><td> &nbsp; <?php if($_product->getDvpCholesterol()==''){echo "No";}else{echo $_product->getDvpCholesterol();}?></td></tr>
+                
+                <tr><th>Sodium <font style="font-weight:normal; color:#999;"><?php if($_product->getSodiumPerServing()==''){echo "No";}else{echo $_product->getSodiumPerServing();}?></font></th><td> &nbsp; <?php if($_product->getDvpSodium()==''){echo "No";}else{echo $_product->getDvpSodium();}?></td></tr>
+                
+                <tr><th>Total Carbohydrate <font style="font-weight:normal; color:#999;"><?php if($_product->getCarboPerServing()==''){echo "No";}else{echo $_product->getCarboPerServing();}?></font></th><td>&nbsp;<?php if($_product->getDvpCarbo()==''){echo "No";}else{echo $_product->getDvpCarbo();}?></td></tr>
+                <tr><th>Dietary Fiber <font style="font-weight:normal; color:#999;"><?php if($_product->getFiberPerServing()==''){echo "No";}else{echo $_product->getFiberPerServing();}?></font></th><td>&nbsp;<?php if($_product->getDvpFiber()==''){echo "No";}else{echo $_product->getDvpFiber();}?></td></tr>
+                <tr><th>Sugars  <font style="font-weight:normal; color:#999;"><?php if($_product->getSugarPerServing()==''){echo "No";}else{echo $_product->getSugarPerServing();}?></font></th><td></td></tr>
+                
+                <tr><th>Protein  <font style="font-weight:normal; color:#999;"><?php if($_product->getProteinPerServing()==''){echo "No";}else{echo $_product->getProteinPerServing();}?></font></th><td><?php if($_product->getDvpProtein()==''){echo "No";}else{echo $_product->getDvpProtein();}?></td></tr>
+                <tr style="background:#000;"><th></th><td></td></tr>
+                <tr><th>Vitamin A <?php if($_product->getDvpVitaminA()==''){echo "No";}else{echo $_product->getDvpVitaminA();}?></th><td>Vitamin C <?php if($_product->getDvpVitaminC()==''){echo "No";}else{echo $_product->getDvpVitaminC();}?></td></tr>
+                <tr><th>Calcium <?php if($_product->getDvpCalcium()==''){echo "No";}else{echo $_product->getDvpCalcium();}?></th><td>Iron  <?php if($_product->getDvpIron()==''){echo "No";}else{echo $_product->getDvpIron();}?></td></tr>
+                <tr><td colspan="2">*Pervent Daily Values are based on a 2,000 calories. Your daily values may be higher or lower depanding on your calorie needs :</td></tr>
+                <tr><th></th><td>Calories &nbsp; 2,000 &nbsp; 2,500</td></tr>
+                <tr><th>Total Fat</th><td></td></tr>
+                <tr><th>Saturated Fat</th><td></td></tr>
+                <tr><th>Cholesterol</th><td></td></tr>
+                <tr><th>Sodium</th><td></td></tr>
+                <tr><th>Total Calory/diet</th><td></td></tr>
+                <tr><th>Dietary Fiber</th><td></td></tr>
+                <tr><th>Calories per gram</th><td></td></tr>
+                <tr><td colspan="2">Fat <?php if($_product->getTotalFatUom()==''){echo "No";}else{echo $_product->getTotalFatUom();}?>&nbsp; Calory/diet &nbsp; Protein <?php if($_product->getProteinUom()==''){echo "No";}else{echo $_product->getProteinUom();}?></td></tr>
+            </tbody>
+        </table>
+        <!--<table class="data-table" id="product-attribute-specs-table">
+			<col width="25%" />
+			<col />
+			<tbody>
+			<?php /*foreach ($_additional as $_data): ?>
+                <tr>
+					<th class="label"><?php echo $this->htmlEscape($this->__($_data['label'])) ?></th>
+					<td class="data"><?php echo $_helper->productAttribute($_product, $_data['value'], $_data['code']) ?></td>
+				</tr>
+			<?php endforeach; */?>
+			</tbody>
+		</table>-->
+		<script type="text/javascript">decorateTable('product-attribute-specs-table')</script>
+	</div>
+<?php endif;?>

@@ -1,0 +1,67 @@
+<?php $surveyDetails = $this->getSurveyDetails(); ?>
+<?php if( $surveyDetails!=null): ?>
+<div class="block block-related">
+    <div class="block-title">
+        <strong><span><?php echo $surveyDetails->getData('survey_name'); ?></span></strong>
+    </div>
+    
+    <div class="block-content">
+        <div id="survey" class="empty">
+            <form action="<?php echo $this->getSurveySubmitUrl(); ?>" name="survey_result" method="post">
+            <?php $cnt=1; ?>
+            <?php foreach( $this->helper('surveymanager')->getSurveyRelations(
+                            $surveyDetails->getData('survey_id')) as $key=> $surveyRelation): ?>
+                      <?php $question = $this->helper('surveymanager')
+                              ->getSurveyQnById( $surveyRelation->getData('survey_qn_id')) ?> 
+                      <div style="padding-bottom:10px;"><?php echo $cnt.':'?> <?php echo $question->survey_qn_title; ?></div>
+                      <?php $answers = $this->helper('surveymanager')->getSurveyAnswersByQid($question->survey_qn_id) ?>
+                      <?php $ansType = $question->survey_ans_type; ?>
+                       <input type="hidden" id="survey_ans_type" name="survey_ans_type[<?php echo $question->survey_qn_id; ?>]" value="<?php echo $ansType; ?>" />   
+                       
+                       <div style="padding-bottom:10px;">     
+                          <?php if($ansType=="9" ||  $ansType=="6"): ?>  
+                             <select id="survey_value" name="survey_values[<?php echo $question->survey_qn_id; ?>]">
+                          <?php endif; ?>                          
+                              <?php if( $ansType=="6"): ?>    
+                                  <option value="yes">Yes</option>
+                                  <option value="no">No</option>
+                              <?php endif; ?>
+                              
+                              <?php foreach($answers as $answer): ?>
+                                  <?php if( $ansType=="9"): ?>  
+                                      <option value="<?php echo $answer->survey_ans_id; ?>">
+                                        <?php echo $answer->survey_ans_title; ?>
+                                      </option>
+                                  <?php endif; ?>
+                                  <?php if( $ansType=="7"): ?>
+                                      <input type="radio" name="survey_values[<?php echo $question->survey_qn_id; ?>]" value="<?php echo $answer->survey_ans_id; ?>"/>
+                                      <?php echo $answer->survey_ans_title; ?>
+                                  <?php endif; ?>
+                                  <?php if( $ansType=="8"): ?>    
+                                      <input type="checkbox" name="survey_values[<?php echo $question->survey_qn_id; ?>]" value="<?php echo $answer->survey_ans_id; ?>"/>
+                                  <?php endif; ?>     
+                              <?php endforeach; ?>
+                                      
+                          <?php if( $ansType=="9" ||  $ansType=="6"): ?>  
+                             </select>
+                          <?php endif; ?>
+                          
+                          <?php if( $ansType=="3"): ?>    
+                              <input type="text" name="survey_values[<?php echo $question->survey_qn_id; ?>]" value="" size="40"/>
+                          <?php endif; ?>
+                          
+                          <?php if( $ansType=="4"): ?>    
+                              <textarea name="survey_values[<?php echo $question->survey_qn_id; ?>]" ></textarea>
+                          <?php endif; ?> 
+                      <?php $cnt++; ?>  
+                      </div>    
+            <?php endforeach; ?>
+                  <input type="hidden" id="survey_id" name="survey_id" value="<?php echo $surveyDetails->getData('survey_id'); ?>" />     
+                  <div class="actions">
+                    <button class="button" title="Submit your Feedback" type="submit"><span><span><?php echo $this->__('Submit your Feedback') ?></span></span></button>
+                  </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Customer_Track>
+      <version>0.1.0</version>
+    </Customer_Track>
+  </modules>
+  <global>
+    <helpers>
+      <track>
+        <class>Customer_Track_Helper</class>
+      </track>
+    </helpers>
+	<blocks>
+	  <track>
+		<class>Customer_Track_Block</class>
+	  </track>
+	</blocks>
+	<models>
+	  <track>
+		<class>Customer_Track_Model</class>
+		<resourceModel>track_mysql4</resourceModel>
+	  </track>
+	  <track_mysql4>
+		<class>Customer_Track_Model_Mysql4</class>
+		<entities>		  
+			  <track>
+				<table>user_tracking</table>
+			  </track>
+        </entities>
+	  </track_mysql4>
+	</models>
+	<resources>
+	  <track_setup>
+		<setup>
+		  <module>Customer_Track</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </track_setup>
+	  <track_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </track_write>
+	  <track_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </track_read>
+	</resources>
+  </global>
+  <admin>
+	<routers>
+	  <track>
+	    <use>admin</use>
+		<args>
+		  <module>Customer_Track</module>
+		  <frontName>track</frontName>
+		</args>
+	  </track>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <track module="track">
+		<title>Track</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <track module="track">
+		    <title>Manage Track</title>
+			<sort_order>0</sort_order>
+			<action>track/adminhtml_track</action>
+		  </track>
+			 <!-- <report_track module="track">
+				<title>Track Report</title>
+				<sort_order>0</sort_order>
+				<action>track/adminhtml_report_track/index</action>
+			  </report_track>-->
+		</children>
+	  </track>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<track translate="title" module="track">
+			  <title>Track</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <track translate="title">
+			<title>Manage Track</title>
+			<sort_order>0</sort_order>
+		  </track>
+			  <report_track translate="title">
+				<title>Manage Track Report</title>
+				<sort_order>0</sort_order>
+			  </report_track>
+			  </children>
+			</track>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<track>
+		  <file>track.xml</file>
+		</track>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

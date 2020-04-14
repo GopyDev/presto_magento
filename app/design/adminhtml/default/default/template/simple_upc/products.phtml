@@ -1,0 +1,82 @@
+<div class="content-header">
+    <h3 class="icon-head head-adminhtml-import">Import Products</h3>
+    <p class="form-buttons">
+    	<button style="" onclick="setLocation('<?php echo $this->getBack();?>')" class="scalable back" type="button" title="Back"><span><span><span>Back</span></span></span></button>
+        <button style="" onclick="setLocation(window.location.href)" class="scalable " type="button" title="Reset"><span><span><span>Reset</span></span></span></button>
+    </p>
+</div>
+
+
+<div class="entry-edit">
+    <form enctype="multipart/form-data" method="post" action="<?php echo $this->getPosturl()?>" id="upc_form" name="upc_form">
+    	<div>
+        	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+        </div>
+        <div class="entry-edit-head">
+    		<h4 class="icon-head head-edit-form fieldset-legend">Import Settings</h4>
+    		<div class="form-buttons"></div>
+		</div>
+    	<div id="base_fieldset" class="fieldset ">
+    		<div class="hor-scroll">
+            	<table cellspacing="0" class="form-list">
+            	<tbody>
+                	<tr>
+       					<td class="label"><label for="entity">Single UPC Code</label></td>
+    					<td class="value">
+        					<input type="text" name="single_upc" id="single_upc" class="required-entry input-text"/>
+                            <p class="note"><span>Enter a single UPC code.</span></p>
+                        </td>
+                        <td class="use-default">
+                        	<input type="radio" onclick="reset_upc_form(this, 'single_upc')" checked="checked" class="checkbox config-inherit" value="single_upc" name="upc_code_type" />
+                            <label title="" class="inherit" for="general_locale_code_inherit">Import Single</label>
+                        </td>
+					</tr>
+                    <tr><td></td><td align="center"><b>- - or - -</b></td></tr>
+					<tr>
+        				<td class="label"><label for="behavior">Multiple UPC Codes</label></td>
+    					<td class="value">
+        					<textarea name="upc_codes" id="upc_codes" class="required-entry textarea" disabled="disabled"></textarea>
+                            <p class="note"><span>Enter multiple UPC codes in next line each.</span></p>
+                        </td>
+                        <td class="use-default">
+                        	<input type="radio" onclick="reset_upc_form(this, 'upc_codes')" class="checkbox config-inherit" value="upc_codes" name="upc_code_type" />
+                            <label title="" class="inherit" for="general_locale_code_inherit">Import Multiple</label>
+                        </td>
+    				</tr>
+					<?php /*?><tr><td></td><td align="center"><b>- - or - -</b></td></tr>
+                    <tr>
+        				<td class="label"><label for="import_file">Select File to Import</label></td>
+   						<td class="value">
+        					<input type="file" class=" required-entry" title="Select File to Import" disabled="disabled" value="" name="import_file" id="import_file">
+                        </td>
+                        <td class="use-default">
+                        	<input type="radio" onclick="reset_upc_form(this, 'import_file')" class="checkbox config-inherit" value="import_file" name="upc_code_type" />
+                            <label title="" class="inherit" for="general_locale_code_inherit">Import by file</label>
+                        </td>
+    				</tr><?php */?>
+                    <tr>
+                    	<td></td>
+                        <td><br /><button class="scalable save" type="submit" title="Import Products"><span><span><span>Import Products</span></span></span></button></td>
+                        <td></td>
+                    </tr>
+            		</tbody>
+        		</table>
+            </div>
+        </div>
+	</form>
+</div>
+<script type="text/javascript">
+    var upc_form = new varienForm('upc_form');
+</script>
+<script type="text/javascript">
+function reset_upc_form(_i, _id){
+	ids = new Array('single_upc', 'upc_codes');//, 'import_file'
+	c_id = _id;
+	$(_id).removeAttribute('disabled');
+	ids.each(function(id){
+		if(id != c_id){
+			$(id).setAttribute('disabled', 'disabled');
+		}
+	});
+}
+</script>

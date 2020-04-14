@@ -1,0 +1,173 @@
+<?php
+/**
+ * aheadWorks Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This software is designed to work with Magento enterprise edition and
+ * its use on an edition other than specified is prohibited. aheadWorks does not
+ * provide extension support in case of incorrect edition use.
+ * =================================================================
+ *
+ * @category   AW
+ * @package    AW_Sarp2
+ * @version    2.0.1
+ * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
+ * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ */
+?><?php echo $this->getMessagesBlock()->toHtml(); ?>
+
+<?php
+	/*******************************************
+		Start Update Subscription Section
+		Dated: 26/10/2015
+	/*******************************************/
+function updateSubscription(){
+		$product_id = 25265;
+		$product     = Mage::getModel('catalog/product')->load($product_id);
+		$cart = Mage::getModel('checkout/cart');
+		$cart->init();
+		$params = array(
+		'product' => $product_id,
+		'qty' => 1,
+		'options' => array(
+				[-5071] => array(
+					'quote_path' => 3					
+				))
+		);
+		$cart->addProduct($product, $params);
+		$cart->save();
+}
+
+	if($_GET['update'] == 'subscription'){
+			//echo "Update subscription section here..";
+			$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+			$customer_id = Mage::getSingleton('customer/session')->getCustomer()->getId();
+			$query2 = "select * from mg_aw_sarp2_profile where  `customer_id` LIKE '$customer_id' AND `status` LIKE 'active'";
+			$result2 = $connection->query($query2);
+			$row2 = $result2->fetch();
+			$todayDate = date('Y-m-d');
+			$subStartDate = $row2['start_date'];
+		?>
+		<div class="page-title">
+			<h1><?php echo $this->__('Update Subscription') ?></h1>
+		 </div>
+		<?php
+			/*echo "Today Date is ".$todayDate;
+			echo "<br/> Subscription Start Date is ".$subStartDate;
+			echo "<br/>*******************<br/>";*/
+			// Build example data
+			$timeStart = strtotime($subStartDate);
+			$timeEnd = strtotime($todayDate);
+			//$timeStart = strtotime("2015-09-29");
+			//$timeEnd = strtotime("2015-10-20");
+			// Adding current month + all months in each passed year
+			$numMonths = (date("Y",$timeEnd)-date("Y",$timeStart))*12;
+			// Add/subtract month difference
+			$numMonths += date("m",$timeEnd)-date("m",$timeStart);
+			$remainingAmount = number_format((89 /12) * (12 - $numMonths),2);
+			//echo "Temp difffernce Is ".$tempDifference;
+			$differneceCharges = 169 - $remainingAmount;
+			$_product = 25265;
+			?>
+			<table width="100%" cellspacing="2" cellpadding="2" class="data-table" id="my-profiles-table">
+			 <thead>
+            <tr>
+                <th><span class="nobr"><?php echo $this->__('Subscription Start Date'); ?></span></th>
+				<th><span class="nobr"><?php echo $this->__('Remaining Amount'); ?></span></th>
+                <th><span class="nobr"><?php echo $this->__('Update Subscription Date'); ?></span></th>
+				<th><span class="nobr"><?php echo $this->__('New Subscription Amount'); ?></span></th>
+                <th><span class="nobr"><?php echo $this->__('Difference Charges'); ?></span></th>
+                
+            </tr>
+        </thead>
+				<tr>
+					<td style="text-align:center;"><?php echo $subStartDate?></td>
+					<td style="text-align:center;"><?php echo "$".$remainingAmount;?></td>
+					<td style="text-align:center;"><?php echo $todayDate;?></td>
+					<td style="text-align:center;">$169</td>
+					<td style="text-align:center;"><?php echo "$".$differneceCharges;?></td>
+				</tr>
+				<tr>
+					<td colspan="5" style="text-align:center;">
+					 <br/>
+					 <?php
+						$count = $this->helper('checkout/cart')->getSummaryCount(); 
+						//echo "Item count is ".$count;
+						if(!isset($count)){
+					 ?>
+					 <button type="button" title="Upgrade Subscription" class="button btn-cart" onclick="setaLocation('http://www.prestofreshgrocery.com/free-shipping-subscription-product.html?update=subscription',25265)" class="button btn-cart"><span><span>Upgrade Subscription</span></span></button>
+					 <?php
+						}else{
+					 ?>
+					 <button type="button" title="Upgrade Subscription" class="button btn-cart" onclick="setaLocation('http://www.prestofreshgrocery.com/free-shipping-subscription-product.html?update=subscription',25265)" class="button btn-cart"disabled="disabled"><span><span>Upgrade Subscription</span></span></button>
+					<br/>
+					<div style="color:red;">Subscription item can be purchased standalone only. To proceed please remove other items from the cart.</div>
+					<?php
+						}
+					?>
+					</td>
+				</tr>
+			</table>
+ <script type="text/javascript">
+    function setaLocation(url){
+		location.href=url;
+	}
+    </script>
+		<?php
+			
+
+
+	}else{
+	
+?>
+<?php $profile = $this->getProfile(); ?>
+
+<div class="page-title title-buttons">
+    <h1><?php echo $this->__('Subscription #%s', $profile->getReferenceId()); ?></h1>
+    <?php echo $this->getChildHtml('buttons'); ?>
+</div>
+<dl class="order-info">
+    <dt><?php echo $this->__('About This Profile:') ?></dt>
+    <dd>
+        <ul id="order-info-tabs">
+            <li class="current"><strong><?php echo $this->__('Subscription Information'); ?></strong></li>
+            <li><a href="<?php echo $this->getUrl('*/*/orders', array('_current' => true)); ?>"><?php echo $this->__('Related Orders'); ?></a></li>
+        </ul>
+    </dd>
+</dl>
+<div class="col2-set order-info-box">
+    <div class="col-1">
+        <?php echo $this->getReferenceHtml(); ?>
+    </div>
+    <div class="col-2">
+        <?php echo $this->getPurchaseHtml(); ?>
+    </div>
+</div>
+<div class="col2-set order-info-box">
+    <div class="col-1">
+        <?php echo $this->getScheduleHtml(); ?>
+    </div>
+    <div class="col-2">
+        <?php echo $this->getPaymentsHtml(); ?>
+    </div>
+</div>
+<div class="col2-set order-info-box">
+    <div class="col-1">
+        <?php echo $this->getBillingHtml(); ?>
+    </div>
+    <div class="col-2">
+        <?php echo $this->getShippingHtml(); ?>
+    </div>
+</div>
+<?php
+	}
+?>

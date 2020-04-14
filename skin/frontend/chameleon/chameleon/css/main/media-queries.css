@@ -1,0 +1,107 @@
+/**
+ * BelVG
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ 
+ * @category   Belvg
+ * @package    Chameleon Mobile Theme
+ * @copyright  Copyright (c) 2010 - 2012 BelVG LLC. (http://www.belvg.com)
+ * @license    http://store.belvg.com/BelVG-LICENSE-COMMUNITY.txt
+ */
+
+/* MEDIA QUERIES ----------------------------------- */
+body > section img {
+    max-width: 100%;
+}
+@media screen and (min-width:480px) and (max-width:1024px) {
+	
+	.c-list li.last {
+		background:url( '../../images/bg/border-product.gif' ) repeat-x center bottom!important;
+		}
+	.products-grid  {
+		clear:none;
+		}
+}
+@media screen and (max-width: 320px) {
+    .c-list  > li{
+		width:100%;
+		}
+		.c-list .product-image {
+			float:none;
+			margin:0 auto;
+			text-align:center;
+		}
+	.c-list .product-shop {
+		clear:both;
+		padding:0 0 0 10px;
+	}
+	.products-grid  {
+		margin-right:0px;
+		}
+	#super-product-table {
+		clear:both;
+		margin-bottom: 10px;
+		}
+	/*Shopping Cart*/
+	.cart-table .product-name {
+		font-size: 10px;
+		line-height: 13px;
+	}
+	.cart-table .product-name a {
+		font-size:11px;
+		}
+	/* Shopping Cart Collateral boxes */
+/* 	.cart .crosssell .add-to-links > li{
+		clear: both;
+		display: block;
+		} */
+	.cart .crosssell .add-to-links > li > a{display:table;margin-bottom:10px;}
+    }
+@media screen and (max-width: 340px) {
+ .c-list  > li{
+		width:100%;
+		}
+		.c-list .product-image {
+			float:none;
+			margin:0 auto;
+			text-align:center;
+		}
+	.c-list .product-shop {
+		clear:both;
+		padding:0 0 0 10px;
+	}
+	.products-grid  {
+		margin-right:0px;
+		}
+	#super-product-table {
+		clear:both;
+		margin-bottom: 10px;
+		}
+	/*Shopping Cart*/
+	.cart-table .product-name {
+		font-size: 10px;
+		line-height: 13px;
+	}
+	.cart-table .product-name a {
+		font-size:11px;
+		}
+    }
+ @media screen and (max-width: 400px) {
+	.c-list > li{
+		float: left;
+    max-height: 262px;
+    width: 148px;
+		}
+  	.cart-table .product-name {
+		font-size: 10px;
+		line-height: 13px;
+	}
+	.cart-table .product-name a {
+		font-size:11px;
+		}
+    }

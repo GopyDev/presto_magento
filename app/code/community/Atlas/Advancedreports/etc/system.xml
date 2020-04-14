@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <atlas_advancedreports>            
+            
+            <label><![CDATA[<div style="position:absolute;"><img id="test_block" src="" alt="" border="0" width="100%" /></div>&nbsp;<script>
+            var n = SKIN_URL.indexOf("adminhtml");
+            $('test_block').src = SKIN_URL.substring(0, n) + "adminhtml/default/default/atlas/atlassoftweb.png";
+            </script>]]></label>
+            <sort_order>198</sort_order>
+            
+        </atlas_advancedreports>            
+    </tabs>
+    <sections>
+        <atlas_advancedreports translate="label" module="advancedreports">
+            <label>Contact Us</label>
+            <tab>atlas_advancedreports</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>10000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>     	
+            <groups>
+                <advancedreports_contact>
+                    <frontend_model>advancedreports/adminhtml_system_config_fieldset_contactus</frontend_model>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </advancedreports_contact>
+            </groups>
+        </atlas_advancedreports>    
+    </sections>	
+</config>

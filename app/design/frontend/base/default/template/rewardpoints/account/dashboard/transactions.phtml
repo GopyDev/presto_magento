@@ -1,0 +1,284 @@
+<?php 
+/**
+ * Magestore
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Magestore.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.magestore.com/license-agreement.html
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category    Magestore
+ * @package     Magestore_RewardPoints
+ * @copyright   Copyright (c) 2012 Magestore (http://www.magestore.com/)
+ * @license     http://www.magestore.com/license-agreement.html
+ */
+
+/**
+ * Rewardpoints Account Dashboard Recent Transactions
+ * 
+ * @see Magestore_RewardPoints_Block_Account_Dashboard_Transactions
+ */
+?>
+<style>
+ .mainSurvey_sub{
+	 border-bottom: 1px solid #cecece;
+    color: #333;
+    font-size: 13px;
+    margin-bottom: 15px;
+    padding-bottom:24px;
+	height:58px;
+ }
+ h3{
+	     color: #5a5959;
+ }
+  .subMsg{
+    /* margin-left: 37px;*/
+	margin-left:0px;
+    /*padding: 14px;*/
+    color:#65ae01 !important;
+	font-size:13px;
+	font-size:13px;
+	width: 65%;
+ }
+ .unsubMsg{
+    float: left;
+    /*margin-left: 37px;*/
+	margin-left:0px;
+    padding: 4px;
+	font-size:13px;
+	
+ }
+ .subButtom{
+   -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , #9dc31f, #649513) repeat scroll 0 0;
+    border-color: #5d8c12 #5d8c12 #36520b;
+    border-image: none;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    color: #fff;
+    font-family: "Open Sans",sans-serif;
+    font-size: 13px;
+    height: 30px;
+    line-height: 25px;
+   cursor:pointer;	 
+   background-color: #5d8c12 !important;
+   padding-left:3px;
+   padding-right:3px;
+ }
+ .chkbox{
+	 margin-right:10px;
+ }
+#msg{
+color:red;
+}
+.text{
+	 float: left;
+    width: 65%;
+}
+.estimated_fields {
+    float: left;
+    width: 33%;
+}
+</style>
+<?php
+	$customer_id = Mage::getSingleton('customer/session')->getId();
+	$resource = Mage::getSingleton('core/resource');
+	$conn = $resource->getConnection('core_read');
+	
+	if($_REQUEST['unsubscribe'] == 'Submit Change'){
+		if(isset($_REQUEST['first'])){
+			$qry = "INSERT INTO mg_survey_subscribe
+					(customer_id,subscribe,created_date)
+					VALUES ('".$customer_id."',0,now() )";
+			$result = $conn->query($qry);
+			if($result){
+				$msg = "You are successfully unsubscribe survey email.";
+			}
+		}else {
+			$qry = "UPDATE mg_survey_subscribe SET subscribe = '0', updated_date = now() WHERE customer_id = '".$customer_id."' ";
+			$result = $conn->query($qry);
+			if($result){
+				$msg = "You are successfully unsubscribe survey email.";
+			}
+		}
+	}
+	if($_REQUEST['subscribe'] == 'Submit Change'){
+               $qry = "SELECT subscribe FROM mg_survey_subscribe WHERE customer_id = '".$customer_id."' ";
+			   $results = $conn->fetchAll($qry);
+			if(empty($results)){
+					$qry = "INSERT INTO mg_survey_subscribe
+							(customer_id,subscribe,created_date)
+							VALUES ('".$customer_id."',1,now() )
+							";
+					$result = $conn->query($qry);
+					if($result){
+						$msg = "You are successfully subscribe survey email.";
+							  // continue;
+					}
+					
+			}
+		else
+		{
+		     $qry = "UPDATE mg_survey_subscribe SET subscribe = '1', updated_date = now() WHERE customer_id = '".$customer_id."' ";
+		     $result = $conn->query($qry);
+				 if($result){
+					$msg = "You are successfully subscribe survey email.";
+				 }
+        }
+	}
+	
+	
+	
+	$qry = "SELECT subscribe FROM mg_survey_subscribe WHERE customer_id = '".$customer_id."' ";
+	$results = $conn->fetchAll($qry);
+	
+?>
+<div class="mainSurvey_sub">
+	<span><h3>Survey Subscription</h3></span>
+		 <?php
+				if(empty($results)){
+			?>
+			
+ 
+				<!--<div class="text"><span class="subMsg">Unsubscribe for receive delivery surveys via email.</span></div>-->
+				<div class="text" style="  line-height: 28px;"><span class="subMsg">Receive delivery surveys via email (Receive points for each survey completed!).</span></div>
+				<div class="estimated_fields"> 
+				<form name="survey" method="post" action="" >
+					
+					&nbsp;&nbsp; &nbsp;Subscribed&nbsp;&nbsp;&nbsp;<input type="checkbox" name="surveySubscribe" id="surveyUnSubscribe" checked="checked" class="chkbox" />
+					&nbsp;&nbsp;<input type="submit" name="unsubscribe" value="Submit Change" class="subButtom" id="UnsubButton"/>
+					<input type="hidden" value="first" name="first">
+                                       
+				</div>
+				<div id="msg"><?php echo $msg;?></div>
+			</form>
+			<?php
+				} //
+				else if(!empty($results) && $results[0]['subscribe'] == '1'){
+			?>
+			
+ 
+				<div class="text" style="  line-height: 28px;"><span class="subMsg">Receive delivery surveys via email (Receive points for each survey completed!).</span></div>
+				<div class="estimated_fields">
+				<form name="survey" method="post" action="" >
+					
+					&nbsp;&nbsp; &nbsp;Subscribed&nbsp;&nbsp;&nbsp;<input type="checkbox" name="surveySubscribe" id="surveyUnSubscribe" checked="checked" class="chkbox" />
+					&nbsp;&nbsp;<input type="submit" name="unsubscribe" value="Submit Change" class="subButtom" id="UnsubButton"/>
+                                       
+				</div>
+				<div id="msg"><?php echo $msg;?></div>
+			</form>
+			<?php
+				}else{
+				?>
+				<div class="text"><span class="unsubMsg">Receive delivery surveys via email (Receive points for each survey completed!).</span></div>
+				<div class="estimated_fields">
+					<form name="survey" method="post" action="" >
+						
+						
+						<div style="float:left;">
+							Subscribed&nbsp;&nbsp; &nbsp;<input type="checkbox" name="surveySubscribe" id="surveySubscribe" class="chkbox" />
+							&nbsp;&nbsp;<input type="submit" name="subscribe" value="Submit Change" class="subButtom" id="subButton"/>
+											  
+						</div>
+					</form>	
+			</div>
+			<div id="msg"><?php echo $msg;?></div>
+				<?php
+				}
+			?>	 
+	</div>
+
+
+<script>
+jQuery('#subButton').click(function() {
+     if(jQuery('#surveySubscribe').attr('checked')){
+       ///   alert('checked');
+		return true;
+	 }
+        else{
+         // alert('unchecked');
+			jQuery('#surveySubscribe').css('border','1px solid #FF5151');
+			return false;
+		}
+});
+
+
+jQuery('#UnsubButton').click(function() {
+     if(jQuery('#surveyUnSubscribe').attr('checked')){
+          //  alert('checked');
+		return false;
+	 }
+        else{
+         //  alert('unchecked');
+			jQuery('#surveyUnSubscribe').css('border','1px solid #FF5151');
+			return true;
+		}
+});
+
+	jQuery(document).ready(function() {
+		setTimeout(function() {
+			jQuery("#msg").fadeOut(1500);
+		},3000);
+	});
+	</script>
+
+<!-- end a subscribe survey-->
+
+<?php $_collection = $this->getCollection() ?>
+<?php if (count($_collection)): ?>
+<div class="box-account box-info box-rewardpoints-history">
+    <div class="box-head">
+		<h2><?php echo $this->__('Recent Transactions') ?></h2>
+        <a href="<?php echo $this->getUrl('*/*/transactions') ?>"><?php echo $this->__('View All') ?></a>
+	</div>
+    <table class="data-table" id="recent-transactions-history">
+        <colgroup>
+            <col class="id" />
+            <col class="title" />
+            <col class="point_amount" />
+            <col class="created_time" />
+            <col class="expiration_date" />
+            <col class="status" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th><?php echo $this->__('Title') ?></th>
+                <th><?php echo $this->__('Points') ?></th>
+                <th><?php echo $this->__('Creating Date') ?></th>
+                <!-- <th><?php echo $this->__('Expiration Date') ?></th>
+                <th><?php echo $this->__('Status') ?></th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($_collection as $_transaction): ?>
+            <tr>
+                <td class="a-right first"><?php echo $_transaction->getId() ?></td>
+                <td><span class="label-cell"><?php echo $this->__('Title') ?></span><h2><?php echo $_transaction->getTitleHtml() ?></h2></td>
+                <td class="a-right"><span class="label-cell"><?php echo $this->__('Points') ?></span><h2><?php echo $_transaction->getPointAmount() ?></h2></td>
+                <td><span class="label-cell"><?php echo $this->__('Creating Date') ?></span><h2><?php echo $this->formatTime($_transaction->getCreatedTime(), 'medium', true) ?></h2></td>
+                <!-- <td><span class="label-cell"><?php echo $this->__('Expiration Date') ?></span><h2>
+                    <?php if ($_transaction->getExpirationDate()): ?>
+                        <?php echo $this->formatTime($_transaction->getExpirationDate(), 'medium', true) ?>
+                    <?php else: ?>
+                        <?php echo $this->__('N/A') ?>
+                    <?php endif ?>
+                </h2></td>
+                <td><span class="label-cell"><?php echo $this->__('Status') ?></span><h2><?php echo $_transaction->getStatusLabel() ?></h2></td> -->
+            </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
+</div>
+<?php endif ?>

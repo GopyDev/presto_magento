@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Webduo_Simpleupc>
+            <version>1.0.0</version>
+        </Webduo_Simpleupc>
+    </modules>
+    <frontend>
+        <routers>
+            <simpleupc>
+                <use>standard</use>
+                <args>
+                    <module>Webduo_Simpleupc</module>
+                    <frontName>simpleupc</frontName>
+                </args>
+            </simpleupc>
+        </routers>
+        <layout>
+            <updates>
+                <simpleupc>
+                    <file>simpleupc.xml</file>
+                </simpleupc>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+            <simpleupc>
+                <use>admin</use>
+                <args>
+                    <module>Webduo_Simpleupc</module>
+                    <frontName>simpleupc</frontName>
+                </args>
+            </simpleupc>
+        </routers>
+    </admin>
+    
+	<global>
+		<blocks>
+            <simpleupc>
+                <class>Webduo_Simpleupc_Block</class>
+            </simpleupc>
+                 
+            <sales>
+                <rewrite>
+                    <order_totals>Webduo_Simpleupc_Block_Sales_Order</order_totals>
+                    <order_invoice_totals>Webduo_Simpleupc_Block_Sales_Invoice</order_invoice_totals>
+					<order_creditmemo_totals>Webduo_Simpleupc_Block_Sales_Creditmemo</order_creditmemo_totals>
+                </rewrite>
+            </sales>
+			
+			<page>
+				<rewrite>
+					<html_topmenu>Webduo_Simpleupc_Block_Html_Topmenu</html_topmenu>
+				</rewrite>
+			</page>
+        </blocks>
+        <models>
+            <simpleupc>
+                <class>Webduo_Simpleupc_Model</class>
+            </simpleupc>
+        </models>
+        <helpers>
+            <simpleupc>
+                <class>Webduo_Simpleupc_Helper</class>
+            </simpleupc>
+        </helpers>
+	    <resources>
+            <simpleupc_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </simpleupc_write>
+            <simpleupc_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </simpleupc_read>
+        </resources>
+		
+		<events>
+        	
+			<sales_order_place_before>
+				<observers>
+                    <webduo_simpleupc_order_observer>
+                        <type>singleton</type>
+                        <class>Webduo_Simpleupc_Model_Observer</class>
+                        <method>samedeliverywindowdiscount</method>
+                    </webduo_simpleupc_order_observer>
+                </observers>
+			</sales_order_place_before>
+			
+			<sales_order_place_after> 
+            	<observers>
+            	    <webduo_simpleupc_order_observer>
+            	        <class>Webduo_Simpleupc_Model_Observer</class>
+                        <method>clear_discount_session</method>
+            	    </webduo_simpleupc_order_observer>
+            	</observers>
+        	</sales_order_place_after>
+			
+			<sales_quote_collect_totals_after>
+				<observers>
+                    <webduo_simpleupc_order_total_observer>
+                        <type>singleton</type>
+                        <class>Webduo_Simpleupc_Model_Observer</class>
+                        <method>setdiscountamount</method>
+                    </webduo_simpleupc_order_total_observer>
+                </observers>
+            </sales_quote_collect_totals_after> 
+    	</events>
+		
+		<!--<sales>
+            <quote>
+                <totals>
+                    <discount>
+                        <class>Webduo_Simpleupc_Model_Discount</class>
+                        <after>subtotal</after>
+                    </discount>
+                </totals>
+            </quote>
+             
+            <invoice>
+                <totals>
+                    <discount>
+                        <class>Webduo_Simpleupc_Model_Invoice</class>
+                        <after>subtotal</after>
+                    </discount>
+                </totals>
+            </invoice>
+             
+            <creditmemo>
+                <totals>
+                    <discount>
+                        <class>Webduo_Simpleupc_Model_Creditmemo</class>
+                        <after>subtotal</after>
+                    </discount>
+                </totals>
+            </creditmemo>
+        </sales>-->
+    </global>
+
+	<adminhtml>
+
+       	<menu>
+           <!--	<simpleupc_menu translate="title" module="simpleupc">
+               	<title>Simple UPC</title> 
+               	<sort_order>9999</sort_order>
+               	<children>
+               	    <import_products module="simpleupc">
+               	        <title>Import Products</title> 
+               	        <action>simpleupc/index/index</action>
+               	    </import_products>
+					<search_products module="simpleupc">
+               	        <title>Search Products</title> 
+               	        <action>simpleupc/index/search</action>
+               	    </search_products>
+               	</children>
+           	</simpleupc_menu>-->
+			<salereport_menu translate="title" module="simpleupc">
+               	<title>Sale Reports</title> 
+               	<sort_order>5555</sort_order>
+               	<children>
+               	    <item_pick_report module="simpleupc">
+               	        <title>Order/Item Pick Reports</title> 
+               	        <action>simpleupc/pick/index</action>
+               	    </item_pick_report>
+					<!--<vendor_products_report module="simpleupc">
+               	        <title>Vendor Products Reports</title> 
+               	        <action>simpleupc/pick/vendor</action>
+               	    </vendor_products_report>-->
+				</children>
+			</salereport_menu>
+       	</menu> 
+
+		<acl>
+			<resources>
+				<admin>
+					<children>
+						<system>
+							<children>
+								<config>
+									<children>
+										<simpleupc translate="title" module="simpleupc">
+											<title>Simpleupc</title>
+										</simpleupc>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+	</adminhtml>
+</config>

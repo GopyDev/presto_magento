@@ -1,0 +1,1382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+<?php 
+    $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+	
+	if(!empty($_REQUEST['from']) ){
+		/*====================== Start Code for Magento Orders Product =====================*/
+		//echo "<pre>";
+		$orders_row = array();
+		
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+	    
+		$rr=explode("/",$from);
+		$adate=$rr[1]."_".$rr[0]."_".$rr[2];
+		$adate3=$rr[2]."-".$rr[0]."-".$rr[1];
+		
+		$rr2=explode("/",$to);
+		$adate2=$rr2[1]."_".$rr2[0]."_".$rr2[2];
+		
+		$adate22=$rr2[1]."-".$rr2[0]."-".$rr2[2];
+	
+		$to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		$from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+		
+		$datetime1 = new DateTime($from);
+		$datetime2 = new DateTime($to);
+		
+	function getWeekDates($date, $start_date, $end_date)
+    {
+		$week =  date('W', strtotime($date));
+		$year =  date('Y', strtotime($date));
+		$from12 = date("Y-m-d", strtotime("{$year}-W{$week}+0")); //Returns the date of monday in week
+		if($from12 < $start_date) $from = $start_date;
+		$to12 = date("Y-m-d", strtotime("{$year}-W{$week}-6"));   //Returns the date of sunday in week
+		// $to12 = date('Y-m-d',strtotime($from12 . " +6 day"));
+		if($to12 > $end_date) $to12 = $end_date; 
+		  return "SD:".$from12.",ED:".$to12;
+    }
+
+	$start_date = $from_date;
+	$end_date = $to_date;
+    $end_date1 = date('Y-m-d',strtotime($adate22 . " +6 day"));
+	$abda = date('Y-m-d',strtotime($adate3 . " -6 day"));
+
+		$interval = $datetime1->diff($datetime2);
+		$kdf =  $interval->format('%R%a');
+		
+		for($i=0;$i<=$kdf+8;$i++){
+					
+					$Date1 = $adate3;
+					$date = new DateTime($abda);
+					$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+					$kbt = $date->format('d_m_Y');
+					
+					$kbt2 = $date->format('Y-m-d');
+					
+					$update = "update supervision set realdate='".$kbt2."' where ddate='".$kbt."'";
+					$rupdate = $connection->query($update); 
+				      }
+                 }
+             if($from=="" && $to=="") { 
+		      $to=date('m/d/Y');
+			  $from=date('m/d/Y',strtotime($to . " -60 day"));
+		    } ?>
+<div id="anchor-content" class="middle">
+  <div id="page:main-container">
+    <div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Dashboard Report");?></h3></td>
+            <td class="form-buttons"><button style="" onclick="document.getElementById('filter_form').submit();" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Show Report</span></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <?php /*?><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><?php */?>
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Start Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $from; ?>" id="sales_report_from" name="from" />
+                      <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_from",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_from_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  
+				  <tr>
+                    <td class="label"><label for="sales_report_from">End Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $to; ?>" id="sales_report_to" name="to" />
+                      <img style="" title="Select Date" id="sales_report_to_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_to",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_to_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	<?php
+	  if(!empty($_REQUEST['from']) ){
+	?>
+	<style>
+	.page
+	{
+	   width:90%;
+	}
+	
+	td, th 
+	{
+	   padding-top:5px !important;
+	   padding-left:5px !important;
+	   padding-right:5px !important;
+	   padding-bottom:5px !important;
+	}
+	
+	table
+	{
+	   border-collapse:collapse;
+	}
+	</style>
+	<?php
+		 $rdate = explode("_",$adate);
+		 $opdate = $rdate[1]."-".$rdate[0]."-".$rdate[2];
+		 $bpil = 0;
+	?>
+		  
+		  <script type="text/javascript">
+		function divprintlove()
+		{
+            var divContents = jQuery("#divlove").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title> </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+		  
+		  <!-- <a href="javascript:void(0);" onClick="divprintlove();"> Print All</a>  -->
+    <div id="divlove">	  
+    <div id="dvContainer">
+	
+	<?php function timeDiff($firstTime,$lastTime){
+   // convert to unix timestamps
+   $firstTime=strtotime($firstTime);
+   $lastTime=strtotime($lastTime);
+
+   // perform subtraction to get the difference (in seconds) between times
+   $timeDiff=$lastTime-$firstTime;
+
+   // return the difference
+   return $timeDiff;
+} ?>
+	<script>
+	//Author: Monie Corleone
+//Purpose: To draw line chart in canvas element
+//The MIT License (MIT)
+//Copyright (c) <2015> <Monie Corleone>
+; (function ($, window, document, undefined) {
+    var pluginName = "SimpleChart";
+    var defaults = {
+        ChartType: "Line", //Area, Scattered, Bar, Hybrid, Pie, Stacked, Stacked Hybrid
+        xPadding: 60,
+        yPadding: 50,
+        topmargin: 20,
+        rightmargin: 20,
+        data: null,
+        toolwidth: 300,
+        toolheight: 300,
+        axiscolor: "#333",
+        font: "italic 10pt sans-serif",
+        headerfontsize: "14px",
+        axisfontsize: "12px",
+        piefontsize: "13px",
+        pielabelcolor: "#fff",
+        pielabelpercentcolor: "#000",
+        textAlign: "center",
+        textcolor: "#E6E6E6",
+        showlegends: true,
+        showpielables: false,
+        legendposition: 'bottom',
+        legendsize: '100',
+        xaxislabel: null,
+        yaxislabel: null,
+        title: null,
+        LegendTitle: "Legend",
+        pieborderColor: "#fff",
+        pieborderWidth: 2
+    };
+
+    function Plugin(element, options) {
+        this.element = element;
+        this.options = $.extend({}, defaults, options);
+        this.init();
+    }
+
+    Plugin.prototype = {
+        init: function () {
+
+            var that = this,
+           config = that.options;
+            var graph = jQuery(that.element).addClass("SimpleChart").addClass(config.ChartType).append("<canvas class='SimpleChartcanvas'></canvas>").find('canvas').css({
+                float: (config.legendposition == 'right' || config.legendposition == 'left') ? 'left' : '',
+                'margin-top': config.topmargin,
+                'margin-right': config.rightmargin
+            });
+            var ctx = graph[0].getContext("2d");
+            graph[0].width = jQuery(that.element).width() - (config.showlegends ? ((config.legendposition == 'right' || config.legendposition == 'left') ? parseInt(config.legendsize) + parseInt(config.xPadding) : 0) : 0) - config.rightmargin;
+            graph[0].height = jQuery(that.element).height() - (config.showlegends ? ((config.legendposition == 'bottom' || config.legendposition == 'top') ? config.legendsize : 0) : 0) - config.topmargin;
+            var c = graph[0].getContext('2d');
+            switch (config.ChartType) {
+                case "Line":
+                    that.drawAxis(c, graph);
+                    that.drawLineAreaScatteredHybridCharts(c, graph);
+                    break;
+                case "Area":
+                    that.drawAxis(c, graph);
+                    that.drawLineAreaScatteredHybridCharts(c, graph);
+                    break;
+                case "Scattered":
+                    that.drawAxis(c, graph);
+                    that.drawLineAreaScatteredHybridCharts(c, graph);
+                    break;
+                case "Hybrid":
+                    that.drawAxis(c, graph);
+                    that.drawLineAreaScatteredHybridCharts(c, graph);
+                    that.drawBar(c, graph);
+                    that.drawHybrid(c, graph);
+                    break;
+                case "Bar":
+                    that.drawAxis(c, graph);
+                    that.drawBar(c, graph);
+                    break;
+                case "Pie":
+                    that.drawPie(c, graph);
+                    break;
+                case "Stacked":
+                    that.drawAxis(c, graph);
+                    that.drawStacked(c, graph);
+                    break;
+                case "StackedHybrid":
+                    that.drawAxis(c, graph);
+                    that.drawStacked(c, graph);
+                    that.drawLineAreaScatteredHybridCharts(c, graph);
+                    break;
+            }
+
+            //show legend
+            if (config.showlegends) {
+                that.drawLegends(graph);
+            }
+        },
+        reload: function () {
+            jQuery(this.element).empty();
+            this.init();
+        },
+        destroy: function () {
+            jQuery(this.element).empty();
+        },
+        FindYMax: function () {
+            config = this.options;
+            var max = 0;
+            for (var i = 0; i < config.data.length; i++) {
+                for (var j = 0; j < config.data[i].values.length; j++) {
+                    if (config.data[i].values[j].Y > max) {
+                        max = config.data[i].values[j].Y;
+                    }
+                }
+            }
+			
+            max += 10 - max % 10;
+            return max;
+        },
+        pixelX: function (val, i) {
+            config = this.options;
+            var graph = jQuery(this.element).find('.SimpleChartcanvas');
+            return ((graph.width() - config.xPadding) / config.data[i].values.length) * val + (config.xPadding * 1.5);
+        },
+        pixelY: function (val) {
+            config = this.options;
+            var graph = jQuery(this.element).find('.SimpleChartcanvas');
+            return graph.height() - (((graph.height() - config.yPadding) / this.FindYMax()) * val) - config.yPadding;
+        },
+        getRandomColor: function () {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        },
+        drawAxis: function (c, graph) {
+            var that = this, xelementarray = new Array(),
+            config = this.options;
+            c.lineWidth = 2;
+            c.strokeStyle = config.axiscolor;
+            c.font = config.font;
+            c.textAlign = config.textAlign;
+
+
+            c.beginPath();
+            c.moveTo(config.xPadding, 0);
+            c.lineTo(config.xPadding, graph.height() - config.yPadding);
+            c.lineTo(graph.width(), graph.height() - config.yPadding);
+            c.stroke();
+
+            c.fillStyle = config.textcolor;
+
+            for (var i = 0; i < config.data.length; i++) {
+                for (var j = 0; j < config.data[i].values.length; j++) {
+                    if (xelementarray.indexOf(config.data[i].values[j].X) < 0) {
+                        xelementarray.push(config.data[i].values[j].X);
+                        c.fillText(config.data[i].values[j].X, that.pixelX(j, i), graph.height() - config.yPadding + 20);
+                    }
+                }
+            }
+            c.save();
+            var fontArgs = c.font.split(' ');
+            c.font = config.axisfontsize + ' ' + fontArgs[fontArgs.length - 1];
+            if (config.xaxislabel) {
+                c.fillText(config.xaxislabel, graph.width() / 2, graph.height());
+            }
+            if (config.yaxislabel) {
+                c.save();
+                c.translate(0, graph.height() / 2);
+                c.rotate(-Math.PI / 2);
+                c.fillText(config.yaxislabel, 0, 15);
+                c.restore();
+            }
+            if (config.title) {
+                jQuery("<div class='simple-chart-Header' />").appendTo(jQuery(that.element)).html(config.title).css({
+                    left: graph.width() / 2 - (jQuery(that.element).find('.simple-chart-Header').width() / 2),
+                    top: 5
+                });
+            }
+            c.restore();
+
+            c.textAlign = "right"
+            c.textBaseline = "middle";
+            var maxY = that.FindYMax();
+			
+            var incrementvalue = "";
+            for (var i = 0 ; i < Math.ceil(maxY).toString().length - 1; i++) {
+                incrementvalue += "0";
+            }
+            incrementvalue = "1" + incrementvalue;
+            incrementvalue = Math.ceil(maxY / parseInt(incrementvalue)) * Math.pow(10, (Math.ceil(maxY / 10).toString().length - 1));
+			
+			if(config.title=="Substitution Rate " || config.title=="Subs Per Order " || config.title=="Perfect Rate ( orders with zero substitutes divided by number of total orders )"  )
+			{
+               for (var i = 0; i < that.FindYMax() ; i += parseInt(incrementvalue)) {
+                c.fillStyle = config.textcolor;
+                c.fillText(i/1000, config.xPadding - 10, that.pixelY(i));
+                c.fillStyle = config.axiscolor;
+                c.beginPath();
+                c.arc(config.xPadding, that.pixelY(i), 6, 0, Math.PI * 2, true);
+                c.fill();
+            }
+			}
+			else
+			{
+			   for (var i = 0; i < that.FindYMax() ; i += parseInt(incrementvalue)) {
+                c.fillStyle = config.textcolor;
+                c.fillText(i, config.xPadding - 10, that.pixelY(i));
+                c.fillStyle = config.axiscolor;
+                c.beginPath();
+                c.arc(config.xPadding, that.pixelY(i), 6, 0, Math.PI * 2, true);
+                c.fill();
+              }
+			}
+        },
+        drawPie: function (c, graph) {
+            var that = this,
+           config = this.options;
+            c.clearRect(0, 0, graph.width(), graph.height());
+            var totalVal = 0, lastend = 0;
+            for (var j = 0; j < config.data[0].values.length; j++) {
+                totalVal += (typeof config.data[0].values[j].Y == 'number') ? config.data[0].values[j].Y : 0;
+            }
+
+            for (var i = 0; i < config.data[0].values.length; i++) {
+                c.fillStyle = config.data[0].linecolor == "Random" ? config.data[0].values[i].color = randomcolor = that.getRandomColor() : config.data[0].linecolor;
+                c.beginPath();
+                var centerx = graph.width() / 2.2;
+                var centery = graph.height() / 2.2;
+                c.moveTo(centerx, centery);
+                c.arc(centerx, centery, (config.legendposition == 'right' || config.legendposition == 'left') ? centerx : centery, lastend, lastend +
+                  (Math.PI * 2 * (config.data[0].values[i].Y / totalVal)), false);
+                c.lineTo(centerx, centery);
+                c.fill();
+                c.fillStyle = config.pielabelcolor;
+                c.lineWidth = config.pieborderWidth;
+                c.strokeStyle = config.pieborderColor;
+                c.stroke();
+
+                if (config.showpielables) {
+                    c.save();
+                    c.translate(centerx, centery);
+                    c.rotate(lastend - 0.20 +
+                      (Math.PI * 2 * (config.data[0].values[i].Y / totalVal)));
+                    var dx = Math.floor(centerx * 0.5) + 40;
+                    var dy = Math.floor(centery * 0.05);
+                    c.textAlign = "right";
+                    var fontArgs = c.font.split(' ');
+                    c.font = config.piefontsize + ' ' + fontArgs[fontArgs.length - 1];
+                    c.fillText(config.data[0].values[i].X, dx, dy);
+                    c.restore();
+
+                    c.save();
+                    c.fillStyle = config.pielabelpercentcolor;
+                    c.translate(centerx, centery);
+                    c.rotate(lastend - 0.15 +
+                      (Math.PI * 2 * (config.data[0].values[i].Y / totalVal)));
+                    var dx = Math.floor(centerx * 0.5) + 90;
+                    var dy = Math.floor(centery * 0.05);
+                    c.textAlign = "right";
+                    var fontArgs = c.font.split(' ');
+                    c.font = config.piefontsize + ' ' + fontArgs[fontArgs.length - 1];
+                    c.fillText(Math.round((config.data[0].values[i].Y / totalVal) * 100) + "%", dx, dy);
+                    c.restore();
+                }
+                lastend += Math.PI * 2 * (config.data[0].values[i].Y / totalVal);
+            }
+            var canvasOffset = jQuery(graph).offset();
+            var offsetX = canvasOffset.left;
+            var offsetY = canvasOffset.top;
+
+        },
+        drawBar: function (c, graph) {
+            var that = this,
+            config = this.options;
+            for (var i = 0; i < config.data[0].values.length; i++) {
+                var randomcolor;
+                c.strokeStyle = config.data[0].linecolor == "Random" ? config.data[0].values[i].color = randomcolor = that.getRandomColor() : config.data[0].linecolor;
+                c.fillStyle = config.data[0].linecolor == "Random" ? randomcolor : config.data[0].linecolor;
+                c.beginPath();
+                c.rect(that.pixelX(i, 0) - config.yPadding / 4, that.pixelY(config.data[0].values[i].Y), config.yPadding / 2, graph.height() - that.pixelY(config.data[0].values[i].Y) - config.xPadding + 8);
+                c.closePath();
+                c.stroke();
+                c.fill();
+                c.textAlign = "left";
+                c.fillStyle = "#000";
+                c.fillText(config.data[0].values[i].Y, that.pixelX(i, 0) - config.yPadding / 4, that.pixelY(config.data[0].values[i].Y) + 7, 200);
+            }
+        },
+
+        drawStacked: function (c, graph) {
+            var that = this,
+            config = this.options;
+            for (var i = 0; i < config.data.length; i++) {
+                for (var j = 0; j < config.data[i].values.length; j++) {
+                    var randomcolor;
+                    c.strokeStyle = config.data[i].linecolor == "Random" ? config.data[i].values[j].color = randomcolor = that.getRandomColor() : config.data[i].linecolor;
+                    c.fillStyle = config.data[i].linecolor == "Random" ? randomcolor : config.data[i].linecolor;
+                    c.beginPath();
+                    c.rect(that.pixelX(j, 0) - config.yPadding / 4, that.pixelY(config.data[i].values[j].Y), config.yPadding / 2, graph.height() - that.pixelY(config.data[i].values[j].Y) - config.xPadding + 8);
+                    c.closePath();
+                    c.stroke();
+                    c.fill();
+                    c.textAlign = "left";
+                    c.fillStyle = "#000";
+                    c.fillText(config.data[i].values[j].Y, that.pixelX(j, 0) - config.yPadding / 4, that.pixelY(config.data[i].values[j].Y) + 7, 200);
+                }
+            }
+        },
+
+        drawHybrid: function (c, graph) {
+            var that = this,
+            config = this.options;
+            var randomcolor;
+            c.strokeStyle = config.data[0].linecolor == "Random" ? randomcolor = that.getRandomColor() : config.data[0].linecolor;
+            c.beginPath();
+            c.moveTo(that.pixelX(0, 0), that.pixelY(config.data[0].values[0].Y));
+            for (var j = 1; j < config.data[0].values.length; j++) {
+                c.lineTo(that.pixelX(j, 0), that.pixelY(config.data[0].values[j].Y));
+            }
+            c.stroke();
+            c.fillStyle = config.data[0].linecolor == "Random" ? randomcolor : config.data[0].linecolor;
+            for (var j = 0; j < config.data[0].values.length; j++) {
+                c.beginPath();
+                c.arc(that.pixelX(j, 0), that.pixelY(config.data[0].values[j].Y), 4, 0, Math.PI * 2, true);
+                c.fill();
+            }
+        },
+        drawLineAreaScatteredHybridCharts: function (c, graph) {
+            var that = this,
+            config = this.options;
+            var tipCanvas = jQuery(that.element).append("<canvas id='tip'></canvas><div class='down-triangle'></div>").find("#tip").attr('width', config.toolwidth).attr('height', config.toolheight);
+            var tipCtx = tipCanvas[0].getContext("2d");
+            var highlighter = jQuery(that.element).append("<canvas id='highlighter'></canvas>").find('#highlighter').attr('width', "18").attr('height', "18");
+            var higlightctx = highlighter[0].getContext("2d");
+            var tipbaloontip = jQuery(that.element).find('.down-triangle');
+            var canvasOffset = jQuery(graph).offset();
+            var offsetX = canvasOffset.left;
+            var offsetY = canvasOffset.top;
+            jQuery(graph[0]).on("mousemove", function (e) {
+                drawToolTiponHover(e);
+            });
+
+            for (var i = 0; i < config.data.length; i++) {
+                c.strokeStyle = config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor = that.getRandomColor() : config.data[i].linecolor;
+                c.beginPath();
+                c.moveTo(that.pixelX(0, i), that.pixelY(config.data[i].values[0].Y));
+                if (config.ChartType !== "Scattered" && config.ChartType !== "Hybrid") {
+                    for (var j = 1; j < config.data[i].values.length; j++) {
+                        c.lineTo(that.pixelX(j, i), that.pixelY(config.data[i].values[j].Y));
+                    }
+                    c.stroke();
+                }
+                c.fillStyle = config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor : config.data[i].linecolor;
+                if (config.ChartType == "Area") {
+                    c.lineTo(that.pixelX(config.data[i].values.length - 1, i), that.pixelY(0));
+                    c.lineTo(that.pixelX(0, 0), that.pixelY(0));
+                    c.stroke();
+                    c.fill();
+                }
+                if (config.ChartType == "Line" || config.ChartType == "Scattered" || config.ChartType == "StackedHybrid") {
+                    for (var j = 0; j < config.data[i].values.length; j++) {
+                        c.beginPath();
+                        c.arc(that.pixelX(j, i), that.pixelY(config.data[i].values[j].Y), 4, 0, Math.PI * 2, true);
+                        c.fill();
+                    }
+                }
+            }
+
+            var linepoints = [];
+            for (var i = 0; i < config.data.length; i++) {
+                for (var j = 0; j < config.data[i].values.length; j++) {
+                    linepoints.push({
+                        x: that.pixelX(j, i),
+                        y: that.pixelY(config.data[i].values[j].Y),
+                        r: 4,
+                        rXr: 16,
+                        tip: config.data[i].values[j].Y,
+                        color: config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor : config.data[i].linecolor
+                    });
+                }
+            }
+
+            function drawToolTiponHover(e) {
+                mouseX = parseInt(e.pageX - offsetX);
+                mouseY = parseInt(e.pageY - offsetY);
+                var hit = false;
+                for (var i = 0; i < linepoints.length; i++) {
+                    var dot = linepoints[i];
+                    var dx = mouseX - dot.x;
+                    var dy = mouseY - dot.y;
+                    if (dx * dx + dy * dy < dot.rXr) {
+                        tipCanvas[0].style.left = (dot.x - (tipCanvas[0].width / 2)) - 3 + "px";
+                        tipCanvas[0].style.top = (dot.y - 21 - tipCanvas[0].height) + config.topmargin + "px";
+                        tipCtx.clearRect(0, 0, tipCanvas[0].width, tipCanvas[0].height);
+				
+				        if(config.title=="Substitution Rate " || config.title=="Subs Per Order " || config.title=="Perfect Rate ( orders with zero substitutes divided by number of total orders )"  )
+			            {
+						    tipCtx.fillText(dot.tip/1000, 5, 15);
+				         }
+						 else
+						 {
+                        tipCtx.fillText(dot.tip, 5, 15);
+						}
+                        tipbaloontip[0].style.left = (dot.x) - 7 + "px";
+                        tipbaloontip[0].style.top = (dot.y + config.topmargin) - 19 + "px";
+                        if (config.ChartType == "Line" || config.ChartType == "Scattered" || config.ChartType == "Hybrid" || config.ChartType == "StackedHybrid") {
+                            highlighter[0].style.left = (dot.x) - 9 + "px";
+                            highlighter[0].style.top = (dot.y + config.topmargin) - 9 + "px";
+                        }
+                        higlightctx.clearRect(0, 0, highlighter.width(), highlighter.height());
+                        higlightctx.strokeStyle = dot.color;
+                        higlightctx.beginPath();
+                        higlightctx.arc(9, 9, 7, 0, 2 * Math.PI);
+                        higlightctx.lineWidth = 2;
+                        higlightctx.stroke();
+                        hit = true;
+                    }
+                }
+                if (!hit) {
+                    tipCanvas[0].style.left = "-400px";
+                    highlighter[0].style.left = "-400px";
+                    tipbaloontip[0].style.left = "-400px";
+                }
+            }
+        },
+        drawLegends: function (graph) {
+            var that = this,
+            config = this.options;
+            if (config.ChartType == "Line" || config.ChartType == "Area" || config.ChartType == "Scattered" || config.ChartType == "Stacked" || config.ChartType == "StackedHybrid") {
+                var _legends = jQuery("<div class='simple-chart-legends' />", { id: "legendsdiv" }).css({
+                    width: (config.legendposition == 'right' || config.legendposition == 'left') ? (config.legendsize - 5) : graph.width(),
+                    height: (config.legendposition == 'top' || config.legendposition == 'bottom') ? (config.legendsize - 5) : graph.height(),
+                    float: (config.legendposition == 'right' || config.legendposition == 'left') ? 'left' : ''
+                }).appendTo(jQuery(that.element));
+                var _ul = jQuery(_legends).append("<span>" + config.LegendTitle + "</span>").append("<ul />").find("ul")
+                for (var i = 0; i < config.data.length; i++) {
+                    jQuery("<li />", { class: "legendsli" }).append("<span />").find('span').addClass("legendindicator").append('<span class="line" style="background: ' + (config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor : config.data[i].linecolor) + '"></span><span class="circle" style="background: ' + (config.data[i].linecolor == "Random" ? config.data[i].Randomlinecolor : config.data[i].linecolor) + '"></span>').parent().append("<span>" + config.data[i].title + "</span>").appendTo(_ul);
+                }
+                if (config.legendposition == 'top' || config.legendposition == 'left') {
+                    jQuery(_legends).insertBefore(jQuery(that.element).find('.SimpleChartcanvas'));
+                }
+                if (config.legendposition == 'right' || config.legendposition == 'left') {
+                    jQuery(_legends).addClass('vertical')
+                }
+                else {
+                    jQuery(_legends).addClass('horizontal');
+                }
+            }
+            if (config.ChartType == "Bar" || config.ChartType == "Hybrid" || config.ChartType == "Pie") {
+                var _legends = jQuery("<div class='simple-chart-legends' />", { id: "legendsdiv" }).css({
+                    width: (config.legendposition == 'right' || config.legendposition == 'left') ? (config.legendsize - 5) : graph.width(),
+                    height: (config.legendposition == 'top' || config.legendposition == 'bottom') ? (config.legendsize - 5) : graph.height(),
+                    float: (config.legendposition == 'right' || config.legendposition == 'left') ? 'left' : ''
+                }).appendTo(jQuery(that.element));
+                var _ul = jQuery(_legends).append("<span>" + config.LegendTitle + "</span>").append("<ul />").find("ul")
+                for (var i = 0; i < config.data[0].values.length; i++) {
+
+                    jQuery("<li />", { class: "legendsli" }).append("<span />").find('span').addClass("legendindicator").append('<span class="line" style="background: ' + (config.data[0].linecolor == "Random" ? config.data[0].values[i].color : config.data[0].linecolor) + '"></span><span class="circle" style="background: ' + (config.data[0].linecolor == "Random" ? config.data[0].values[i].color : config.data[0].linecolor) + '"></span>').parent().append("<span>" + config.data[0].values[i].X + "</span><span class='legendvalue'>" + (config.ChartType == 'Pie' ? config.data[0].values[i].Y : '') + "</span>").appendTo(_ul);
+                }
+                if (config.legendposition == 'top' || config.legendposition == 'left') {
+                    jQuery(_legends).insertBefore(jQuery(that.element).find('.SimpleChartcanvas'));
+                }
+                if (config.legendposition == 'right' || config.legendposition == 'left') {
+                    jQuery(_legends).addClass('vertical')
+                }
+                else {
+                    jQuery(_legends).addClass('horizontal');
+                }
+            }
+        }
+    }
+
+
+    $.fn[pluginName] = function (options) {
+        if (typeof options === "string") {
+            var args = Array.prototype.slice.call(arguments, 1);
+            this.each(function () {
+                var plugin = $.data(this, 'plugin_' + pluginName);
+                if (plugin[options]) {
+                    plugin[options].apply(plugin, args);
+                } else {
+                    plugin['options'][options] = args[0];
+                }
+            });
+        } else {
+            return this.each(function () {
+                if (!$.data(this, 'plugin_' + pluginName)) {
+                    $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
+                }
+            });
+        }
+    }
+})(jQuery, window, document, undefined);
+	</script>
+	<style>
+        .SimpleChart {
+            position: relative;
+        }
+
+            .SimpleChart #tip {
+                background-color: #f0f0f0;
+                border: 1px solid #d0d0d0;
+                position: absolute;
+                
+            }
+
+        .down-triangle {
+            width: 0;
+            height: 0;
+            border-top: 10px solid #d0d0d0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            position: absolute;
+           
+        }
+
+
+        .SimpleChart #highlighter {
+            position: absolute;
+            left: -200px;
+        }
+
+        .-simple-chart-holder {
+            float: left;
+            position: relative;
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #cecece;
+            /*padding: 6px;*/
+        }
+
+
+        .SimpleChart .legendsli {
+            list-style: none;
+        }
+
+            .SimpleChart .legendsli span {
+                float: left;
+                vertical-align: middle;
+            }
+
+                .SimpleChart .legendsli span.legendindicator {
+                    position: relative;
+                    top: 5px;
+                }
+
+                    .SimpleChart .legendsli span.legendindicator .line {
+                        width: 30px;
+                        height: 3px;
+                    }
+
+                    .SimpleChart .legendsli span.legendindicator .circle {
+                        width: 12px;
+                        height: 12px;
+                        border-radius: 20px;
+                        position: relative;
+                        top: -5px;
+                        right: 20px;
+                    }
+
+
+        /******Starts::Horizontal Alignment of Legends******/
+
+        .simple-chart-legends {
+            background: #E7E7E7;
+            border: 1px solid #d6d7dd;
+            padding: 5px;
+            margin: 2px 0px;
+			display:none;
+        }
+
+            .simple-chart-legends ul {
+            }
+
+                .simple-chart-legends ul li {
+                    display: inline;
+                    border-right: 1px solid #d6d7dd;
+                    float: left;
+                    padding: 10px;
+                }
+
+                    .simple-chart-legends ul li:last-child {
+                        border-right: 0px;
+                    }
+
+
+            .simple-chart-legends.vertical {
+                margin: 0px 10px;
+            }
+
+                .simple-chart-legends.vertical ul li {
+                    display: block;
+                    border: 0px;
+                    border-bottom: 1px solid #d6d7dd;
+                }
+
+                    .simple-chart-legends.vertical ul li:last-child {
+                        border-bottom: 0px;
+                    }
+
+            .simple-chart-legends .legendvalue {
+                padding-left: 2px;
+                background: #fff;
+            }
+
+        /******Starts::Horizontal Alignment of Legends******/
+        .simple-chart-Header {
+            position: absolute;
+            font-size: 16px;
+        }
+    </style>
+	<?php 
+	$str1="";
+	$str2="";
+	$str3="";
+	$str4="";
+	$str5="";
+	$str6="";
+	$str7="";
+	$str8="";
+	
+	
+	$str1b="";
+	$str2b="";
+	$str3b="";
+	$str4b="";
+	$str5b="";
+	$str6b="";
+	$str7b="";
+	$str8b="";
+	
+	// echo $start_date."<br/>";
+	// echo $end_date1;
+	
+	$trev=0;
+	$tso=0;
+	$rso=0;
+	$rd=0;
+	
+	$rns=0;
+	$ap=0;
+	
+	$tsop=0;
+	$topt=0;
+	
+	
+	// echo $from_date;
+	
+	$k=1;
+	for($date = $start_date; $date < $end_date1; $date = date('Y-m-d', strtotime($date. ' + 6 days')))
+	{
+		$key = getWeekDates($date, $start_date, $end_date);
+		$rarray=explode(",",$key);
+		$adate = explode("SD:",$rarray[0]);
+		
+		$sd=$adate[1];
+		
+		if($k==1)
+		{
+		  $from_date2=explode("00:00:00",$from_date);
+		  $sd=$from_date2[0];
+		}
+		
+		$temp=explode("-",$sd);
+		$range=$temp[1]."/".$temp[2];
+		
+		$bdate = explode("ED:",$rarray[1]);
+		$ed=str_replace("00:00:00","",$bdate[1]);
+		
+		$temp2=explode("-",$ed);
+		$range2=$temp2[1]."/".$temp2[2];
+		
+		$ed = date('Y-m-d', strtotime($ed. ' + 1 days'));
+	
+		$kd = date('Y-m-d', strtotime($sd. ' + 1 days'));
+		
+		$red = date('Y-m-d', strtotime($kd. ' - 1 days'));
+		
+		$bred = date('Y-m-d', strtotime($end_date));
+		
+		$sel_new_cust_sales = "SELECT count(o.entity_id) FROM mg_sales_flat_order AS o
+JOIN (
+    SELECT
+        customer_id,
+        MIN(entity_id) AS entity_id,
+        MIN(created_at) AS created_at
+    FROM mg_sales_flat_order
+    GROUP BY customer_id
+) AS first ON first.entity_id = o.entity_id
+WHERE
+     first.created_at  >='".$sd."' and first.created_at  <='".$ed."'";
+	   $new_cust_sales=$connection->fetchOne($sel_new_cust_sales);
+	
+	  
+		$sel_newcustomer="select count(entity_id) from mg_customer_entity where created_at >='".$sd."' and created_at <='".$ed."'";
+		$rs_newcustomer=$connection->fetchOne($sel_newcustomer);
+		
+		
+		$sel_orders="select count(entity_id) from mg_sales_flat_order where created_at >='".$sd."' and created_at <='".$ed."' and status!='canceled'";
+		$rs_orders=$connection->fetchOne($sel_orders);
+		
+		$sel_revenue="select sum(base_total_invoiced) from mg_sales_flat_order where created_at >='".$sd."' and created_at <='".$ed."' and status!='canceled'";
+		$rs_revenue=$connection->fetchOne($sel_revenue);
+		
+		
+		           $sql3fff = "select item_id from supervision where  ( realdate >='".$sd."' and realdate <='".$ed."' ) and ordernumber = ' ' ";
+					$rows3avv = $connection->fetchAll($sql3fff);
+					foreach ($rows3avv as $bbbcvv) {
+					
+					    $sel_order_number="select order_id from mg_sales_flat_order_item where item_id='".$bbbcvv["item_id"]."'";
+					    $rs_order_number=$connection->fetchOne($sel_order_number);
+					   
+					 $update32 = "update supervision set ordernumber='".$rs_order_number."' where item_id='".$bbbcvv["item_id"]."'";
+					 $connection->query($update32); 
+					  
+					} 
+					
+		
+		$sel_no_of_subs="select count(item_id) from supervision where  substitute!=' '  and ( realdate >='".$sd."' and realdate <='".$ed."' )";
+		$rs_no_of_subs=$connection->fetchOne($sel_no_of_subs);
+		
+		
+		$total_packed="select count(item_id) from supervision where  ( realdate >='".$sd."' and realdate <='".$ed."' )";
+		$abtotal_packed=$connection->fetchOne($total_packed);
+		
+		$sbrate = $rs_no_of_subs / $abtotal_packed;
+		
+		$rns = $rns + $rs_no_of_subs;
+		$ap = $ap + $abtotal_packed;
+		
+		 $sel_dorderff="select ordernumber from supervision where  ( realdate >='".$sd."' and realdate <='".$ed."' ) group by ordernumber";
+		$rs_dorderff=$connection->fetchAll($sel_dorderff);
+		
+		
+		
+		
+		$dorderff = $rs_no_of_subs / count($rs_dorderff)  ;
+		
+		$rso=$rso+$rs_no_of_subs;
+		$rd=$rso+count($rs_dorderff);
+		
+		$rd5=$rd5+count($rs_dorderff);
+		
+		$totaldoodr = count($rs_dorderff);
+		
+		$sql3a = "select msi.order_id from supervision s 
+					left join mg_sales_flat_order_item msi on msi.item_id = s.item_id
+					where ( s.realdate >='".$sd."' and s.realdate <='".$ed."' ) and s.status!='found' and s.substitute!=' '  and s.item_id is not null group by msi.order_id";
+					$rows3a = $connection->fetchAll($sql3a);
+					$hh=1; 
+					$bbbc="";
+					$gprs="";
+				    foreach ($rows3a as $bbbc) {
+					
+					  if($bbbc["order_id"]!="")
+					  {
+					   $gprs[$hh] = $bbbc["order_id"];
+					   }
+					   $hh=$hh+1;
+					}
+					
+		    $totalsubs_order =  count($gprs);
+			$totalsubsless_order =  $totaldoodr - count($gprs);
+			$check[$k]=$range.'-'.$range2;
+			if($bred > $red)
+		    {
+				if($check[$k]!=$check[$k-1])
+				{
+				  if($rs_newcustomer!="" && $range!="" && $range2!="" )
+				  {
+			   
+			   $str1.=' { X : "'.$range.'-'.$range2.' <br/> ( '.$rs_newcustomer.' ) '.'"';
+			   $str1.=",";
+			   
+			   $str1.='Y: '.$rs_newcustomer;
+			   $str1.=" } ,";
+			   
+			   $str1b = $str1b + $rs_newcustomer;
+			   
+			   }
+			   
+			      if($totalsubsless_order!="" && $range!="" && $range2!="" )
+				{
+			   
+			       $z=round(($totalsubsless_order/$totaldoodr),2);
+				   //$str6.=' { X : "'.$range.'-'.$range2.'"';
+				   $str6.=' { X : "'.$range.'-'.$range2.' ( '.$z.' ) '.'"';
+				   $str6.=",";
+				   
+				   $str6.='Y: '.($totalsubsless_order/$totaldoodr)*1000;
+				   $str6.=" } ,";
+				   
+				   
+				   $tsop = $tsop + $totalsubsless_order;
+				   $topt = $topt + $totaldoodr;
+				   $str6b = $str6b + $z;
+			   
+			   }
+			   
+			       if($dorderff!="" && $range!="" && $range2!="" )
+				{
+				   $z=round(($dorderff),2);
+				  // $str5.=' { X : "'.$range.'-'.$range2.'"';
+						$str5.=' { X : "'.$range.'-'.$range2.' ( '.$z.' ) '.'"';
+						$str5.=",";
+				   
+					   $str5.='Y: '.$dorderff*1000;
+					   $str5.=" } ,";
+				   
+				       $str5b = $str5b + $z;
+			   }
+			   
+				  if($sbrate!="" && $range!="" && $range2!="" )
+				{
+				
+				   $z=round(($sbrate),2);
+				   // $str7.=' { X : "'.$range.'-'.$range2.'"';
+				   $str7.=' { X : "'.$range.'-'.$range2.' ( '.$z.' ) '.'"';
+				   $str7.=",";
+				   
+				   $str7.='Y: '.$sbrate*1000;
+				   $str7.=" } ,";
+				   
+				   $str7b = $str7b + $z;
+			   
+			   } 
+			   
+			   
+			   if($rs_orders!="" && $range!="" && $range2!="" )
+			   {
+			   
+			    $z=$rs_orders;
+			  // $str2.=' { X : "'.$range.'-'.$range2.'"';
+			    $str2.=' { X : "'.$range.'-'.$range2.' ( '.$z.' ) '.'"';
+			    $str2.=",";
+			   
+				   $str2.='Y: '.$rs_orders;
+				   $str2.=" } ,";
+			   
+			       $str2b = $str2b + $z;
+			   
+			   }
+			   
+			   
+			   if($rs_revenue!="" && $range!="" && $range2!="" )
+			   {
+			       $z=$rs_revenue;
+				   // $str3.=' { X : "'.$range.'-'.$range2.'"';
+				   $str3.=' { X : "'.$range.'-'.$range2.' ( '.$z.' ) '.'"';
+				   $str3.=",";
+				   
+				   $str3.='Y: '.$rs_revenue;
+				   $str3.=" } ,";
+				   
+				   $str3b = $str3b + $z;
+			   
+			   }
+			   
+			   
+			   if($new_cust_sales!="" && $range!="" && $range2!="" )
+			   {
+			      $z=$new_cust_sales;
+				  // $str8.=' { X : "'.$range.'-'.$range2.'"';
+				   $str8.=' { X : "'.$range.'-'.$range2.' ( '.$z.' ) '.'"';
+				   $str8.=",";
+				   
+				   $str8.='Y: '.$new_cust_sales;
+				   $str8.=" } ,";
+				   
+				   $str8b = $str8b + $z;
+			   
+			   }
+			   
+			   if($rs_revenue/$rs_orders!="" && $range!="" && $range2!="" )
+			   {
+			       $z=round($rs_revenue/$rs_orders,2);
+				   $str4.=' { X : "'.$range.'-'.$range2.' ( '.$z.' ) '.'"';
+				   $str4.=",";
+				   
+				   $str4.='Y: '.$rs_revenue/$rs_orders;
+				   $str4.=" } ,";
+				   
+				   $str4b = $str4b + $z;
+				   
+				   $trev = $trev + $rs_revenue;
+				   $tso = $tso + $rs_orders;
+			   }
+			   
+			   
+				}
+				  $k++;
+		    }	
+	}
+	
+	 
+	
+	 
+	 $string = substr($str1,0,-1);
+	 $string2 = substr($str2,0,-1);
+	 
+	 $string3 = substr($str3,0,-1);
+	 $string4 = substr($str4,0,-1);
+	 
+	
+	 $string5 = substr($str5,0,-1);
+	 $string6 = substr($str6,0,-1);
+	 $string7 = substr($str7,0,-1);
+	 $string8 = substr($str8,0,-1);
+	 
+	?>
+	
+	
+	
+	<script>
+        var graphdata1 = {
+            linecolor: "#008000",
+            title: "No of Customers Registration,Total : <?php echo $str1b; ?>",
+            values: [
+            <?php echo $string; ?>
+            ]
+        };
+		
+		var graphdata2 = {
+            linecolor: "#004080",
+            title: "No of Orders,Total : <?php echo $str2b; ?>",
+            values: [
+            <?php echo $string2; ?>
+            ]
+        };
+		
+		var graphdata3 = {
+            linecolor: "#5e002f",
+            title: "Total Sales / Revenue,Total : <?php echo $str3b; ?>",
+            values: [
+            <?php echo $string3; ?>
+            ]
+        };
+		
+		var graphdata4 = {
+            linecolor: "#8000ff",
+            title: "Avg Order Size,Total $: <?php echo round($trev/$tso,2); ?>",
+            values: [
+            <?php echo $string4; ?>
+            ]
+        };
+		
+		var graphdata5 = {
+            linecolor: "#408080",
+            title: "Subs Per Order,Total : <?php echo $str5b; ?>",
+            values: [
+            <?php echo $string5; ?>
+            ]
+        };
+		
+		var graphdata6 = {
+            linecolor: "#800040",
+            title: "Perfect Rate ( orders with zero substitutes divided by number of total orders ),Total : <?php echo $str6b; ?> ",
+            values: [
+            <?php echo $string6; ?>
+            ]
+        };
+		
+		
+		var graphdata7 = {
+            linecolor: "#ff0000",
+            title: "Substitution Rat ( Substitutes divided by total item packed ),Total : <?php echo $str7b; ?>",
+            values: [
+            <?php echo $string7; ?>
+            ]
+        };
+		
+		
+		var graphdata8 = {
+            linecolor: "#e80074",
+            title: "New Customers Orders,Total : <?php echo $str8b; ?>",
+            values: [
+            <?php echo $string8; ?>
+            ]
+        };
+		
+        
+        jQuery(function () {
+		
+		
+		jQuery("#Linegraph").SimpleChart({
+                ChartType: "Line",
+                toolwidth: "50",
+                toolheight: "25",
+                axiscolor: "#E6E6E6",
+                textcolor: "#6E6E6E",
+                showlegends: false,
+                data: [graphdata1],
+                legendsize: "0",
+                legendposition: 'bottom',
+                xaxislabel: 'Date Range',
+                title: 'No of Customers Registration,Total : <?php echo $str1b; ?>',
+                yaxislabel: 'Customers'
+            });
+			
+	 jQuery("#Linegraph2").SimpleChart({
+                ChartType: "Line",
+                toolwidth: "50",
+                toolheight: "25",
+                axiscolor: "#E6E6E6",
+                textcolor: "#6E6E6E",
+                showlegends: false,
+                data: [graphdata2],
+                legendsize: "0",
+                legendposition: 'bottom',
+                xaxislabel: 'Date Range',
+                title: 'No of Orders,Total : <?php echo $str2b; ?>',
+                yaxislabel: 'Orders'
+            });	
+			
+			
+			 jQuery("#Linegraph8").SimpleChart({
+                ChartType: "Line",
+                toolwidth: "50",
+                toolheight: "25",
+                axiscolor: "#E6E6E6",
+                textcolor: "#6E6E6E",
+                showlegends: false,
+                data: [graphdata8],
+                legendsize: "0",
+                legendposition: 'bottom',
+                xaxislabel: 'Date Range',
+                title: 'New Customers Orders,Total : <?php echo $str8b; ?>',
+                yaxislabel: 'Orders'
+            });	
+			
+			
+	      jQuery("#Linegraph3").SimpleChart({
+                ChartType: "Line",
+                toolwidth: "50",
+                toolheight: "25",
+                axiscolor: "#E6E6E6",
+                textcolor: "#6E6E6E",
+                showlegends: false,
+                data: [graphdata3],
+                legendsize: "0",
+                legendposition: 'bottom',
+                xaxislabel: 'Date Range',
+                title: 'Total Sales / Revenue,Total $: <?php echo round($str3b,2); ?>',
+                yaxislabel: 'revenue'
+            });	
+			
+			jQuery("#Linegraph4").SimpleChart({
+                ChartType: "Line",
+                toolwidth: "50",
+                toolheight: "25",
+                axiscolor: "#E6E6E6",
+                textcolor: "#6E6E6E",
+                showlegends: false,
+                data: [graphdata4],
+                legendsize: "0",
+                legendposition: 'bottom',
+                xaxislabel: 'Date Range',
+                title: 'Avg Order Size,Total $: <?php echo round($trev/$tso,2); ?>',
+                yaxislabel: 'Avg Order'
+            });
+			
+			
+			jQuery("#Linegraph7").SimpleChart({
+                ChartType: "Line",
+                toolwidth: "50",
+                toolheight: "25",
+                axiscolor: "#E6E6E6",
+                textcolor: "#6E6E6E",
+                showlegends: false,
+                data: [graphdata7],
+                legendsize: "0",
+				
+                legendposition: 'bottom',
+                xaxislabel: 'Date Range',
+                title: 'Substitution Rate,Total : <?php echo round($rns/$ap,3); ?>',
+                yaxislabel: 'Rate'
+            });
+			
+			jQuery("#Linegraph5").SimpleChart({
+                ChartType: "Line",
+                toolwidth: "50",
+                toolheight: "25",
+                axiscolor: "#E6E6E6",
+                textcolor: "#6E6E6E",
+                showlegends: false,
+                data: [graphdata5],
+                legendsize: "0",
+				
+                legendposition: 'bottom',
+                xaxislabel: 'Date Range',
+                title: 'Subs Per Order,Total : <?php echo round($rso/$rd5,3); ?>',
+                yaxislabel: 'Rate',
+				
+
+            });
+			
+			
+			jQuery("#Linegraph6").SimpleChart({
+                ChartType: "Line",
+                toolwidth: "50",
+                toolheight: "25",
+                axiscolor: "#E6E6E6",
+                textcolor: "#6E6E6E",
+                showlegends: false,
+                data: [graphdata6],
+                legendsize: "0",
+				
+                legendposition: 'bottom',
+                xaxislabel: 'Date Range',
+                title: 'Perfect Rate ( orders with zero substitutes divided by number of total orders ),Total : <?php echo round($tsop/$topt,3); ?>',
+                yaxislabel: 'Rate'
+            });
+			
+					
+        });
+    </script>
+	
+	<div style="width:98%;margin-bottom:20px;float:left;">
+	<div id="Linegraph" style="height:250px" >
+    </div>
+	</div>
+	
+	
+	<div style="width:98%;margin-bottom:20px;float:left;" >
+	<div id="Linegraph2" style="height:250px"  >
+    </div>
+	</div>
+	
+	
+	<div style="width:98%;margin-bottom:20px;float:left;" >
+	<div id="Linegraph8" style="height:250px"  >
+    </div>
+	</div>
+	
+	<div style="width:98%;margin-bottom:20px;float:left;">
+	<div id="Linegraph3" style="height:250px" >
+    </div>
+	</div>
+	
+	 <div style="width:98%;margin-bottom:20px;float:left;">
+	<div id="Linegraph4" style="height:250px" >
+    </div>
+	</div>
+	
+	 <div style="width:98%;margin-bottom:20px;float:left;">
+	<div id="Linegraph7" style="height:250px" >
+    </div>
+	</div>
+	
+	 <div style="width:98%;margin-bottom:20px;float:left;">
+	<div id="Linegraph5" style="height:250px" >
+    </div>
+	</div>
+	
+	 <div style="width:98%;margin-bottom:20px;float:left;">
+	<div id="Linegraph6" style="height:250px" >
+    </div>
+	</div>
+	
+	<?php 
+	} ?>  
+	<script type="text/javascript">
+       	 //<![CDATA[
+        	var filterFormSubmit  = new varienForm('filter_form');
+         //]]>
+        </script> 
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script> 
+</body>
+</html>

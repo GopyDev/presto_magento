@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <modules>
+        <Discount_Orders>
+            <version>0.0.0.1</version>
+        </Discount_Orders>
+    </modules>
+ 
+    <global>
+        <models>
+            <discount_orders>
+                <class>Discount_Orders_Model</class>
+                <resourceModel>discount_orders_resource</resourceModel>
+            </discount_orders>
+        </models>
+ 
+        <resources>
+            <discount_orders_setup>
+                <setup>
+                    <module>Discount_Orders</module>
+                </setup>
+            </discount_orders_setup>
+        </resources>
+ 
+        <blocks>
+            <discount_orders>
+                <class>Discount_Orders_Block</class>
+            </discount_orders>
+        </blocks>
+ 
+        <helpers>
+            <discount_orders>
+                <class>Discount_Orders_Helper</class>
+            </discount_orders>
+        </helpers>
+    </global>
+ 
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <discount_orders before="Mage_Adminhtml">Discount_Orders_Adminhtml</discount_orders>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config> 
+

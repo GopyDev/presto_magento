@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <modules>
+        <Lifesotware_Orders>
+            <version>0.0.0.1</version>
+        </Lifesotware_Orders>
+    </modules>
+ 
+    <global>
+        <models>
+            <lifesotware_orders>
+                <class>Lifesotware_Orders_Model</class>
+                <resourceModel>lifesotware_orders_resource</resourceModel>
+            </lifesotware_orders>
+        </models>
+ 
+        <resources>
+            <lifesotware_orders_setup>
+                <setup>
+                    <module>Lifesotware_Orders</module>
+                </setup>
+            </lifesotware_orders_setup>
+        </resources>
+ 
+        <blocks>
+            <lifesotware_orders>
+                <class>Lifesotware_Orders_Block</class>
+            </lifesotware_orders>
+        </blocks>
+ 
+        <helpers>
+            <lifesotware_orders>
+                <class>Lifesotware_Orders_Helper</class>
+            </lifesotware_orders>
+        </helpers>
+    </global>
+ 
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <lifesotware_orders before="Mage_Adminhtml">Lifesotware_Orders_Adminhtml</lifesotware_orders>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>

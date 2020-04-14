@@ -1,0 +1,235 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product additional attributes template
+ *
+ * @see Mage_Catalog_Block_Product_View_Attributes
+ */
+?>
+<?php
+    $_helper = $this->helper('catalog/output');
+    $_product = $this->getProduct();
+	$proid = $_product->getId();
+?>
+<?php if($_additional = $this->getAdditionalData()): ?>
+<style type="text/css">
+#product-attribute-specs-table tr label{ padding-right:10px; color:#000; font-weight:bold;}
+#product-attribute-specs-table { color:#000; }
+.bolder{ font-size: 18px; padding-right:10px;}
+.Caleries{font-weight: bold;color: #000;padding: 12px 15px 12px;}
+.Caleries ul{ float:right ; padding: 10px 0;}
+.Caleries ul li{ float:left; margin:0 19px; list-style:circle;}
+.Extra-Attribute label{ text-transform:uppercase; color:#000; font-weight:bold;}  
+.Extra-Attribute span{ color:#000 ;font-weight:bold;}
+#product-attribute-specs-table td{ padding: 0px 15px 0px;vertical-align: middle;}
+#product-attribute-specs-table th{ padding:5px !important;}
+.extra-att td{ padding:10px; color:#000;}
+h3
+{
+   margin-bottom:0px !important;
+   line-height:1 !important;
+}
+.Extra-Attribute p
+{
+   line-height:18px !important;
+}
+.Extra-Attribute h3
+{
+    margin-top:8px !important;
+}
+.product-view .product-name h1
+{
+   font-size:16px !important;
+}
+</style>
+<?php if($proid!='25265') { ?>
+  <h2><?php echo $this->__('Nutrition Information') ?></h2>
+  <div class="box-collateral-content">
+        
+		<table class="data-table nutration-table" id="product-attribute-specs-table" cellpadding="5" cellspacing="5" style="width:94%" >
+			<col width="25%" />
+			<col />
+			<tbody>
+            	<tr>
+                    <th><label style="font-size:8pt; font-weight:bold; font-family: verdana, arial;">Serving Size</label></th>
+                    <td>
+                    	 <font style="font-weight:9pt; color:#000; font-family: verdana, arial;">
+                             <?php echo $this->getProduct()->getServingSize();?>
+    				     </font>
+                    </td>
+                </tr>
+              <th><label style="font-size:8pt; font-weight:bold; font-family: verdana, arial;">Serving Per Container </label></th>
+              <td>
+              	<font style="font-weight:9pt; color:#000; font-family: verdana, arial;">
+                    <?php echo $this->getProduct()->getServingsPerContainer();?>
+                </font>
+              </td>
+                <tr style="background:#000;"><th></th><td></td></tr>
+                <tr>
+                    <th colspan="2"><label style="font-size:8pt; font-weight:bold; font-family: verdana, arial;">Amount Per Serving</label></th>	</tr>
+                <tr>
+                    <th colspan="2">
+                    <label class="bolder" style="font-size:8pt; color:#000;   font-family: verdana, arial;">Calories </label>
+                   	  <span style="font-weight:normal"><?php if($this->getProduct()->getCalories()==''){echo "0";}else{echo $this->getProduct()->getCalories();}?></span>
+                    </th>
+                </tr>
+                <tr>
+                	<th  colspan="2"><label style="font-size:8pt; color:#000;   font-family: verdana, arial;">Calories from Fat</label>
+                	 <span style="font-weight:normal"><?php if($this->getProduct()->getFatCaloriesPerServing()==''){echo "0";}else{echo $this->getProduct()->getFatCaloriesPerServing();}?></span>
+                </th>
+                </tr>
+                <tr style="background:#000;">
+                	<th></th><td></td></tr>
+                <tr>
+                <tr><td style="border-top:0; padding:2px 10px;font-size:12px; font-weight:bold;font-family: verdana, arial;" colspan="2">% Daily value</td></tr>
+                <td colspan="2" style="padding-left:0;padding-right:0">
+                <table width="100%">
+                <tbody>
+                	 <tr>
+                         <th><label class="bolder" style="font-size:8pt; font-weight:bold; font-family: verdana, arial;">Total Fat</label>
+                         	 <font style="font-weight:normal; color:#000; font-family: verdana, arial;font-size:8pt;">
+						 		<?php if($this->getProduct()->getTotalfat()==''){echo "0g";}else{echo $this->getProduct()->getTotalfat().'g';}?>
+                         	 </font></th>
+                         <td>
+							 <?php if($this->getProduct()->getTotalfat() != '')
+							 		{
+									  $percentval = $this->getProduct()->getTotalfat()/65 *100; 
+									  echo round($percentval).'%';
+							 		 }?>
+                         </td>
+                     </tr>
+                     <tr>
+                         <th colspan="1" style="padding-left:40px"><label style="font-size:8pt; font-weight:normal; font-family: verdana, arial;">Saturated Fat</label>
+                         	 <font style="font-weight:normal; color:#000; font-family: verdana, arial;font-size:8pt;">
+							 	<?php if($this->getProduct()->getSaturatedfat()==''){echo "0g";}else{echo $this->getProduct()->getSaturatedfat().'g';}?>
+                             </font>
+                         </th>
+                         <td>&nbsp;
+							 <?php if($this->getProduct()->getSaturatedfat() != '')
+									 {
+										$saturatedfat =  $this->getProduct()->getSaturatedfat()/20 *100;
+										echo round($saturatedfat) .'%';
+									 }else
+									 {
+										echo '%';
+									 }
+							 ?> 
+                         </td> 
+                     </tr>
+                	 <tr>
+                     	<th colspan="2"  style="padding-left:40px"><label style="font-size:8pt; font-weight:normal; font-family: verdana, arial;">Trans Fat </label>
+                       		<font style="font-weight:normal; color:#000; font-family: verdana, arial;font-size:8pt;">
+								<?php if($this->getProduct()->getTransfat()==''){echo "0g";}else{echo $this->getProduct()->getTransfat().'g';}?>
+                            </font>
+                        </th>
+                     </tr>
+                 </tbody>
+                </table>
+                </td>
+           </tr>
+                <tr>
+                	<th><label class="bolder" style="font-size:8pt; font-weight:bold; font-family: verdana, arial;">Cholesterol </label>
+                        <font style="font-weight:normal; color:#000; font-family: verdana, arial;font-size:8pt;">
+                                <?php if($this->getProduct()->getCholesterol()==''){echo "0mg";}else{echo $this->getProduct()->getCholesterol().'mg';}?>
+                        </font>
+                    </th>
+                    <td>
+                        <?php if($_product->getCholesterol() != ''){$cholesterol = $_product->getCholesterol()/300 *100; echo round($cholesterol).'%';}else{echo "%";}?>
+                    </td>
+               </tr>
+                <tr>
+                	<th><label class="bolder" style="font-size:8pt; font-weight:bold; font-family: verdana, arial;">Sodium</label>
+						<font style="font-weight:normal; color:#000; font-family: verdana, arial;font-size:8pt;">
+							<?php if($_product->getSodium()==''){echo "0mg";}else{echo $_product->getSodium().'mg';
+							}?>
+                        </font>
+                    </th>
+					<td><?php if($_product->getSodium() !=''){ $sodium = $_product->getSodium()/2400 *100;echo round($sodium).'%';}else{echo '%';}?></td><?php ?>
+               </tr>
+                <tr>
+                <td colspan="2" style="padding-left:0;padding-right:0">
+                <table width="100%">
+                <tbody>
+					<tr>
+                	<th><label class="bolder" style="font-size:8pt; font-weight:bold; font-family: verdana, arial;">Total Carbohydrate </label>
+                   		<font style="font-weight:normal; color:#000; font-family: verdana, arial;font-size:8pt;">
+							<?php if($_product->getTotalcarbohydrate()==''){echo "0g";}else{echo $_product->getTotalcarbohydrate().'g';}?>
+                        </font>
+                    </th>
+                   <?php /*?> <td>&nbsp;&nbsp;<?php if($_product->getTotalcarbohydrate()==''){echo $_product->getTotalcarbohydrate()/300 ;}else{ echo '%';}?></td><?php */?>
+                    </tr>
+                     <tr>
+                     <th style="padding-left:40px"><label style="font-size:8pt; font-weight:normal; font-family: verdana, arial;">Dietary Fiber </label>
+                     		<font style="font-weight:normal; color:#000; font-family: verdana, arial;font-size:8pt;">
+							<?php if($_product->getDietaryfiber()==''){echo "0g";}else{echo $_product->getDietaryfiber().'g';}?>
+                        </font>
+                     </th>
+                        <?php /*?><td><?php if($_product->getDietaryfiber() != ''){echo $_product->getDietaryfiber()/25 * 100 .'%';}else{echo '%';}?></td><?php */?>
+                     </tr>
+                    <tr>
+                        <th style="padding-left:40px"><label style="font-size:8pt; font-weight:normal; font-family: verdana, arial;">Sugars  </label>
+                            <font style="font-weight:normal; color:#000; font-family: verdana, arial;font-size:8pt;">
+                                <?php if($_product->getSugars()==''){echo "0g";}else{echo $_product->getSugars().'g';}?>
+                            </font>
+                        </th>
+                    </tr>
+                </tbody>
+                </table>
+                </td>
+                </tr>
+                <tr>
+                	<th><label class="bolder" style="font-size:8pt; font-weight:bold; font-family: verdana, arial;">Protein </label>
+                     <font style="font-weight:normal; color:#000; font-family: verdana, arial;font-size:8pt;">
+						 	<?php if($_product->getProteinPerServing()==''){echo "g";}else{echo $_product->getProteinPerServing().'g';}?>
+                         </font>
+                    </th>
+                    <td><?php if($_product->getProteinPerServing() != ''){ $protein = ($_product->getProteinPerServing()/50)*100; echo round($protein).'%';}else{echo "%";}?></td>
+                    <?php /*?><td><?php if($_product->getDvpProtein()==''){echo "No";}else{echo $_product->getDvpProtein();}?></td><?php */?>
+                </tr>
+                <tr style="background:#000;"><th></th><td></td></tr>
+                
+                <tr>
+                    <th><label style="font-size:8pt; font-weight:normal; font-family: verdana, arial;">Vitamin A </label>
+                    	 <span style="font-weight:normal"><?php if($_product->getDvpVitaminA()==''){echo "%";}else{echo $_product->getDvpVitaminA().'%';}?></span></th>
+                    
+                    <th style="text-align:right"><label  style="font-size:8pt; font-weight:normal; font-family: verdana, arial;">Vitamin C</label> 
+                    	 <span style="font-weight:normal"><?php if($_product->getDvpVitaminC()==''){echo "%";}else{echo $_product->getDvpVitaminC().'%';}?></span></th>
+                </tr>
+                <tr>
+                    <th><label  style="font-size:8pt; font-weight:normal; font-family: verdana, arial;">Calcium </label>
+					 <span style="font-weight:normal"><?php if($_product->getDvpCalcium()==''){echo "%";}else{echo $_product->getDvpCalcium().'%';}?></span></th>
+                    <td><label  style="font-size:8pt; font-weight:normal; font-family: verdana, arial;"> Iron </label>
+                    <span style="font-weight:normal"> <?php if($_product->getDvpIron()==''){echo "%";}else{echo $_product->getDvpIron().'%';}?></span></td>
+                </tr>
+                <tr><td colspan="2" style="font-size:8pt; font-weight:normal; font-family: verdana, arial;">*Percent Daily Values are based on a 2,000 Calorie Diet. Your values may be higher or lower based on your calorie needs</td></tr>
+            </tbody>
+        </table>
+   
+	<script type="text/javascript">decorateTable('product-attribute-specs-table')</script>
+	</div>
+	<?php } ?>
+<?php endif;?>

@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * zeonsolutions inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.zeonsolutions.com/shop/license-community.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * This package designed for Magento COMMUNITY edition
+ * =================================================================
+ * zeonsolutions does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * zeonsolutions does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   Zeon
+ * @package    Zeon_AjaxCart
+ * @version    0.0.1
+ * @copyright  @copyright Copyright (c) 2013 zeonsolutions.Inc. (http://www.zeonsolutions.com)
+ * @license    http://www.zeonsolutions.com/shop/license-community.txt
+ */
+-->
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <zextension translate="title">
+                        <title>Zeon Extensions</title>
+                        <sort_order>200</sort_order>
+                        <children>
+                            <zeon_ajaxcart translate="title" module="zeon_ajaxcart">
+                                <title>AJAX Cart</title>
+                                <sort_order>500</sort_order>
+                                <children>
+                                    <ajaxcart_settings translate="title" module="zeon_ajaxcart">
+                                        <title>Manage AJAX Cart Settings</title>
+                                        <sort_order>20</sort_order>
+                                    </ajaxcart_settings>
+                                </children>
+                            </zeon_ajaxcart>
+                        </children>
+                    </zextension>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <zextension translate="title">
+                                        <title>Zeon Extensions</title>
+                                    </zextension>
+                                    <zeon_ajaxcart>
+                                        <title>Zeon Extensions - AJAX Cart Settings</title>
+                                    </zeon_ajaxcart>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+    <menu>
+        <zextension translate="title">
+            <title>Zeon Extensions</title>
+            <sort_order>90</sort_order>
+            <children>
+                <zeon_ajaxcart translate="title" module="zeon_ajaxcart">
+                    <title>AJAX Cart</title>
+                    <sort_order>500</sort_order>
+                    <children>
+                        <ajaxcart_settings module="zeon_ajaxcart">
+                            <title>Manage AJAX Cart Settings</title>
+                            <sort_order>20</sort_order>
+                            <action>adminhtml/system_config/edit/section/zeon_ajaxcart</action>
+                        </ajaxcart_settings>
+                    </children>
+                </zeon_ajaxcart>
+            </children>
+        </zextension>
+    </menu>
+</config>

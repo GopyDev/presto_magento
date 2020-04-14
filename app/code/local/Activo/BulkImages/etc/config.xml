@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Activo Extensions
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Activo Commercial License
+ * that is available through the world-wide-web at this URL:
+ * http://extensions.activo.com/license_professional
+ *
+ * @copyright   Copyright (c) 2013 Activo Extensions (http://extensions.activo.com)
+ * @license     Commercial
+ */
+-->
+<config>
+	<modules>
+        <Activo_BulkImages>
+            <version>1.0.0</version>
+        </Activo_BulkImages>
+    </modules>
+    <admin>
+        <routers>
+             <adminhtml>
+                 <args>
+                     <modules>
+                         <activo_bulkimages before="Mage_Adminhtml">Activo_BulkImages_Adminhtml</activo_bulkimages>
+                     </modules>
+                 </args>
+             </adminhtml>
+        </routers>
+    </admin>
+    <global>
+    	<blocks>
+    		<bulkimages>
+    			<class>Activo_BulkImages_Block</class>
+    		</bulkimages>
+    	</blocks>
+    	<helpers>
+    		<bulkimages>
+    			<class>Activo_BulkImages_Helper</class>
+    		</bulkimages>
+    	</helpers>
+        <models>
+            <bulkimages>
+                <class>Activo_BulkImages_Model</class>
+                <resourceModel>bulkimages_mysql4</resourceModel>
+            </bulkimages>
+            <bulkimages_mysql4>
+                <class>Activo_BulkImages_Model_Mysql4</class>
+                <entities>
+                    <import><table>activo_bulkimages_import</table></import>
+                </entities>
+            </bulkimages_mysql4>
+       </models>
+        <resources>
+            <bulkimages_setup>
+                <setup>
+                    <module>Activo_BulkImages</module>
+                    <class>Mage_Catalog_Model_Resource_Eav_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </bulkimages_setup>
+            <bulkimages_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </bulkimages_write>
+            <bulkimages_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </bulkimages_read>
+        </resources>
+    </global>
+    <default>
+        <activo_bulkimages>
+            <global>
+                <licensekey></licensekey>
+                <sourcefolder>import</sourcefolder>
+                <separator>-BI-</separator>
+                <excludefirst>1</excludefirst>
+                <deleteold>1</deleteold>
+                <filteroptions>1</filteroptions>
+                <attachtosimple>0</attachtosimple>
+            </global>
+            <regex>
+                <regexpattern></regexpattern>
+                <regexreplace></regexreplace>
+            </regex>
+            <seo>
+                <newfilename>1</newfilename>
+            </seo>
+        </activo_bulkimages>
+    </default>
+</config>

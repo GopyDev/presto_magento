@@ -1,0 +1,243 @@
+
+/*******************************/
+
+.sf-menu .parentMenu {
+  float: left;
+  text-align: left;
+  position: relative;
+  border-right: 1px solid #5a8710;
+  z-index: 99;
+}
+.sf-menu .parentMenu a {
+  display: block;
+  color: #383737;
+  text-decoration: none;
+  position: relative;
+  padding: 0;
+}
+.sf-menu .parentMenu a  span {
+  display: block; color:#fff;
+font-size: 15px;
+line-height: 25px;
+font-weight: 600;
+text-shadow: none;
+cursor: pointer;
+white-space: nowrap;
+padding: 5px 24px 12px;
+text-transform: capitalize;
+font-family: 'Open Sans', sans-serif;
+
+}
+div.wp-custom-menu-popup {
+background: #323232;
+box-shadow: 0px 15px 15px rgba(0, 0, 0, 0.3);
+color: #fff;
+}
+#menu161 .parentMenu{ border-right:0;}
+.wp-custom-menu-popup{ color:#fff; font-size:13px; line-height:14px;}
+.parentMenu a:hover > .active{ background: url(../images/menu-active.gif) repeat-x center top;}
+
+
+/******************************** End */
+
+.nav-container {
+  position: relative;
+  z-index: 2;
+}
+.sf-menu {
+background: url(../images/nav-bg.gif) 0 bottom repeat-x #a2c820;
+font-size: 13px;
+line-height: 17px;
+border-top: 1px solid #cde12f;
+border-bottom: 1px solid #4e750e;
+border-radius: 4px;
+margin-top: 1px;
+}
+.sf-menu li {
+  float: left;
+  text-align: left;
+  position: relative;
+  border-right: 1px solid #5a8710;
+  z-index: 99;
+}
+.sf-menu li a {
+  display: block;
+  color: #383737;
+  text-decoration: none;
+  position: relative;
+  padding: 0;
+}
+.sf-menu > li > a > span {
+  display: block;
+  font-size: 15px;
+  line-height: 20px;
+  color: #fff;
+  font-weight: 600;
+  text-shadow:none;
+  cursor: pointer;
+  white-space: nowrap; padding:5px 33px 12px;
+/*  padding: 18px 20px 24px;*/
+}
+.sf-menu > li:first-child > a {border-radius: 4px 0 0 4px;}
+.sf-menu li ul a span {  white-space: normal;}
+.sf-menu > li.parent > a > span {  background: url(../images/marker-8.gif) center -67px no-repeat;/*-59px*/}
+.nav-9{ border-right:0 !important;  } 
+
+.sf-menu> li { background: url(../images/menu-active.gif) no-repeat -111px -1111px;}
+.sf-menu > li.sfHover > a,
+.sf-menu> li > a:hover,
+.sf-menu > li.active > a {  color: #fff; background: url(../images/menu-active.gif) repeat-x center top;}
+
+.sf-menu > li.sfHover > a span,
+.sf-menu > li > a:hover span,
+.sf-menu > li.active > a span {  color: #fff;}
+.sf-menu li a:hover {  text-decoration: none;}
+
+.sf-menu ul {
+  position: absolute;
+  top: -999em;
+  z-index: 99;
+  width: 220px;
+  display: none;
+  background: #323232;
+}
+.sf-menu li li {  border-bottom: 1px solid #000;}
+.sf-menu li li.last {  border-bottom: none;}
+.sf-menu li li {
+  float: none;
+  border-right: none;
+  position: relative;
+}
+.sf-menu li li.sfHover,
+.sf-menu li li:hover
+.sf-menu li li.active {background-color:#424141; }
+.sf-menu li li.parent > a:before {content: "\f105"; font-size: 20px; color: #a4a2a2; float: right; line-height: 16px; }
+
+.sf-menu li li a {
+  display:block;
+  background: none;
+  font-size: 13px;
+  line-height: 14px;
+  color: #fff;
+  padding: 7px 15px;
+}
+.sf-menu li li > a:hover,
+.sf-menu li li.sfHover > a,
+.sf-menu li li.active > a {  color: #fce702;}
+
+.sf-menu ul ul {
+  position: absolute;
+  top: -999em;
+  z-index: 99;
+  width: 220px;
+}
+.sf-menu li:hover ul,
+.sf-menu li.sfHover ul {
+  left: 0px;
+  /*top: 63px;*/ top:38px;
+  /* match top ul list item height */
+}
+
+ul.sf-menu li:hover li ul,
+ul.sf-menu li.sfHover li ul {
+  top: -999em;
+}
+ul.sf-menu li li:hover ul,
+ul.sf-menu li li.sfHover ul {
+  left: 221px;
+  /* match ul width */
+  top: 0;
+}
+ul.sf-menu li li:hover li ul,
+ul.sf-menu li li.sfHover li ul {
+  top: -999em;
+}
+ul.sf-menu li li li:hover ul,
+ul.sf-menu li li li.sfHover ul {
+  left: 221px;
+  /* match ul width */
+  top: 0;
+}
+@media only screen and (min-width: 980px) and (max-width: 1199px) { 
+  .sf-menu > li > a > span {font-size: 16px;}
+}
+@media only screen and (min-width: 980px) {
+    #menu-icon,
+    .sf-menu-phone {  display: none !important;}
+}
+@media only screen and (max-width: 979px) {
+  .sf-menu,
+  .sf-menu-phone {display: none;}
+  /* menu icon */
+  #menu-icon {
+    background: url("../images/nav-bg.gif") repeat-x scroll 0 bottom #A2C820;
+    display: block;
+    font-size: 22px;
+    line-height: 21px;
+    color: #fff;
+    cursor: pointer;
+    padding: 18px 0 0 20px;
+    height: 42px;
+    margin: 0 10px;
+    position: relative;
+    border-radius: 6px;
+    margin-top: -3px !important;
+  }
+  #menu-icon:before {
+    content: ".";
+    font-size: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: url(../images/menu-icon-bg.png) 96% 17px no-repeat;
+  }
+  #menu-icon.active:before { background-position: 96% -41px;  }
+
+  .sf-menu-phone {
+    background: #323232;
+    position: relative;
+    padding:0;
+    z-index: 2;
+    margin: 0 10px;
+    border: 1px solid #000000;
+    margin-top: -3px !important;
+  }
+  .sf-menu-phone li { position: relative; font-size: 18px;  }
+  .sf-menu-phone > li {  border-bottom: 1px solid #000000;  padding: 13px 20px;  }
+  .sf-menu-phone > li.last {border: 0;}
+  .sf-menu-phone li a { display: inline-block;  color: #fff;  }
+  .sf-menu-phone li a:hover { color: #fce702; }
+  .sf-menu-phone li li {font-size: 14px; padding: 3px 0; }
+  .sf-menu-phone li li.last { padding-bottom: 0;  }
+  .sf-menu-phone li strong {
+    position: absolute;
+    display: block;
+    background: url(../images/toogle-button2.png) center -54px no-repeat;
+    top: 4px;
+    right: 0;
+    height: 24px;
+    width: 24px;
+  }
+  .sf-menu-phone > li > strong {top: 11px; right: 13px;}
+  .sf-menu-phone li strong:hover { cursor: pointer; }
+  .sf-menu-phone li strong.opened { background-position: center 7px; }
+
+  /* dropdown */
+  .sf-menu-phone ul {  width: auto;  padding: 8px 0 0 20px;  display: none;  }
+  .sf-menu-phone > li.active > a > span {color: inherit;}
+  .sf-menu-phone > li.active > a,
+  .sf-menu-phone > li > a:hover { color: #fce702;  }
+
+  .sf-menu-phone li li.active > a,
+  .sf-menu-phone li li a:hover {color: #fce702;}
+  
+  
+  
+  
+}
+@media only screen and (min-width: 768px) and (max-width: 979px) {
+   #menu-icon,
+   .sf-menu-phone {margin: 0;}
+}

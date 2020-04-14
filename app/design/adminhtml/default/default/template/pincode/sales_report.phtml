@@ -1,0 +1,296 @@
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__('Sales Report')?></h3></td>
+            <td><button onclick="exportOrders.submit()" class="scalable save" type="button"><span>Export Orders</span></button></td>
+            <td class="a-right">
+                <button onclick="editForm.submit()" class="scalable save" type="button"><span>Submit to check Sales Report</span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="entry-edit">
+    <form id="edit_form" name="edit_form" method="post" action="<?php echo $this->getUrl('*/*/postsales')?>">
+        <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+        
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo$this->__('Insert Area to get sales report')?></h4>
+        <fieldset id="my-fieldset">
+            <table cellspacing="0" class="form-list">
+                <tr>
+                <?php
+                //DebugBreak();
+                $post = $this->getRequest()->getPost();
+                ?>
+                    <td class="label"><?php echo $this->__('Insert Area name')?> <span class="required">*</span></td>
+                    <td class="input-ele"><select class=" required-entry required-entry select" name="myform[myfield]">
+                    
+                    
+                    
+                    <option value=""><?php echo $this->__("Please Select")?></option>
+                    <option value="All Areas" <?php 
+                    $post = $this->getRequest()->getPost();
+                    if($post){
+                        $a_name = $post['myform']['myfield'];
+                    
+                    if($a_name == "All Areas"){?> selected="All Areas"<?php }}?>><?php echo $this->__("All Areas")?></option>
+                    <?php
+                    //DebugBreak();
+                    $collection = Mage::getModel('pincode/pincode')->getCollection();
+                    foreach($collection as $collection_area){
+                        $area_name = $collection_area->getData('area_name');
+                    
+                    ?>
+                    <option value="<?php echo $area_name?>" <?php 
+                    
+                    $post = $this->getRequest()->getPost();
+                    if($post){
+                        $a_name = $post['myform']['myfield'];
+                    
+                    if($a_name == $area_name){?> selected="<?php echo $area_name?>"<?php }}?>><?php echo $area_name?></option>
+                    <?php
+        }
+        ?>
+                    </select></td>
+                    </tr>
+                    
+                    <tr>
+    
+                    <td style="padding-bottom: 10px;"><label for="from-date" style="padding-left: 5px;"><?php echo $this->__('From Date') ?></label><span class="required">*</span></td>
+                    <td>
+                        <input name="from-date" id="_dob" value="<?php if($post){echo $post['from-date']; }?>" type="text" class="required-entry input-text" style="width:110px !important;">
+                        <img title="Select date" id="_dob_trig" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN)."adminhtml/default/default/images/grid-cal.gif";?>" class="v-middle">
+                    
+                    </td>
+                    </tr>
+                    
+                    <tr>
+    
+                    <td><label for="to-date" style="padding-left: 5px;"><?php echo $this->__('To Date') ?></label><span class="required">*</span></td>
+                    <td>
+                        <input name="to-date" id="_dob1" value="<?php if($post){echo $post['to-date']; }?>" type="text" class="required-entry input-text" style="width:110px !important;">
+                        <img title="Select date" id="_dob_trig1" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN)."adminhtml/default/default/images/grid-cal.gif";?>" class="v-middle">
+                    
+                 </td>
+                 </tr>
+                    
+                
+            </table>
+        </fieldset>
+    </form>
+    
+   <?php 
+                    $post = $this->getRequest()->getPost();
+                    if($post){
+                        $a_name = $post['myform']['myfield'];
+                        $from_date = $post['from-date'];
+                        $to_date = $post['to-date'];
+                        ?> 
+    
+    <form id="export_orders" name="export_orders" method="post" action="<?php echo $this->getUrl('*/*/exportorders')?>">
+    <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+
+    <input name="area-name" type="hidden" value="<?php echo $a_name; ?>">
+    <input name="from-date" type="hidden" value="<?php echo $from_date; ?>">
+    <input name="to-date" type="hidden" value="<?php echo $to_date; ?>">
+                        
+    </form>
+    <?php
+    }
+?>
+    
+    <?php
+        function generateRow($area_name,$res2){
+         ?>
+        <tr class="even pointer">
+        <td><?php echo $area_name; ?></td>
+        <td><?php echo $res2['date(sales_flat_order.created_at)']; ?>
+        <td><?php echo $res2['count(sales_flat_order_address.postcode)']; ?></td>
+        <td><?php 
+        if($res2['sum(sales_flat_order.subtotal)'] == NULL){
+            $res2['sum(sales_flat_order.subtotal)'] = 0.0000;
+        }
+        echo $res2['sum(sales_flat_order.subtotal)']; ?></td>
+        <td><?php 
+        if($res2['sum(sales_flat_order.base_subtotal_invoiced)'] == NULL){
+            $res2['sum(sales_flat_order.base_subtotal_invoiced)'] =0.0000;
+        }
+        echo $res2['sum(sales_flat_order.base_subtotal_invoiced)']; ?></td>
+        <td><?php 
+        if($res2['sum(sales_flat_order.subtotal_refunded)'] == NULL){
+            $res2['sum(sales_flat_order.subtotal_refunded)'] = 0.0000;
+        }
+        
+        echo $res2['sum(sales_flat_order.subtotal_refunded)']; ?></td>
+        <td><?php 
+        if($res2['sum(sales_flat_order.base_shipping_tax_amount)'] == NULL){
+            $res2['sum(sales_flat_order.base_shipping_tax_amount)'] = 0.0000;
+        }
+        echo $res2['sum(sales_flat_order.base_shipping_tax_amount)']; ?></td>
+        <td><?php 
+        if($res2['sum(sales_flat_order.shipping_amount)'] == NULL){
+            $res2['sum(sales_flat_order.shipping_amount)'] = 0.0000;
+        }
+        echo $res2['sum(sales_flat_order.shipping_amount)']; ?></td>
+        <td><?php 
+        if($res2['sum(sales_flat_order.discount_amount)'] == NULL){
+            $res2['sum(sales_flat_order.discount_amount)'] = 0.0000;
+        }
+        echo $res2['sum(sales_flat_order.discount_amount)']; ?></td>
+        <td><?php 
+        if($res2['sum(sales_flat_order.subtotal_canceled)'] == NULL){
+            $res2['sum(sales_flat_order.subtotal_canceled)'] = 0.0000;
+        }
+        
+        echo $res2['sum(sales_flat_order.subtotal_canceled)']; ?></td>
+        
+        </tr>
+       
+        
+        <?php }?>
+        
+        <?php
+        
+        function getPinCode($area_name){
+            $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+            $read= Mage::getSingleton('core/resource')->getConnection('core_read');
+            $sql1 = "SELECT pin_code FROM pincode where area_name='".$area_name."'";
+            $res = $read->fetchRow($sql1);
+            
+          return $res['pin_code'];
+        }
+        
+        function getInformation($pincode,$from_date,$to_date){
+            //DebugBreak();
+            $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+            $read= Mage::getSingleton('core/resource')->getConnection('core_read');
+           
+            $sql3 = "select count(sales_flat_order_address.postcode),sum(sales_flat_order.subtotal),sum(sales_flat_order.base_subtotal_invoiced),sum(sales_flat_order.subtotal_refunded),sum(sales_flat_order.base_shipping_tax_amount),sum(sales_flat_order.shipping_amount),sum(sales_flat_order.discount_amount),sum(sales_flat_order.subtotal_canceled),date(sales_flat_order.created_at) from sales_flat_order,sales_flat_order_address where sales_flat_order_address.parent_id = sales_flat_order.entity_id and sales_flat_order_address.postcode in ('".$pincode."') and sales_flat_order_address.address_type='billing' and date(sales_flat_order.created_at) between '".$from_date."' and '".$to_date."' group by sales_flat_order_address.postcode,date(sales_flat_order.created_at)";
+            $arr['res2'] = $read->fetchAll($sql3);
+            return $arr;
+            
+        }
+        ?>
+    
+    <?php
+//DebugBreak();
+        $post = $this->getRequest()->getPost();
+        if($post){ ?>
+
+ <div class="grid">
+        <table border="1px" style="border: 1px solid #CCCCCC;color: #000000;text-align: center;width: 1287px;">
+        <tr class="headings" style="font-weight: bold;">
+        <td>Area Name</td>
+        <td>Date</td>
+        <td>Total Ordered</td>
+        <td>Subtotal</td>
+        <td>Invoiced</td>
+        <td>Refunded</td>
+        <td>Tax amount</td>
+        <td>Shipping Amount</td>
+        <td>Discounts</td>
+        <td>Cancelled</td>
+        
+        </tr>
+
+        <?php
+    
+
+        $area_name = $post['myform']['myfield'];
+        if($area_name == "All Areas"){
+            $area_name = array();
+            $collection = Mage::getModel('pincode/pincode')->getCollection();
+                    foreach($collection as $collection_area){
+                    $area_names[] = $collection_area->getData('area_name');
+                    
+                    foreach($area_names as $area_name){
+                        
+                        $pincode = getPinCode($area_name);
+            
+                        $result = getInformation($pincode,$post['from-date'],$post['to-date']);
+                         
+                    }
+                    
+                         foreach($result['res2'] as $res){
+                            $orders_placed[] = $res['count(sales_flat_order_address.postcode)'];
+                            $subtotal[] = $res['sum(sales_flat_order.subtotal)'];
+                            $base_subtotal_invoiced[] = $res['sum(sales_flat_order.base_subtotal_invoiced)'];
+                            $subtotal_refunded[] = $res['sum(sales_flat_order.subtotal_refunded)'];
+                            $base_shipping_tax_amount[] = $res['sum(sales_flat_order.base_shipping_tax_amount)'];
+                            $shipping_amount[] = $res['sum(sales_flat_order.shipping_amount)'];
+                            $discount_amount[] = $res['sum(sales_flat_order.discount_amount)'];
+                            $subtotal_canceled[] = $res['sum(sales_flat_order.subtotal_canceled)'];
+                            
+                                               
+                         generateRow($area_name,$res);
+                         }
+                }
+        }
+        
+        else{
+        
+            $pincode = getPinCode($area_name);
+            
+            $result = getInformation($pincode,$post['from-date'],$post['to-date']);
+            foreach($result['res2'] as $res){
+                
+                $orders_placed[] = $res['count(sales_flat_order_address.postcode)'];
+                $subtotal[] = $res['sum(sales_flat_order.subtotal)'];
+                $base_subtotal_invoiced[] = $res['sum(sales_flat_order.base_subtotal_invoiced)'];
+                $subtotal_refunded[] = $res['sum(sales_flat_order.subtotal_refunded)'];
+                $base_shipping_tax_amount[] = $res['sum(sales_flat_order.base_shipping_tax_amount)'];
+                $shipping_amount[] = $res['sum(sales_flat_order.shipping_amount)'];
+                $discount_amount[] = $res['sum(sales_flat_order.discount_amount)'];
+                $subtotal_canceled[] = $res['sum(sales_flat_order.subtotal_canceled)'];
+                
+            generateRow($area_name,$res);
+            }   
+        }
+            ?>
+       <tfoot>
+       <tr class="totals">
+        <td style="font-weight: bold;">Total</td>
+        <td style="font-weight: bold;"></td>
+        <td style="font-weight: bold;"><?php echo array_sum($orders_placed); ?></td>
+        <td style="font-weight: bold;"><?php echo array_sum($subtotal); ?></td>
+        <td style="font-weight: bold;"><?php echo array_sum($base_subtotal_invoiced); ?></td>
+        <td style="font-weight: bold;"><?php echo array_sum($subtotal_refunded); ?></td>
+        <td style="font-weight: bold;"><?php echo array_sum($base_shipping_tax_amount); ?></td>
+        <td style="font-weight: bold;"><?php echo array_sum($shipping_amount); ?></td>
+        <td style="font-weight: bold;"><?php echo array_sum($discount_amount); ?></td>
+        <td style="font-weight: bold;"><?php echo array_sum($subtotal_canceled); ?></td>
+       </tr>
+        </tfoot>
+        </table>
+        
+        </div>
+           <?php 
+            }
+
+?>
+    
+    
+</div>
+<script type="text/javascript">
+    var editForm = new varienForm('edit_form');
+    var exportOrders = new varienForm('export_orders');
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+ Calendar.setup({
+        inputField : '_dob',
+        ifFormat : '%Y-%m-%e',
+        button : '_dob_trig',
+        align : 'Bl',
+        singleClick : true
+    });
+    
+    Calendar.setup({
+        inputField : '_dob1',
+        ifFormat : '%Y-%m-%e',
+        button : '_dob_trig1',
+        align : 'Bl',
+        singleClick : true
+    });
+//]]>
+</script>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <modules>
+        <Total_Orders>
+            <version>0.0.0.1</version>
+        </Total_Orders>
+    </modules>
+ 
+    <global>
+        <models>
+            <total_orders>
+                <class>Total_Orders_Model</class>
+                <resourceModel>total_orders_resource</resourceModel>
+            </total_orders>
+        </models>
+ 
+        <resources>
+            <total_orders_setup>
+                <setup>
+                    <module>Total_Orders</module>
+                </setup>
+            </total_orders_setup>
+        </resources>
+ 
+        <blocks>
+            <total_orders>
+                <class>Total_Orders_Block</class>
+            </total_orders>
+        </blocks>
+ 
+        <helpers>
+            <total_orders>
+                <class>Total_Orders_Helper</class>
+            </total_orders>
+        </helpers>
+    </global>
+ 
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <total_orders before="Mage_Adminhtml">Total_Orders_Adminhtml</total_orders>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>

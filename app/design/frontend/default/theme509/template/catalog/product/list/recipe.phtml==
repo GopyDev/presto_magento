@@ -1,0 +1,38 @@
+
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/AppetizerPhoto.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;"><select id="rep-snack" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="snack" onchange="gotor('snack');"> <option value="">Select Recipe</option> <option value="http://www.prestofreshgrocery.com/prestofresh-guacamole-recipe.html">Guacamole Recipe</option> </select></div>
+</div>
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/BreakfastRecipes.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;"><select id="rep-break" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="break" onchange="gotor('break');"> <option value="">Select Recipe</option> <option value="http://www.prestofreshgrocery.com/banana-bread-recipe-from-prestofresh.html">Banana Bread Recipe from PrestoFresh</option> </select></div>
+</div>
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/BBQrecipeslogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;">
+<h2><a href="#">Grilling/BBQ Recipes</a></h2>
+</div>
+</div>
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/DessertsLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;">
+<h2><a href="#">Dessert Recipes</a></h2>
+</div>
+</div>
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/DinnerRecipesLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;"><select id="rep-dinner" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="rep" onchange="gotor('dinner');"> <option value="">Select Recipe</option> <option value="http://www.prestofreshgrocery.com/italian-sausage-peppers-and-onions-recipe.html">Italian Sausage, Peppers, and Onions Recipe</option> <option value="http://www.prestofreshgrocery.com/chicken-piccata-with-lemon-recipe.html">Chicken Piccata with Lemon Recipe</option> <option value="http://www.prestofreshgrocery.com/sweet-spicy-dijon-pork-roast-recipe.html">Sweet &amp; Spicy Dijon Pork Roast Recipe (Easy!)</option> <option value="http://www.prestofreshgrocery.com/stuffed-lasagna-shells.html">Stuffed Lasagna Shells</option> </select></div>
+</div>
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/HealthyRecipeLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;">
+<h2><a href="#">Produce/Healthy Recipes</a></h2>
+</div>
+</div>
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/RecipeWinnerLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;"><select id="rep-winner" class="input-text" style="border: 1px solid #65ae01; width: 220px; color: #000; margin: 8px 0;" name="break" onchange="gotor('winner');"> <option value="">Select Recipe</option> <option value="http://www.prestofreshgrocery.com/tammys-chocolate-mayonnaise-cake.html">March's Recipe Winner: Tammys Chocolate Mayonnaise Cake!</option> </select></div>
+</div>
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/SoupStewRecipesLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;">
+<h2><a href="#">Side Dish Recipes</a></h2>
+</div>
+</div>
+<div class="divd" style="width: 352px; float: left; margin: 10px; height: 315px; vertical-align: middle; text-align: center;"><a href="#"><img class="imgdrr" style="vertical-align: middle;" src="http://www.prestofreshgrocery.com/media/recipe/SideDishRecipeLogo.png" alt="" width="350" height="260" border="0" /></a>
+<div style="margin-top: 10px;">
+<h2><a href="#">Soups/Stew Recipes</a></h2>
+</div>
+</div>

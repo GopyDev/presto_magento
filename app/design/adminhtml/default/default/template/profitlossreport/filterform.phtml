@@ -1,0 +1,323 @@
+<?php
+/************************************************************************
+ * 
+ * jtechextensions @ J-Tech LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.jtechextensions.com/LICENSE-M1.txt
+ *
+ * @package    Inventory Report
+ * @copyright  Copyright (c) 2012-2013 jtechextensions @ J-Tech LLC. (http://www.jtechextensions.com)
+ * @license    http://www.jtechextensions.com/LICENSE-M1.txt
+************************************************************************/
+?>
+
+<div class="entry-edit">
+
+		<div class="entry-edit-head">
+		    <h4 class="icon-head head-edit-form fieldset-legend">Report Filter</h4>
+		    <div class="form-buttons"></div>
+		</div>
+		<div id="reportsfilter_form" class="fieldset ">
+		
+			<div class="hor-scroll">
+				<table cellspacing="0" class="form-list">
+            		<tbody>
+               			<tr>
+        					<td class="label">
+        						<label for="report_name">Report Name <span class="required">*</span></label>
+        					</td>
+    						<td class="value">
+        						<input id="report_name" name="report_name" value="<?php echo $this->_reportName; ?>" type="text" class=" input-text required-entry"/>
+							</td>
+    					</tr>
+						<tr>
+        					<td class="label">
+        						<label for="store_ids">Show Report For</label>
+        					</td>
+    						<td class="value">
+        						<select id="store_ids" name="1" class=" select">
+        							<?php 
+        								$storeIds = $this->getStoreIdsArray();
+        								$counter = 0;
+        								
+        								foreach ($storeIds as $id => $name)
+        								{
+        									if ($id == $this->_reportOptions['store_id']) {
+        										?>
+	        										<option value="<?php echo $id; ?>" selected="yes"><?php echo $name; ?></option>
+	        									<?php
+        									} else {
+        										?>
+	        										<option value="<?php echo $id; ?>"><?php echo $name; ?></option>
+	        									<?php
+        									}
+        									
+        									$counter++;
+        								}
+        							?>
+								</select>
+							</td>
+    					</tr>
+						<tr>
+        					<td class="label">
+        						<label for="report_type">Match Period To</label>
+        					</td>
+    						<td class="value">
+        						<select id="report_type" name="2" class=" select">
+        							<?php 
+        								$reportType = array(
+        									'created_at_order'	=> 'Order Created Date',
+        									'updated_at_order'	=> 'Order Updated Date'
+        								);
+        								
+        								foreach ($reportType as $value => $name) {
+        									if ($value == $this->_reportOptions['match_period']) {
+        										?>
+	        										<option value="<?php echo $value; ?>" selected="yes"><?php echo $name; ?></option>
+	        									<?php
+        									} else {
+        										?>
+	        										<option value="<?php echo $value; ?>"><?php echo $name; ?></option>
+	        									<?php
+        									}
+        								}
+        							?>
+								</select>
+            				</td>
+						</tr>
+						<tr>
+       	 					<td class="label">
+       	 						<label for="period_type">Period</label>
+       	 					</td>
+    						<td class="value">
+        						<select id="period_type" name="3" title="Period" class=" select">
+        							<?php
+        								$periodType = array(
+        									'order'		=> 'By Order',
+	        								'day'		=> 'Daily',
+	        								'week'		=> 'Weekly',
+	        								'fortnight'	=> 'Fortnightly',
+	        								'month'		=> 'Monthly',
+	        								'quarter'	=> 'Quarterly',
+	        								'bi-year'	=> 'Bi Yearly',
+	        								'year'		=> 'Yearly'
+        								);
+        								
+        								foreach ($periodType as $value => $name) {
+        									if ($value == $this->_reportOptions['period']) {
+        										?>
+	        										<option value="<?php echo $value; ?>" selected="yes"><?php echo $name; ?></option>
+	        									<?php
+        									} else {
+        										?>
+	        										<option value="<?php echo $value; ?>"><?php echo $name; ?></option>
+	        									<?php
+        									}
+        								}
+        							?>
+								</select>
+							</td>
+    					</tr>
+						<tr>
+        					<td class="label">
+        						<label for="from">From <span class="required">*</span></label>
+        					</td>
+							<td class="value">
+								<?php 
+									if (isset($this->_reportOptions['date_from'])) {
+										$date = new DateTime($this->_reportOptions['date_from']);
+										$dateFrom = date_format($date, 'd/m/y');
+									} else {
+										$dateFrom = '';
+									}
+								?>
+        						<input name="4" id="from" value="<?php echo $dateFrom; ?>" title="From" type="text" class=" required-entry input-text" style="width:110px !important;" />&nbsp;
+        						<img src="<? echo Mage::getDesign()->getSkinUrl('images/grid-cal.gif');?>" alt="" class="v-middle" id="from_trig" title="Select Date" style="" />
+            					<script type="text/javascript">
+						            //<![CDATA[
+						                Calendar.setup({
+						                    inputField: "from",
+						                    ifFormat: "%e/%m/%y",
+						                    showsTime: false,
+						                    button: "from_trig",
+						                    align: "Bl",
+						                    singleClick : true
+						                });
+						            //]]>
+           	 					</script>
+							</td>
+    					</tr>
+						<tr>
+        					<td class="label">
+        						<label for="to">To <span class="required">*</span></label>
+        					</td>
+    						<td class="value">
+    							<?php 
+									if (isset($this->_reportOptions['date_to'])) {
+										$date = new DateTime($this->_reportOptions['date_to']);
+										$dateTo = date_format($date, 'd/m/y');
+									} else {
+										$dateTo = '';
+									}
+								?>
+								<input name="5" id="to" value="<?php echo $dateTo; ?>" title="To" type="text" class=" required-entry input-text" style="width:110px !important;" />&nbsp;
+								<img src="<? echo Mage::getDesign()->getSkinUrl('images/grid-cal.gif');?>" alt="" class="v-middle" id="to_trig" title="Select Date" style="" />
+            					<script type="text/javascript">
+						            //<![CDATA[
+						                Calendar.setup({
+						                    inputField: "to",
+						                    ifFormat: "%e/%m/%y",
+						                    showsTime: false,
+						                    button: "to_trig",
+						                    align: "Bl",
+						                    singleClick : true
+						                });
+						            //]]>
+            					</script>
+            				</td>
+    					</tr>
+						<tr>
+        					<td class="label">
+        						<label for="show_order_statuses">Order Status</label>
+        					</td>
+    						<td class="value">
+        						<select id="show_order_statuses" name="show_order_statuses" class=" select" onChange="showOrderStatuses(this.value);">
+        							<?php 
+        								$showOrderStatusOptions = array(
+        									0		=> 'Any',
+	        								1		=> 'Specified'
+        								);
+        								
+        								foreach ($showOrderStatusOptions as $value => $name) {
+        									if ($value == 1) {
+        										if ($this->_reportOptions['status'] != '') {
+	        										?>
+		        										<option value="<?php echo $value; ?>" selected="yes"><?php echo $name; ?></option>
+		        									<?php
+	        									} else {
+	        										?>
+		        										<option value="<?php echo $value; ?>"><?php echo $name; ?></option>
+		        									<?php	
+	        									}	
+        									} else {
+        										?>
+	        										<option value="<?php echo $value; ?>"><?php echo $name; ?></option>
+	        									<?php
+        									}
+        								}
+        							?>
+								</select>
+								<p class="note" id="note_show_order_statuses"><span>Applies to Any of the Specified Order Statuses</span></p>
+            				</td>
+    					</tr>
+						<tr>
+	        				<td class="label"></td>
+	    					<td class="value">
+	    						<?php
+	    							if ($this->_reportOptions['status'] != '')
+	    								$displayStyle = 'inline-block';
+	    							else
+	    								$displayStyle = 'none';
+	    						?>
+	        					<select id="order_statuses" name="order_statuses[]" size="10" class=" select multiselect" multiple="multiple" style="display: <?php echo $displayStyle; ?>">
+		        					<?php
+		        						$orderStatuses = $this->getStatuses();
+		        						$selectedOrderStatuses = explode(', ', $this->_reportOptions['status']);
+		        						
+		        						foreach ($orderStatuses as $value => $name)
+		        						{
+		        							if (in_array($value, $selectedOrderStatuses)) {
+		        								?>
+			        								<option value="<?php echo $value; ?>" selected="yes"><?php echo $name; ?></option>
+			        							<?php 
+		        							} else {
+		        								?>
+			        								<option value="<?php echo $value; ?>"><?php echo $name; ?></option>
+			        							<?php 	
+		        							}
+		        						}
+		        					?>
+								</select>
+							</td>
+    					</tr>
+						<tr>
+        					<td class="label">
+        						<label for="shipping_flag">Use Magento shipping charged value</label>
+        					</td>
+    						<td class="value">
+        						<select id="shipping_flag" name="7" title="Charged Shipping" class=" select">
+        							<?php 
+        								$shippingFlagOptions = array(
+        									'true'		=> 'Yes',
+	        								'false'		=> 'No'
+        								);
+        								
+        								foreach ($shippingFlagOptions as $value => $name) {
+        									if ($value == $this->_reportOptions['shipping_flag']) {
+        										?>
+	        										<option value="<?php echo $value; ?>" selected="yes"><?php echo $name; ?></option>	
+	        									<?php
+        									} else {
+        										?>
+	        										<option value="<?php echo $value; ?>"><?php echo $name; ?></option>	
+	        									<?php
+        									}
+        								}
+        							?>
+								</select>
+								<p class="note" id="note_shipping_flag"><span>Select "No" if you plan on using an additional expense for shipping</span></p>
+            				</td>
+						</tr>
+						<tr>
+        					<td class="label">
+        						<label for="cost_att_opt">Use product cost from</label>
+        					</td>
+   							<td class="value">
+       	 						<select id="cost_att_opt" name="8" title="Cost Value Source" class=" select">
+       	 							<?php 
+        								$costAttOptions = array(
+        									'order'		=> 'Order Table',
+	        								'product'		=> 'Product Cost Attribute',
+        									'hybrid'		=> 'Hybrid of Both'
+        								);
+        								
+        								foreach ($costAttOptions as $value => $name) {
+        									if ($value == $this->_reportOptions['cost_source']) {
+        										?>
+		        									<option value="<?php echo $value; ?>" selected="yes"><?php echo $name; ?></option>	
+		        								<?php	
+        									} else {
+        										?>
+		        									<option value="<?php echo $value; ?>"><?php echo $name; ?></option>	
+		        								<?php
+        									}
+        								}
+        							?>
+								</select>
+								<p class="note" id="note_cost_att_opt"><span>The hybrid uses the product cost attribute when no value exists for cost in the order tables</span></p>
+							</td>
+    					</tr>
+            		</tbody>
+        		</table>
+			</div>
+		</div>
+</div>
+
+<script type="text/javascript">
+	function showOrderStatuses(value) {
+		var selectionOrderStatuses = document.getElementById('order_statuses');
+
+		if(value == 1){
+			selectionOrderStatuses.style.display = 'inline-block';
+		} else {
+			selectionOrderStatuses.style.display = 'none';
+		}
+	}
+</script>
+
+<?php echo $this->getChildHtml('form_after');?>

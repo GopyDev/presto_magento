@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Atlas_Advancedreports>
+            <active>false</active>
+            <codePool>community</codePool>
+        </Atlas_Advancedreports>
+    </modules>
+</config>

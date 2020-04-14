@@ -1,0 +1,252 @@
+<style type="text/css">
+.ordernumber-error {
+    color: #f00 ;
+    font-weight: bold; font-size:11px;
+}
+.processing{position: fixed; text-align: center;top: 350px; width: 100%;  z-index: 99999;}
+.customer-accountpage-index .PrestoPremier label{  color: #000; font-size: 13px; font-weight: bold;}
+.div1 , .customer_prod{ border: 1px solid #bbb;  }
+.PrestoPremier {background: none repeat scroll 0 0 #fff;border: 1px solid #bbb;clear: both;min-height: 123px;padding: 10px;width: 37%;}
+.div1{float: left; padding:10px;}
+.customer_prod{ float:right;padding:10px;}
+#deliverydateedit{background: none repeat scroll 0 0 #3f7e19;border-radius: 5px;color:#beeb20;display: block;padding: 5px 8px;text-align: center; width: 10%;}
+</style>
+ <div class="dashboard">
+        <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+        <div class="box-account box-info">
+            <div class="page-title">
+                    <h1><?php echo $this->__('Edit Order Delivery Date/Time') ?></h1>
+                </div>
+        </div> 
+        <div class="customer-order"><br />
+
+<?php 
+$customer_id = Mage::getSingleton('customer/session')->getCustomer()->getId();
+date_default_timezone_set('America/New_York');
+$day_starting_time = Mage::getStoreConfig('simpleupc/delivery_window/day_starting_time');
+$day_ending_time = Mage::getStoreConfig('simpleupc/delivery_window/day_ending_time');
+$number_of_windows = (Mage::getStoreConfig('simpleupc/delivery_window/number_of_windows')) ? Mage::getStoreConfig('simpleupc/delivery_window/number_of_windows') : 5 ;
+$number_of_days = (Mage::getStoreConfig('simpleupc/delivery_window/number_of_days')) ? Mage::getStoreConfig('simpleupc/delivery_window/number_of_days') : 5 ;
+$delivery_limit = (Mage::getStoreConfig('simpleupc/delivery_window/number_of_orders')) ? Mage::getStoreConfig('simpleupc/delivery_window/number_of_orders') : 5 ;
+
+$delivery_batch = ($day_ending_time - $day_starting_time ) / $number_of_windows;
+$width = 910 / $number_of_windows;
+
+$delivery_on_sunday = Mage::getStoreConfig('simpleupc/delivery_window/hide_sunday');
+$delivery_on_monday = Mage::getStoreConfig('simpleupc/delivery_window/hide_monday');
+
+$flexible_popup_message = Mage::getStoreConfig('simpleupc/delivery_window/flexible_delivery_message');
+$unattended_popup_message = Mage::getStoreConfig('simpleupc/delivery_window/unattended_delivery_message');
+
+$flexible_discount_amount = Mage::getStoreConfig('simpleupc/delivery_window/flexible_delivery_discount');
+$ordered_discount_amount = Mage::getStoreConfig('simpleupc/delivery_window/same_delivery_window_discount');
+$H = date('H');
+	if($H < 7.00)
+	{
+	
+	$_k = 0;
+	}
+	else{
+	
+	$_k = 1;
+	}
+	$_t = ($H > 12) ? ($number_of_days+2) : ($number_of_days+1);
+	
+	$k = $_k;
+	$t = $_t;
+	$is_sun = false;
+	$is_mon = false;
+	for($i = $_k; $i<$_t; $i++){
+	$t_dt = strtolower(date('D',(strtotime(date('Y-m-d') . " +$i day"))));
+	if($t_dt == 'sun'){
+	$is_sun = true;
+	}
+	if($t_dt == 'mon'){
+	$is_mon = true;
+	}
+	}
+	if($is_mon && $is_sun){
+	$t = $t+2;
+	}elseif($is_sun && !$is_mon){
+	$t = $t+1;
+	}
+
+	$timezone = date_default_timezone_set('America/New_York');
+	$date = new DateTime();
+	$nextday =  date('D', strtotime($date .' +1 day'));
+	$nextday = strtolower($nextday);
+	$date->setTimezone($timezone );
+	$H = date('H');
+	$delivery_date = '';
+	$hour =  $date->format('H');
+	$l = 0; for($i = $k; $i<$t; $i++){?>
+	<?php $dt = date('m_d_Y',(strtotime(date('Y-m-d') . " +$i day")))?>
+	<?php $_dt = date('m_d_Y',(strtotime(date('Y-m-d') . " +$i day")))?>
+	<?php $d_dt = strtolower(date('D',(strtotime(date('Y-m-d') . " +$i day"))))?>
+	<?php $day_date = date('Y-m-d',(strtotime(date('Y-m-d') . " +$i day")))?>
+	
+	<?php $delivery_date[] = $dt  ?>
+	<?php }?>
+	
+	<?php //$update = new Istockphp_Customerpage_AccountpageController;
+	//$update->updatedeliverymethod();?>
+        <form name="orderedit" method="post" id="ordereditform"> 
+            <input type="hidden" value="<?php  echo $customer_id?>" name="customer_id" id="customer_id"/>
+            <ul class="form-list">
+                <li class="fields">
+                    <div class="field">
+                        <label class="required" for="name"><em>*</em>Order Number</label>
+                        <div class="input-box">
+                            <input class="input-text digits" type="text" id="ordernumber" name="ordernumber"  value="<?php echo $_REQUEST['ordernumber']?>" required />
+                        </div>
+                    </div>
+               </li>
+               <li class="fields">
+                    <div class="field">
+                        <label class="required" for="name"><em>*</em>Delivery Date</label> 
+                        <div class="input-box">
+                            <select name="deliverydate" id="deliverydate" required>
+                            <option> </option>
+                                <?php foreach($delivery_date as $dt_date):?>
+                                   <option value="<?php echo $dt_date?>">
+                               <?php echo str_replace("_","/",$dt_date);?></option>
+                               <?php endforeach;?>
+                            </select>
+                        </div>
+                    </div>
+               </li>
+               <li class="fields">
+                    <div class="field">
+                        <label class="required" for="name">Delivery  Time </label>
+                        <div class="input-box">
+                            <select name="delivery_time" id="delivery_time">
+                            <option></option>
+                            <option value="01_00pm_03_00pm"> 01:00pm - 03:00pm</option>
+                            <option value="03_00pm_05_00pm">03:00pm - 05:00pm</option>
+                            <option value="05_00pm_07_00pm">05:00pm - 07:00pm</option>
+                            <option value="07_00pm_09_00pm">07:00pm - 09:00pm</option>
+                            </select>
+                        </div>
+                    </div>
+               </li>
+             
+            </ul>           
+        <a href="#" id="deliverydateedit" >Update</a>
+        </form>
+	</div>
+
+    </div>
+    
+    
+     <script src="<?php echo $this->getSkinUrl();?>js/jquery.validate.js"></script>
+	<script>
+jQuery("#deliverydateedit").click(function(){
+var ordernumber = document.getElementById('ordernumber').value;
+var deliverydate = document.getElementById('deliverydate').value;
+deliverydate = deliverydate.split("_");
+deliverydate = deliverydate[1] +'_' + deliverydate[0] + '_' + deliverydate[2];
+var delivery_time = document.getElementById('delivery_time').value;
+var customer_id = document.getElementById('customer_id').value;
+if(deliverydate != '' && ordernumber !=  ''){
+ jQuery('<div class="processing"><img src="<?php echo $this->getSkinUrl()?>images/al.gif" /></div>').appendTo('body');
+}
+//div.attr('id', 'holdy');
+if(ordernumber !=  ''  && deliverydate != ''){
+	 jQuery.ajax({
+     cache : false,       
+     type: 'POST',
+     crossDomain:true,
+	 url : 'http://www.prestofreshgrocery.com/new/update_order.php?ordernumber='+ordernumber+'&deliverydate='+deliverydate+'&delivery_time='+delivery_time+'&customer_id='+customer_id,
+     data:ordernumber,
+     //dataType: "jsonp",
+     contentType:"application/json, text/javascript",
+
+     success: function(data){
+		 jQuery(".processing").remove();
+		 	jQuery("#messages").remove();
+        if(data == 'Your order delivery date has been saved.'){
+			var class_name = 'success-msg';
+		}else{
+			var class_name = 'error-msg';	
+		}
+			
+			jQuery( ".page-title" ).after( '<ul id="messages" class="messages"><li class="'+class_name+'"><ul><li><span>'+data+'</span></li></ul></li></ul>');
+         
+     },
+	// jQuery(".messages").remove();
+     error: function(data){
+				 jQuery(".processing").remove();
+       alert("ERROR RESPONSE FROM  SERVER : "+JSON.stringify(data));
+     },
+     complete: function(data){
+        console.log("call completed");
+     }
+ });
+}else{
+alert('Please Enter Required Field');
+}
+
+});
+	jQuery().ready(function() {
+		jQuery("#messages").remove();
+		// validate the comment form when it is submitted
+		jQuery("#ordereditform").validate();
+
+		// validate signup form on keyup and submit
+		jQuery("#signupForm").validate({
+			rules: {
+				firstname: "required",
+				lastname: "required",
+				username: {
+					required: true,
+					minlength: 2
+				},
+				password: {
+					required: true,
+					minlength: 5
+				},
+				confirm_password: {
+					required: true,
+					minlength: 5,
+					equalTo: "#password"
+				},
+				email: {
+					required: true,
+					email: true
+				},
+				topic: {
+					required: "#newsletter:checked",
+					minlength: 2
+				},
+				agree: "required"
+			},
+			messages: {
+				firstname: "Please enter your firstname",
+				lastname: "Please enter your lastname",
+				username: {
+					required: "Please enter a username",
+					minlength: "Your username must consist of at least 2 characters"
+				},
+				password: {
+					required: "Please provide a password",
+					minlength: "Your password must be at least 5 characters long"
+				},
+				confirm_password: {
+					required: "Please provide a password",
+					minlength: "Your password must be at least 5 characters long",
+					equalTo: "Please enter the same password as above"
+				},
+				email: "Please enter a valid email address",
+				number: "Please enter a valid number.",
+				digits: "Please enter only digits.",
+				agree: "Please accept our policy"
+			}
+		});
+
+		// propose username by combining first- and lastname
+		
+		//code to hide topic selection, disable for demo
+		
+	});
+	    
+	</script>

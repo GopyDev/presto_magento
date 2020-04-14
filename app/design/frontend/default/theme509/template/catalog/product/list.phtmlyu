@@ -1,0 +1,361 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<style>
+@media only screen and (min-width: 360px) and (max-width: 640px) and (orientation:landscape) {
+	.zoom_img img:hover{
+		-moz-transform:scale(1) !important; 
+		-webkit-transform:scale(1) !important;
+		-o-transform:scale(1) !important;
+	}
+}
+@media only screen and (min-width: 480px) {
+	.zoom_img img:hover{
+		-moz-transform:scale(2.3); 
+		-webkit-transform:scale(2.3);
+		-o-transform:scale(2.3);
+}
+.zoom_img img{
+	height: 100px;
+	margin: 45px 0;
+	transition: -moz-transform 0.7s ease-out 0.3s;
+	-moz-transition:-moz-transform 0.7s ease-out 0.3s;
+	-webkit-transition:-webkit-transform 0.7s ease-out; 
+	-o-transition:-o-transform 0.7s ease-out;
+}
+}
+</style>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+?>
+<?php
+    $_productCollection=$this->getLoadedProductCollection();
+    $_helper = $this->helper('catalog/output');
+?>
+<?php if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+<div class="category-products">
+    <?php echo $this->getToolbarHtml() ?>
+    <?php // List mode ?>
+    <?php if($this->getMode()!='grid'): ?>
+    <?php $_iterator = 0; ?>
+    <ol class="products-list" id="products-list">
+    <?php foreach ($_productCollection as $_product): ?>
+        <li class="item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
+            <?php // Product Image ?>
+            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(210); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+			
+			echo $_product["small_image"];
+            <?php // Product description ?>
+            <div class="product-shop">
+                <div class="f-fix">
+                    <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+                    <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName() , 'name'); ?></a></h2>
+                    <div class="desc std">
+                        <?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>
+                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped ?>" class="link-learn"><?php echo $this->__('Learn More') ?></a>
+                    </div>
+					<?php echo $this->getPriceHtml($_product, true) ?>
+                    <?php if($_product->getRatingSummary()): ?>
+						<?php echo $this->getReviewsSummaryHtml($_product) ?>
+                    <?php endif; ?>
+                    <?php if($_product->isSaleable()): ?>
+                        <div style="display: inline-block;"><span style="float: left; "><label for="qty"><?php echo $this->__('Qty') ?>:</label>
+ <input type="text" style="width:27px;" name="qty<?php echo $_product->getId();?>" id="qty<?php echo $_product->getId();?>" maxlength="12" value="<?php echo ($this->getMinimalQty($_product)?$this->getMinimalQty($_product):1) ?>" />
+ </span>
+<br>
+<br>
+							<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setaLocation('<?php echo $this->getAddToCartUrl($_product) ?>',<?php echo $_product->getId();?>)"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                            <ul class="add-to-links">
+                        <?php /* if ($this->helper('wishlist')->isAllow()) : ?>
+							<li><a title="<?php echo $this->__('Add to Wishlist') ?>" href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist tooltips"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                        <?php endif; */ ?>
+                        <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+							<?php /*?><li><a title="<?php echo $this->__('Add to Wishlist') ?>" href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist tooltips"><?php echo $this->__('Add to Wishlist') ?></a></li><?php */?>
+							<li><span class="separator">|</span> <a title="<?php echo $this->__('Add to Compare') ?>" href="<?php echo $_compareUrl ?>" class="link-compare tooltips"><?php echo $this->__('Add to Compare') ?></a></li>
+                        <?php endif; ?>
+                    </ul>
+							</div>
+                    <?php else: ?>
+                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                    <?php endif; ?>
+                    
+                </div>
+            </div>
+        </li>
+    <?php endforeach; ?>
+    </ol>
+    <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
+
+    <?php else: ?>
+
+    <?php // Grid Mode ?>
+
+    <?php $_collectionSize = $_productCollection->count() ?>
+    <?php $_columnCount = $this->getColumnCount(); 
+		  $_helper = $this->helper('catalog/output');?>
+    <?php $i=0; foreach ($_productCollection as $_product): ?>
+    <?php  //print('<pre>');print_r($_product->getData('entity_id'));?>
+        <?php if ($i++%5==0): ?>
+        
+        <ul class="products-grid row">
+        <?php endif ?>
+		
+		<?php //Image get from db
+				/* $entityid 		= $_product->getData('entity_id');
+			    $resource 		= Mage::getSingleton('core/resource');
+				$readConnection = $resource->getConnection('core_read');
+				$table 			= $resource->getTableName('catalog_product_entity_media_gallery');
+				$query 			= 'SELECT value FROM ' . $table . ' WHERE entity_id = '
+						 . $entityid . ' LIMIT 1';
+				$image = $readConnection->fetchOne($query); */
+?> 
+        
+		<?php $productId = $_product->getId();
+		 $product = Mage::getModel('catalog/product')->load($productId);
+		//echo $_product->getSku();
+		   	 Mage::log($product->getGalleryImages(),null,'getGalleryImages.log');
+		   ?>
+          
+		   
+            <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?> span3 " id="<?php echo $product->getBaseImage()?>">
+            <?php  
+			    
+				/* $entityid 		= $_product->getData('entity_id');
+			    $resource 		= Mage::getSingleton('core/resource');
+				$readConnection = $resource->getConnection('core_read');
+				$table 			= $resource->getTableName('catalog_product_entity_media_gallery');
+				$query 			= 'SELECT value FROM ' . $table . ' WHERE entity_id = '
+						 . $entityid . ' order by entity_id LIMIT 1 ';
+				$image = $readConnection->fetchOne($query); */
+			?>
+			
+			
+			 
+			
+				
+				<!-- <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(242); ?>" width="120" height="120" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a> --> 
+				 
+
+			 <div class="zoom_img" > <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'thumbnail'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(200, 200); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'thumbnail'), null, true) ?>" /></a></div>		
+						
+			  <!-- <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'thumbnail'), null, true) ?>" class="product-image"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product'.$image; ?>" height="200" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'thumbnail'), null, true) ?>" /></a>  -->	
+				
+				<!--width="120" height="120" -->
+				<div class="product-shop">
+               <?php   $proname = $_product->getName();
+			   		   $shortproname = substr($proname, 0, 50); ?>
+					<h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" style="font-size:13px;" title="<?php echo html_entity_decode($this->stripTags($_product->getName(), null, true)); ?>">
+					
+					<?php 
+					//if(strlen($shortproname) < 30 ){echo $shortproname;}else{echo $shortproname.'...';}
+					echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+                    <p class="desc_grid"><?php $small_getDescription = strip_tags($_product->getShortDescription());
+					 if (strlen($small_getDescription) < 70) echo($small_getDescription);
+					 else { echo mb_substr($small_getDescription, 0, 70,'UTF-8').'...';} ?></p>
+                    <?php /*?> <p><span><?php echo $_product->getSize(); ?> / <?php echo $_product->getUnit();?></span></p>
+					
+					
+					<?php */?>
+					<?php //echo $this->getPriceHtml($_product, true) ?>
+					<!-- this is apply for solved catalog issue . catalog price are not reflect thatswhy this condition apply -->
+					<!-- code start-->
+					
+					<?php $display_product= Mage::getModel('catalog/product')->load($_product->getId());
+						  $price = Mage::helper('core')->currency($display_product->getPrice(),true,false);
+						  $webprice =  $display_product->getwebprice();
+						  $specialprice = Mage::helper('core')->currency($display_product->getFinalPrice(),true,false);
+					?> 
+					<?php echo $this->getPriceHtml($display_product); ?>
+					
+					
+					<!-- code end -->
+					
+					
+					
+					<div style="font-size:11px;">
+					<?php
+					
+					$_specialPrice = $_product->getFinalPrice();
+
+
+                   $UOM =  (($_specialPrice /  $_product->getSize()) ); 
+                   $unit = $_product->getData('units');
+                       if($UOM != ''){
+                            echo ''.Mage::app()->getLocale()->currency()->getSymbol() .''.number_format($UOM,2) .'  / '.$unit;
+                       }
+                   ?>
+					</div>
+					
+					
+					<?php if($_product->getRatingSummary()): ?>
+					<?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+					<?php endif; ?>
+					
+					<div class="actions">
+						<?php if($_product->isSaleable()): ?>
+						 <p style="display: inline-block;"><span style="float: left; padding-left: 2px;"><label for="qty"><?php echo $this->__('Qty') ?> : </label>
+ <input type="text" style="width:25px; text-align:center;" name="qty<?php echo $_product->getId();?>" id="qty_<?php echo $_product->getId();?>" maxlength="12" value="<?php echo ($this->getMinimalQty($_product)?$this->getMinimalQty($_product):1) ?>" />
+ </span>
+   <input name="cart[<?php echo $_product->getId() ?>][qty]"  id="orignalqty_<?php echo $_product->getId()?>" value="<?php echo $this->getQty() ?>" size="4" title="<?php echo $this->__('Qty') ?>" class="input-text qty" maxlength="12" type="hidden" />
+      <div class="qty_grid" style="width: 20px; display:inline-block;">
+      
+        <input type="hidden" name="orignalqty" id="orignalqty_<?php echo $_product->getId()?>" value="" />
+            	<div class="controls">
+                	<a class="up" onclick="incrment('<?php echo $_product->getId()?>');"></a>
+                    <label id="incrvalue_<?php echo $_product->getId()?>"></label><label id="decrvalue_<?php echo $_product->getId()?>"></label>
+                    <a class="down" onclick="decrement('<?php echo $_product->getId()?>');"></a>
+                </div>
+                
+       </div>
+
+<br>
+<br>
+							
+							</p>
+						<?php else: ?>
+							<p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+						<?php endif; ?>
+						
+					</div>
+                    <div style="text-align:center">
+                    <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setaLocation('<?php echo $this->getAddToCartUrl($_product) ?>',<?php echo $_product->getId();?>)"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                    <ul class="add-to-links">
+							<?php if ($this->helper('wishlist')->isAllow()) : ?>
+								<?php /*?><li><a title="<?php echo $this->__('Add to Wishlist') ?>" href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" rel="tooltip" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li><?php */?>
+							<?php endif; ?>
+							<?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+								<li><span class="separator">|</span> <a  title="<?php echo $this->__('Add to Compare') ?> " href="<?php echo $_compareUrl ?>" rel="tooltip" class="link-compare "><?php echo $this->__('Add to Compare') ?></a></li>
+							<?php endif; ?>
+						</ul>
+                        </div>
+				</div>
+            </li>
+        <?php if ($i%5==0 || $i==$_collectionSize): ?>
+        </ul>
+        <?php endif ?>
+        <?php endforeach ?>
+        <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+    <?php endif; ?>
+    <div class="toolbar-bottom">
+        <?php echo $this->getToolbarHtml() ?>
+    </div>
+</div>
+<?php
+function limit_text($text, $limit) {
+      if (str_word_count($text, 0) > $limit) {
+          $words = str_word_count($text, 2);
+          $pos = array_keys($words);
+          $text = substr($text, 0, $pos[$limit]) . '...';
+      }
+      return $text;
+    }
+?>
+
+<?php endif; ?>
+ <script type="text/javascript">
+    //<![CDATA[
+function setaLocation(url,pid){
+var tmp='qty_'+pid
+var qty=document.getElementById(tmp).value;
+
+var totalurl=url+'qty/'+qty;
+setLocation(totalurl);
+}
+ //]]>
+    </script>
+<script type="text/javascript">
+  function incrment(id){
+	var qtyval =  id
+	qty = document.getElementById('qty_'+id).value;
+	var res = parseInt(qty) + 1;
+	
+	document.getElementById('qty_'+id).value = res;
+	//alert(document.getElementById('qty_'+id).value);
+	document.getElementById('orignalqty_'+id).value = res;
+	
+	}
+	 function decrement(id){ 
+		qtyde = document.getElementById('qty_'+id).value;
+		if(qtyde == 1){}else{
+		var resde = parseInt(qtyde) - 1;
+		document.getElementById('qty_'+id).value = resde;
+		document.getElementById('orignalqty_'+id).value = resde;}
+	 }
+function qtyupdate(id,i)
+{
+	document.getElementById('orignalqty_'+id).value = i;
+}
+
+</script>
+<!-- added by xoom for display not log in popup -->
+<script>
+/*
+jQuery(document).ready(function ()
+{
+	
+	<?php
+	if(!Mage::getSingleton('customer/session')->isLoggedIn())
+	{
+	?>
+		if(jQuery.cookie('display_test') == undefined) 
+		{ 
+			jQuery.fancybox({
+				'href': '#homepage_popup1',
+				'maxWidth': 580
+			});
+			jQuery.cookie('display_test', '1');
+			e.preventDefault();
+			e.stopPropagation();
+		}
+   
+	<?php } ?>
+});
+*/
+</script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.fancybox.js')?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery.fancybox.css')?>" media="all" >
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.cookie.js')?>"></script>
+
+<div style='display:none'>
+<div id='homepage_popup1' style='padding:10px;text-align: justify;'> 
+Hi! We noticed that you are not logged in. You may check out as a 'guest' if you choose, but we highly recommend that you check our service area map on our FAQ page before shopping, to ensure that you are located in our delivery area.Thank you!
+</div>
+</div>
+<style>
+
+.fancybox-wrap
+{
+	left: 20px !important;
+	top: 40px !important;
+	
+}
+</style>

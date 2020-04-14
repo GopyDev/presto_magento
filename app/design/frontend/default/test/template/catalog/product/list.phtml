@@ -1,0 +1,239 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+?>
+<?php
+    $_productCollection=$this->getLoadedProductCollection();
+    $_helper = $this->helper('catalog/output');
+?>
+<?php if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+	<div class="cat-message">
+    	<br /><a href="<?php echo $this->getBaseUrl()?>contacts">Don't see what you're looking for? Let us know! We are continually adding to our inventory and will do what we can to source your request!</a>
+    </div>
+<?php else: ?>
+<div class="category-products">
+    <div class="toolbar-header">
+		<?php echo $this->getToolbarHtml() ?>
+    </div>
+	<?php // List mode ?>
+    <?php if($this->getMode()!='grid'): ?>
+    <?php $_iterator = 0; ?>
+    <ol class="products-list" id="products-list">
+    <?php foreach ($_productCollection as $_product): ?>
+        <li class="item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
+            <?php // Product Image ?>
+            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(100); ?>" width="100" height="100" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+            <?php // Product description ?>
+            <div class="product-shop">
+                <div class="f-fix">
+                    <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+                    <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName() , 'name'); ?></a></h2>
+                    <?php if($_product->getRatingSummary()): ?>
+                    <?php echo $this->getReviewsSummaryHtml($_product) ?>
+                    <?php endif; ?>
+                    <?php echo $this->getPriceHtml($_product, true) ?>
+                    <?php if($_product->isSaleable()): ?>
+                        <div>
+                       	<?php if($_product->getTypeID() != 'ugiftcert'){?>
+                            <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="addtocart('<?php echo $_product->getId()?>_qty', jQuery('#<?php echo $_product->getId()?>_qty').val(), this)"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                        	<div class="qty_grid" style="margin-right:10px;">
+                        		<input type="text" name="qty" value="1" id="<?php echo $_product->getId()?>_qty" />
+                            	<div class="controls">
+                            		<span class="up" onclick="incr('i', '<?php echo $_product->getId()?>_qty')"></span>
+                            	    <span class="down" onclick="incr('d', '<?php echo $_product->getId()?>_qty')"></span>
+                            	</div>
+                        	</div>
+                        <?php }else{?>
+                        	<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                        <?php }?>
+                        </div>
+                    <?php else: ?>
+                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                    <?php endif; ?>
+                    <?php /*?><div class="desc std">
+                        <?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>
+                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped ?>" class="link-learn"><?php echo $this->__('Learn More') ?></a>
+                    </div><?php */?>
+                    <?php /*?><ul class="add-to-links">
+                        <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                            <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                        <?php endif; ?>
+                        <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                            <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                        <?php endif; ?>
+                    </ul><?php */?>
+                </div>
+            </div>
+        </li>
+    <?php endforeach; ?>
+    </ol>
+    <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
+
+    <?php else: ?>
+
+    <?php // Grid Mode ?>
+
+    <?php $_collectionSize = $_productCollection->count() ?>
+    <?php $_columnCount = $this->getColumnCount(); ?>
+    <?php $i=0; foreach ($_productCollection as $_product): ?>
+        <?php if ($i++%$_columnCount==0): ?>
+        <ul class="products-grid">
+        <?php endif ?>
+            <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(166, 157); ?>" width="166" height="157" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+                <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+                <div class="unit-siz"><?php echo $_product->getSize()?>&nbsp;<?php echo $_product->getUnits()?></div>
+				<?php if($_product->getRatingSummary()): ?>
+                <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+                <?php endif; ?>
+                <?php echo $this->getPriceHtml($_product, true) ?>
+                <div class="actions">
+                    <?php if($_product->isSaleable()): ?>
+                        <?php if($_product->getTypeID() != 'ugiftcert'){?>
+                        	<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="addtocart('<?php echo $_product->getId()?>_qty', jQuery('#<?php echo $_product->getId()?>_qty').val(), this)"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                        	<div class="qty_grid">
+                        		<input type="text" name="qty" value="1" id="<?php echo $_product->getId()?>_qty" />
+                        	    <div class="controls">
+                        	    	<span class="up" onclick="incr('i', '<?php echo $_product->getId()?>_qty')"></span>
+                        	        <span class="down" onclick="incr('d', '<?php echo $_product->getId()?>_qty')"></span>
+                        	    </div>
+                        	</div>
+                    	<?php }else{?>
+                        	<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                        <?php }?>
+					<?php else: ?>
+                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                    <?php endif; ?>
+                    <?php /*?><ul class="add-to-links">
+                        <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                            <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                        <?php endif; ?>
+                        <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                            <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                        <?php endif; ?>
+                    </ul><?php */?>
+                </div>
+            </li>
+        <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+        </ul>
+        <?php endif ?>
+        <?php endforeach ?>
+        <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+    <?php endif; ?>
+
+    <div class="toolbar-bottom">
+        <?php echo $this->getToolbarHtml() ?>
+    </div>
+    
+    <div class="cat-message">
+    	<a href="<?php echo $this->getBaseUrl()?>contacts">Don't see what you're looking for? Let us know! We are continually adding to our inventory and will do what we can to source your request!</a>
+    </div>
+    <br />
+	<br />
+</div>
+<?php endif; ?>
+<script type="text/javascript">
+var floating_fix = true;
+jQuery(document).ready(function () {  
+	var top = jQuery('#cart_sidebar').offset().top - parseFloat(jQuery('#cart_sidebar').css('marginTop').replace(/auto/, 0));
+  	jQuery(window).scroll(function (event) {
+    	// what the y position of the scroll is
+    	var y = jQuery(this).scrollTop();
+  
+    	// whether that's below the form
+    	if (y >= top) {
+    		// if so, ad the fixed class
+    		jQuery('#cart_sidebar').addClass('cart_fixed');
+    	}else{
+    		// otherwise remove it
+    	  	jQuery('#cart_sidebar').removeClass('cart_fixed');
+    	}
+  	});
+});
+//jQuery(function(){
+	//jQuery('#cart_sidebar').floatingFixed();
+//});
+<?php /*?>(function($){
+	var triggers = [];
+  	$.fn.floatingFixed = function(options) {
+    	options = $.extend({}, $.floatingFixed.defaults, options);
+    	var r = $(this).each(function() {
+      		var $this = $(this), pos = $this.position();
+      		pos.position = $this.css("position");
+      		$this.data("floatingFixedOrig", pos);
+      		$this.data("floatingFixedOptions", options);
+      		triggers.push($this);
+    	});
+    	windowScroll();
+    	return r;
+  	};
+
+  	$.floatingFixed = $.fn.floatingFixed;
+  	$.floatingFixed.defaults = {
+    	padding: 0
+  	};
+
+  	var $window = $(window);
+  	var windowScroll = function() {
+    	if(triggers.length === 0) { return; }
+    	var scrollY = $window.scrollTop();
+    	for(var i = 0; i < triggers.length; i++) {
+      		var t = triggers[i], opt = t.data("floatingFixedOptions");
+      		if(!t.data("isFloating")) {
+      			var off = t.offset();
+        		t.data("floatingFixedTop", off.top);
+        		//t.data("floatingFixedLeft", off.left);
+      		}
+      		var top = top = t.data("floatingFixedTop");
+      		if(top < scrollY + opt.padding && !t.data("isFloating")) {//left:t.data("floatingFixedLeft")opt.padding
+        		t.css({position: 'fixed', top:'0px', width: t.width() }).data("isFloating", true);
+      		} else if(top >= scrollY + opt.padding && t.data("isFloating")) {
+        		var pos = t.data("floatingFixedOrig");
+        		delete pos.left;//important
+				t.css(pos).data("isFloating", false);
+      		}
+    	}
+  	};
+  	$window.scroll(windowScroll).resize(windowScroll);
+})(jQuery);
+
+function isScrolledIntoView(elem){
+    var docViewTop = jQuery(window).scrollTop();
+    var docViewBottom = docViewTop + jQuery(window).height();
+
+    var elemTop = jQuery(elem).offset().top;
+    var elemBottom = elemTop + jQuery(elem).height();
+
+    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+}<?php */?>
+</script>  

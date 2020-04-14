@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <IWD_OrderManager>
+            <active>true</active>
+            <codePool>community</codePool>
+			<priority>1</priority>
+			<depends>
+				<AW_Sarp2/>
+			</depends>
+        </IWD_OrderManager>
+    </modules>
+</config>

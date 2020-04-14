@@ -1,0 +1,150 @@
+/**
+* zeonsolutions inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.zeonsolutions.com/shop/license-community.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * This package designed for Magento Community edition
+ * =================================================================
+ * zeonsolutions does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * zeonsolutions does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   design
+ * @package    base_default
+ * @version    0.0.1
+ * @copyright  @copyright Copyright (c) 2013 zeonsolutions.Inc. (http://www.zeonsolutions.com)
+ * @license    http://www.zeonsolutions.com/shop/license-community.txt
+ */
+
+
+/* LOADING INDICATOR
+*******************************************************************/
+#loading-process {
+    position:absolute;
+    top:45%;
+    left:50%;
+    margin-left:-60px;
+    border:2px solid #f1af73;
+    padding:15px 60px;
+    background:#fff4e9;
+    color:#d85909;
+    font-size:1.1em;
+    font-weight:bold;
+    text-align:center;
+    z-index:505;
+
+}
+#loading-mask {
+    /* background:url(../images/zeon/ajaxcart/blank.gif) repeat;
+    position:absolute;
+    color:#d85909;
+    font-size:1.1em;
+    font-weight:bold;
+    text-align:center;
+    opacity:0.80;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)"; /*IE8*/
+    /*z-index:500;
+        left:50%;
+        top:50%; */
+
+}
+#loading-mask .loader {
+    position:fixed;
+    top:45%;
+    left:50%;
+    width:120px;
+    margin-left:-60px;
+    padding:15px 60px;
+    background:#fff4e9;
+    border:2px solid #f1af73;
+    color:#d85909;
+    font-weight:bold;
+    text-align:center;
+    z-index:1000;
+}
+#error-content{color: #D91A00; width:407px;}
+#message-popup-window-mask { position:absolute; top:0; right:0; bottom:0; left:0; width:100%; height:100%; z-index:980; background-color:#efefef; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=50); opacity:0.5; }
+.message-popup { position:absolute; z-index:990; margin:0; background:#f3bf8f; padding:0 4px 4px; text-align:left; }
+*:first-child+html .message-popup{ width:938px;}
+*:first-child+html .message-popup-content .product-view {width:920px; overflow-y:auto; height:500px;}
+*:first-child+html #bundleProduct {width:920px; position:inherit!important;}
+*:first-child+html #product-options-wrapper {width:100%; padding:0;}
+.message-popup-content{}
+*:first-child+html #bundle-product-wrapper {width:920px;}
+*:first-child+html .options-container-big {}
+*:first-child+html .message-popup .message-popup-content {}
+*:first-child+html .product-shop {width:390px;}
+/**:first-child+html .product-view {height:500px; overflow:auto;}*/
+*:first-child+html #bundle-product-wrapper {overflow:visible; border:1px solid red;}
+
+
+
+
+/* *:first-child+html .options-container-big {height:500px !important; overflow-y:auto;} */
+*:first-child+html .message-popup .message-popup-content .message-text {/* height:30em !important; */}
+.message-popup .message-popup-head { padding:1px 0; }
+.message-popup .message-popup-head h2 { padding:0 10px; margin:0; font:bold 12px/19px Arial, Helvetica, sans-serif; color:#644f3b; }
+.message-popup .message-popup-head a { float:right; border:1px solid #ea7601; padding:0 12px 0 7px; background:url(../images/zeon/ajaxcart/bkg_btn-close.gif) 0 50% repeat-x !important; font:normal 12px/17px Arial, Helvetica, sans-serif; color:#fff; text-decoration:none !important; cursor:pointer; }
+.message-popup .message-popup-head a span { float:left; background:url(../images/zeon/ajaxcart/bkg_btn-close2.gif) 0 50% no-repeat; padding-left:19px; }
+.message-popup .message-popup-content { background:#fdf4eb; padding:21px 21px 10px; }
+.message-popup .message-popup-content .message-text {min-width:295px;min-height:4.5em;max-height:60em;color:#644f3b;overflow-y:auto;overflow-x:hidden;}
+.message-popup .message-popup-content .message-text .product-view {margin:0;}
+.message-popup .message-popup-content .message-text .product-view .product-img-box {padding:0 0 0;}
+.message-popup .message-popup-content .message-text .product-view .product-img-box .product-image {height:275px;}
+.message-popup .message-popup-content .message-text .product-view .short-description {display:block;}
+.message-popup .message-popup-content .message-text .product-view .product-options-bottom .add-to-cart {padding-right:20px;float: right;}
+.message-popup .message-popup-content .message-text .product-view .product-options-bottom .price-box, 
+.message-popup .message-popup-content .message-text .product-view .product-options-bottom p.required {padding-right:20px;}
+.message-popup .message-popup-content .additional-text {margin: 10px 0;}
+.message-popup .message-popup-content .button {margin: 10px 0;}
+/*Bundle Product*/
+.message-popup .message-popup-content .message-text .options-container-big {padding-top:0; }
+.message-popup .message-popup-content .message-text .product-options {margin-top:0;}
+.message-popup .message-popup-content .message-text #options-container {min-height:0px; width:875px; float:none; position:inherit;}
+.message-popup .message-popup-content .message-text#options-container, 
+.message-popup .message-popup-content .message-text #bundleProduct .product-options-bottom {width:845px;}
+.message-popup .message-popup-content .message-text #bundleProduct .product-options dd {background-position:0;padding:20px 10px 10px 30px;}
+
+/*****************************************/
+/******** ALIGNMENTS AND CLEARS **********/
+/*****************************************/
+
+/* Directional and spacial */
+.f-left, .left      { float:left; }
+.f-right, .right    { float:right; }
+.v-top              { vertical-align:top; }
+.v-middle           { vertical-align:middle !important; }
+.v-bottom           { vertical-align:bottom; }
+.a-left             { text-align:left !important; }
+.a-center           { text-align:center !important; }
+.a-right            { text-align:right !important; }
+.nm                 { margin:0 !important; }
+.np                 { padding:0 !important; }
+.no-display         { display:none; }
+.no-show            { display:none; }
+.nowrap, .nobr      { white-space:nowrap; }
+.wrap               { white-space:normal !important; }
+.no-float           { float:none !important; }
+.pointer            { cursor:pointer; }
+
+/* Color */
+.emph, .accent      { color:#eb5e00 !important; }
+.subdue             { color:#306375; }
+
+/* Font */
+.bold               { font-weight:bold !important; }
+.normal             { font-weight:normal !important; }
+
+/* Clear */ /* This keeps our HTML free of buncha clearing elements */
+.message-popup .message-popup-head:after,
+.message-popup .message-popup-content .message:after, .message-popup .message-popup-content .message-text:after
+{ display:block; clear:both; content:"."; font-size:0; line-height:0; height:0; overflow:hidden; }

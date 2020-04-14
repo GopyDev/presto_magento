@@ -1,0 +1,111 @@
+<?php
+/************************************************************************
+ * 
+ * jtechextensions @ J-Tech LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.jtechextensions.com/LICENSE-M1.txt
+ *
+ * @package    Inventory Report
+ * @copyright  Copyright (c) 2012-2013 jtechextensions @ J-Tech LLC. (http://www.jtechextensions.com)
+ * @license    http://www.jtechextensions.com/LICENSE-M1.txt
+************************************************************************/
+?>
+
+<div class="entry-edit">
+	<div id="reportview_header" class="fieldset ">
+		<?php echo $this->getReportHeader() ?>
+	</div>
+
+	<div style="float: left; width: 49%">
+		<div class="entry-edit-head">
+		    <h4 class="icon-head head-edit-form fieldset-legend">Revenue</h4>
+		    <div class="form-buttons"></div>
+		</div>
+		<div id="reportsrev_form" class="fieldset ">
+			<table style="width: 100%">
+				<tr ><th colspan="2" style="text-align: center; border-bottom: 1px solid #6F8992; font-style: italic">Store Revenue</th></tr>
+				<?php echo $this->getRevenueItems() ?>
+			</table>
+			
+			<div style="text-align: center; border:1px solid #D6D6D6; background:none repeat scroll 0 0 #FFFFFF; margin: 5px; padding: 5px">
+				<?php echo $this->buildGraphImage('revenue') ?>
+			</div>
+		</div>
+	</div>
+	
+	<div style="float:left; width:2%">&nbsp;</div>
+	
+	<div style="float: left; width: 49%">
+		<div class="entry-edit-head">
+		    <h4 class="icon-head head-edit-form fieldset-legend">Expenses</h4>
+		    <div class="form-buttons"></div>
+		</div>
+		<div id="reportsexp_form" class="fieldset ">
+			<table style="width: 100%">
+				<tr ><th colspan="2" style="text-align: center; border-bottom: 1px solid #6F8992; font-style: italic">Store Expenses</th></tr>
+				<?php echo $this->getExpenseItems() ?>
+			</table>
+			
+			<div style="text-align: center; border:1px solid #D6D6D6; background:none repeat scroll 0 0 #FFFFFF; margin: 5px; padding: 5px">
+				<?php echo $this->buildGraphImage('expense') ?>
+			</div>
+		</div>
+	</div>
+	
+	<div style="clear: both"></div>
+	
+	<div style="width: 100%">
+		<div class="entry-edit-head">
+		    <h4 class="icon-head head-edit-form fieldset-legend">Summary</h4>
+		    <div class="form-buttons"></div>
+		</div>
+		
+		<div id="reportsexp_form" class="fieldset ">
+			<div style="float: left; width: 49%">
+				<?php echo $this->getReportSummary() ?>
+			</div>
+			
+			<div style="float:left; width:2%">&nbsp;</div>
+		
+			<div style="float: left; width: 49%; margin: 0px; padding: 0px">
+				<div style="text-align: center; border:1px solid #D6D6D6; background:none repeat scroll 0 0 #FFFFFF; margin: 5px; padding: 5px">
+					<?php echo $this->buildGraphImage('summary') ?>
+				</div>
+			</div>
+			
+			<div style="clear: both"></div>
+		</div>
+	</div>
+	
+	<div class="content-header">
+    	<table cellspacing="0">
+	        <tbody><tr>
+	            <td style="width: 26%;"><h3 class="icon-head head-manager-view" >Magento Store Sales Report Over Time</h3></td>
+	            <td style="vertical-align:bottom">(Does not include additional revenue &amp; expenses)</td>
+	            <td class="form-buttons"></td>
+	        </tr>
+	    </tbody></table>
+	</div>
+	
+	<div id="reportsexp_form" class="fieldset ">
+		<div style="margin: 0 auto; padding: 5px">
+			<div style="text-align: center; border:1px solid #D6D6D6; background:none repeat scroll 0 0 #FFFFFF; margin: 5px; padding: 5px">
+				<?php echo $this->buildGraphImage('salesovertime') ?>
+			</div>
+		</div>
+	</div>
+	
+	<div class="grid">
+		<div class="hor-scroll">
+			<table class="data" cellspacing="0">
+				<?php echo $this->displayDataGrid(); ?>
+			</table>
+		</div>
+	</div>
+	
+</div>

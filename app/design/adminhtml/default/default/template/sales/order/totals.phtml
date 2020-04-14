@@ -1,0 +1,368 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<style type="text/css">
+/*.invoice-charge{ display:none}
+
+.adminhtml-sales-order-invoice-view .invoice-charge { display:block}*/
+.adminhtml-sales-order-view .invoice{ display:none}
+.adminhtml-sales-order-invoice-view .Discount{ display:none}
+</style>
+<?php /*$_source = $this->getSource(); ?>
+<?php $this->setPriceDataObject($_source) ?>
+<?php if ($_source): ?>
+<table cellspacing="0" width="100%">
+    <?php echo $this->getChildHtml('main'); ?>
+    <?php echo $this->getChildHtml('footer'); ?>
+</table>
+<?php endif;*/ ?>
+<?php /*?><table cellspacing="0" width="100%">
+    <col />
+    <col width="1" />
+    <?php $_totals = $this->getTotals('footer')?>
+    <?php if ($_totals):?>
+    <tfoot>
+    <?php
+	foreach ($this->getTotals('footer') as $_code => $_total): ?>
+        <?php if ($_total->getBlockName()): ?>
+            <?php echo $this->getChildHtml($_total->getBlockName(), false); ?>
+        <?php else:?>
+        <?php if($_code == 0){ ?>
+        <tr class="<?php echo $_code?>">
+            <td <?php echo $this->getLabelProperties()?> class="label">
+                <strong><?php echo $this->escapeHtml($_total->getLabel()); ?></strong>
+            </td>
+            <td <?php echo $this->getValueProperties()?> class="emph">
+			<?php 
+				  $_order = $this->getOrder();
+				  $quote_id = $_order->getQuoteId();
+				  $resource = Mage::getSingleton('core/resource');
+				  $readConnection = $resource->getConnection('core_read');
+				  $table = $resource->getTableName('shipping_delivery_window');
+				  $shipcharge = $readConnection->fetchCol('SELECT *  FROM ' . $table .' WHERE quote_id LIKE '.$quote_id.'');
+				  if($shipcharge[0] != ''){
+			 ?>
+			<?php $_order = $this->getOrder();$orderId = $_order->getRealOrderId();?>
+                <strong><?php echo '$'.number_format($_order->getData('grand_total'),2);?></strong>
+                
+                <?php } else {  ?>
+                 <strong><?php echo $this->formatValue($_total) ?></strong>
+                <?php }?>
+            </td>
+        </tr>
+         
+        <?php } else if($_code == 2) {?>
+        	<tr class="<?php echo $_code?>">
+            <td <?php echo $this->getLabelProperties()?> class="label">
+                <strong><?php echo $this->escapeHtml($_total->getLabel()); ?></strong>
+            </td>
+            <td <?php echo $this->getValueProperties()?> class="emph">
+               
+                <strong><?php echo $this->formatValue($_total) ?></strong>
+            </td>
+       		</tr>
+        <?php } else { 
+		?>
+        
+        <tr class="<?php echo $_code?>">
+            <td <?php echo $this->getLabelProperties()?> class="label">
+                <strong><?php echo $this->escapeHtml($_total->getLabel()); ?></strong>
+            </td>
+            <td <?php echo $this->getValueProperties()?> class="emph">
+                <strong><?php echo $this->formatValue($_total) ?></strong>
+            </td>
+        </tr>
+        <?php } ?>
+        <?php endif?>
+    <?php endforeach?>
+    </tfoot>
+    <?php endif?>
+
+    <?php $_totals = $this->getTotals('')?>
+    <?php if ($_totals):?>
+    <tbody>
+    <?php foreach ($_totals as $_code => $_total):  ?>
+        <?php if ($_total->getBlockName()): ?>
+            <?php echo $this->getChildHtml($_total->getBlockName(), false); ?>
+        <?php else:?>
+	        <?php if($_code == '1'){?>
+                    <tr class="<?php echo $_code?>">
+                    <td <?php echo $this->getLabelProperties()?> class="label">
+                        <?php if ($_total->getStrong()):?>
+                        <strong><?php echo $this->escapeHtml($_total->getLabel()); ?></strong>
+                        <?php else:?>
+                        <?php echo $this->escapeHtml($_total->getLabel()); ?>
+                        <?php endif?>
+                    </td>
+                    <?php if ($_total->getStrong()):?>
+                    <td <?php echo $this->getValueProperties()?> class="emph">
+                        <strong><?php echo $this->formatValue($_total) ?></strong>
+                    <?php else:?>
+                    <td <?php echo $this->getValueProperties()?>>
+                        <?php echo $this->formatValue($_total) ?>
+                    <?php endif?>
+                    </td> 
+                </tr>
+               
+                <?php 
+						  $_order = $this->getOrder();
+						  
+						  $quote_id = $_order->getQuoteId();
+						  $resource = Mage::getSingleton('core/resource');
+						  $readConnection = $resource->getConnection('core_read');
+						  $table = $resource->getTableName('shipping_delivery_window');
+						  $shipcharge = $readConnection->fetchCol('SELECT shipcharge  FROM ' . $table .' WHERE quote_id LIKE '.$quote_id.'');
+						   $discount_amount = $readConnection->fetchCol('SELECT discount_amount  FROM ' . $table .' WHERE quote_id LIKE '.$quote_id.'');
+						
+						?>
+                       
+                <?php if($shipcharge[0] != ''){?>
+                <tr class="<?php echo $_code?>"> 
+                    <td class="label">
+                 		
+				       Additional Delivery Fee for Overnight Processing
+                    </td>
+                    <td><span class="price"><?php echo '$'.number_format($shipcharge[0],2);?></span></td>
+                </tr>
+                <?php } ?>
+                <!-- Display Disount amount for flexible delivery only for Invoice-->
+				<?php if($discount_amount[0] != ''){?>      
+               
+	            <?php  
+				$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+				 $mystring = $currentUrl;
+				 $findme   = 'invoice_id';
+				 $pos = strpos($mystring, $findme);
+				 if ($pos === false) {
+				 }
+				 else{?>
+				<tr class="<?php echo $_code?> invoice-charge">
+                    <td class="label">
+                 		
+				    Discount (Delivery Discount)
+                    </td>
+                    <td><span class="price"><?php echo '-$'.number_format($discount_amount[0],2);?></span></td>
+                </tr>	 
+					 <?php } ?>
+                
+               
+                <?php }?>    
+                <!-- Display Disount amount for flexible delivery only for Invoice-->
+                
+			<?php }else{?>
+        	<?php if($this->escapeHtml($_total->getLabel()) == 'Grand Total (Excl.Tax)' || $this->escapeHtml($_total->getLabel()) == 'Grand Total (Incl.Tax)' || $this->escapeHtml($_total->getLabel()) == 'Grand Total'){?>
+             <tr class="<?php echo $_code?>">
+                    <td <?php echo $this->getLabelProperties()?> class="label">
+                        <?php if ($_total->getStrong()):?>
+                        <strong><?php echo $this->escapeHtml($_total->getLabel()); ?></strong>
+                        <?php else:?>
+                        <?php echo $this->escapeHtml($_total->getLabel()); ?>
+                        <?php endif?>
+                    </td>
+                    <?php if ($_total->getStrong()):?>
+                    <td <?php echo $this->getValueProperties()?> class="emph">
+                        <strong><?php echo '$'.number_format($_order->getData('grand_total'),2); ?></strong>
+                    <?php else:?>
+                    <td <?php echo $this->getValueProperties()?>>
+                        <?php echo $this->formatValue($_total) ?>
+                    <?php endif?>
+                    </td>
+       		 </tr>
+            
+            <?php }else{ ?>
+            <tr class="<?php echo $_code?>">
+            <td <?php echo $this->getLabelProperties()?> class="label">
+                <?php if ($_total->getStrong()):?>
+                <strong><?php echo $this->escapeHtml($_total->getLabel()); ?></strong>
+                <?php else:?>
+                <?php echo $this->escapeHtml($_total->getLabel()); ?>
+                <?php endif?>
+            </td>
+            <?php if ($_total->getStrong()):?>
+            <td <?php echo $this->getValueProperties()?> class="emph">
+                <strong><?php echo $this->formatValue($_total) ?></strong>
+            <?php else:?>
+            <td <?php echo $this->getValueProperties()?>>
+                <?php echo $this->formatValue($_total) ?>
+            <?php endif?>
+            </td>
+        </tr>
+       		<?php  }}?>
+        <?php endif?>
+    <?php endforeach?>
+    
+    </tbody>
+    <?php endif?>
+</table>
+<?php */?>
+
+<table cellspacing="0" width="100%">
+    <col />
+    <col width="1" />
+    <?php $_totals = $this->getTotals('footer')?>
+    <?php if ($_totals):?>
+    <tfoot>
+    <?php foreach ($this->getTotals('footer') as $_code => $_total): ?>
+        <?php if ($_total->getBlockName()): ?>
+            <?php echo $this->getChildHtml($_total->getBlockName(), false); ?>
+        <?php else:?>
+        <?php $_order = $this->getOrder();
+		//print('<pre>');	print_r($_order->getData());print('</pre>');
+			  $quote_id = $_order->getQuoteId();
+			  $resource = Mage::getSingleton('core/resource');
+			  $readConnection = $resource->getConnection('core_read');
+			  $table = $resource->getTableName('shipping_delivery_window');
+			  $shipcharge = $readConnection->fetchCol('SELECT shipcharge  FROM ' . $table .' WHERE quote_id LIKE '.$quote_id.'');
+			   $discount_amount = $readConnection->fetchCol('SELECT discount_amount  FROM ' . $table .' WHERE quote_id LIKE '.$quote_id.'');
+		
+		  $base_grand_total = $readConnection->fetchCol('SELECT base_grand_total  FROM mg_sales_flat_order WHERE quote_id LIKE '.$quote_id.'');
+		?>
+        
+        <tr class="<?php echo $_code?>">
+        <?php if($_total->getLabel() == 'Total Paid'){ ?>
+           
+            <td <?php echo $this->getLabelProperties()?> class="label">
+                <strong><?php echo $this->escapeHtml($_total->getLabel()); ?></strong>
+            </td>
+            <td <?php echo $this->getValueProperties()?> class="emph">
+                <strong><?php print('$'.number_format($base_grand_total[0],2)); ?></strong> 
+            </td>
+            <?php }else{?>
+            <td <?php echo $this->getLabelProperties()?> class="label">
+                <strong><?php echo $this->escapeHtml($_total->getLabel()); ?></strong>
+            </td>
+            <td <?php echo $this->getValueProperties()?> class="emph">
+                <strong><?php echo $this->formatValue($_total) ?></strong> 
+            </td>
+            <?php } ?>
+
+        </tr>
+		
+        <?php endif?>
+    <?php endforeach?>
+    </tfoot>
+    <?php endif?>
+
+    <?php $_totals = $this->getTotals('')?>
+    <?php if ($_totals):?>
+    <tbody>
+    <?php $_orders = $this->getOrder();
+	
+      foreach ($_totals as $_code => $_total)://echo '<pre>';print_r($_total);echo '</pre>'; ?>
+        <?php if ($_total->getBlockName()): ?>
+            <?php //echo $this->getChildHtml($_total->getBlockName(), false); ?>
+        <?php else:?>
+        
+		<?php if($this->escapeHtml($_total->getLabel()) == 'Grand Total (Excl.Tax)'){
+			$_order = $this->getOrder();
+			//echo '<pre>';print_r($_order->getData());echo '</pre>';
+		
+			  $quote_id = $_order->getQuoteId();
+			  $resource = Mage::getSingleton('core/resource');
+			  $readConnection = $resource->getConnection('core_read');
+			  $table = $resource->getTableName('shipping_delivery_window');
+			  $shipcharge = $readConnection->fetchCol('SELECT shipcharge  FROM ' . $table .' WHERE quote_id LIKE '.$quote_id.'');
+			  // $discount_amount = $readConnection->fetchCol('SELECT discount_amount  FROM ' . $table .' WHERE quote_id LIKE '.$quote_id.'');?>			
+              	<!-- Display Disount amount for flexible delivery only for Invoice-->
+				
+				<?php if( $discount_amount[0] != 0 ){?>       
+                <?php  
+				$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+				 $mystring = $currentUrl;
+				 $findme   = 'invoice_id';
+				 $pos = strpos($mystring, $findme);
+				 if ($pos === false) { }else{?>
+                  <?php /*?>  <tr class="<?php echo $_code?> invoice-charge">
+                        <td class="label">Discount (Delivery Discount)</td>
+                        <td><span class="price"><?php echo '-$'.number_format($discount_amount[0],2);?></span></td>
+                    </tr>	 <?php */?>
+                    
+                  
+				 <?php } } ?>
+                <?php if( $_order['base_discount_amount'] != 0.0000){?>  
+                  <td class="label invoice">Delivery Discount</td>
+                  <td class="invoice"><span class="price"><?php $discountammount = number_format($_order['base_discount_amount'],2);
+				
+				//echo $discountammount;
+				 $find = strpos($discountammount,'-');
+				 if ($find === false) {
+				
+					 echo  '-$'.$discountammount;
+					} else {
+						 echo str_replace('-','-$',$discountammount);
+					}
+				
+				  ?></span></td>
+                  <?php }?>
+                 
+               <!-- Display Disount amount for flexible delivery only for Invoice-->
+               <!-- Display Delivery Fee for Next day-->
+                <?php
+					//echo "<pre>";
+					//print_r($shipcharge);
+					//exit;
+				?>
+				<?php if($shipcharge[0] != ''){?>
+                    <tr class="<?php echo $_code?>"> 
+                        <td class="label">
+                            
+                           Additional Delivery Fee for Overnight Processing
+                        </td>
+                        <td><span class="price"><?php echo '$'.number_format($shipcharge[0],2);?></span></td>
+                    </tr>
+                 <?php } ?>
+                 <tr class="<?php echo $_code?>"> 
+                        <td class="label">
+                          Tax
+                        </td>
+                        <td> <?php echo '$'.number_format($_order['tax_amount'],2); ?></span></td>
+                    </tr>
+                 <!-- End Delivery fee code-->
+                     
+			  <?php } else{ ?>
+                    <tr class="<?php echo $_code.' '.$this->escapeHtml($_total->getLabel())?>">
+                    <td <?php echo $this->getLabelProperties()?> class="label">
+                        <?php if ($_total->getStrong()):?>
+                        <strong><?php echo $this->escapeHtml($_total->getLabel()); ?></strong>
+                        <?php else:?>
+                        <?php echo $this->escapeHtml($_total->getLabel()); ?>
+                        <?php endif?>
+                    </td>
+                    <?php if ($_total->getStrong()):?>
+                    <td <?php echo $this->getValueProperties()?> class="emph">
+                        <strong><?php echo $this->formatValue($_total) ?></strong>
+                    <?php else:?>
+                    <td <?php echo $this->getValueProperties()?>>
+                        <?php echo $this->formatValue($_total) ?>
+                    <?php endif?>
+                    </td>
+                </tr>
+        	<?php }?>
+        <?php endif?>
+    <?php endforeach?>
+    </tbody>
+    <?php endif?>
+</table>

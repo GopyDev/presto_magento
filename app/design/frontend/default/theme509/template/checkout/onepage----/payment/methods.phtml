@@ -1,0 +1,244 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * One page checkout payment methods
+ *
+ * @see Mage_Checkout_Block_Onepage_Payment_Methods
+ */
+?>
+
+<dl class="sp-methods" id="checkout-payment-method-load">
+<?php
+     $methods = $this->getMethods();
+    $oneMethod = count($methods) <= 0;
+?><?php if (empty($methods)): ?>
+    <dt>
+        <?php echo $this->__('No Payment Methods') ?>
+    </dt>
+<?php else:?>
+<?php
+ 
+    foreach ($methods as $_method):
+	
+         $_code = $_method->getCode();
+		
+
+?>
+
+    <?php echo $code ; if($_code == 'ccsave'){?>
+    	<dt class="payment-info">
+        <h4>Credit Card</h4>
+        <?php if(!$oneMethod): ?>
+        	<input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->htmlEscape($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php if($this->getSelectedMethodCode()==$_code): ?> checked="checked"<?php endif; ?> class="radio" />
+    	<?php else: ?>
+        	<span class="no-display"><input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" /></span>
+        	<?php $oneMethod = $_code; ?>
+    	<?php endif; ?>
+        	<div>
+            	<h5>Information</h5>
+                <label for="p_method_<?php echo $_code ?>"><?php echo $this->escapeHtml($this->getMethodTitle($_method)) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+    		</div>
+        </dt>
+    	<?php if($html = $this->getPaymentMethodFormHtml($_method)): ?>
+   		<br clear="all" />
+        <dd>
+       		<?php echo $html; ?>
+    	</dd>
+    	<?php endif; ?>
+    <?php }else{?>
+    <?php	
+       $groupId = Mage::getSingleton('customer/session')->getCustomerGroupId(); 
+		//if($groupId == '6'){
+		 if($_code == 'cashondelivery'){?>
+        <dt> 
+    	<?php if(!$oneMethod): ?>
+        	<input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->htmlEscape($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php //if($this->getSelectedMethodCode()==$_code): ?><?php //endif; ?> class="radio" />
+    	<?php else: ?>
+        	<!--<span class="no-display"></span>-->
+            <input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" class="radio" />
+        	<?php $oneMethod = $_code; ?>
+    	<?php endif; ?>
+    	    <label   for="p_method_<?php echo $_code ?>"><?php echo $this->escapeHtml($this->getMethodTitle($_method)) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+            
+            <dd id="captcha" style="display:none">
+<?php         $coupon = Mage::getModel('salesrule/rule')->load(10);
+  				 $coupon->getData('coupon_code');?>
+                 <input type="hidden" name="coupan-code"  value="<?php echo $coupon->getData('coupon_code')?>" />
+					<?php $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    $randomString = '';
+                
+                    for ($i = 0; $i < 5; $i++) 
+                    {
+                        $randomString .= $chars[rand(0, strlen($chars)-1)];
+                    }
+                    
+                     $_SESSION['captcha'] = strtolower( $randomString );
+                    
+                    //$im = '<input type="text" name="captcha" id="randomcode" value=" '.$_SESSION["captcha"].'">';
+                    $im = '<input type="hidden" class="captchacodeimage" name="captcha" id="randomcode" value="'.$coupon->getData('coupon_code').'" />';
+                    //$im = @imagecreatefrompng("captcha_bg.png"); 
+                    echo $im;?>
+		 			<!-- <label><?php echo 'COD Code (*required for COD processing) : ';?></label> -->
+                      <input type="text"  class="required-entry" style="WIDTH: 140PX;height: 25px; border:1px solid #ececec; padding-left:6px; border-radius: 5px; margin-left:20px; margin-top:5px;" name="answer" id="answer" onblur="validatecaptcha();" />
+                      
+
+ 
+                    <?php 
+                     imagettftext($im, 30, 0, 10, 38, imagecolorallocate ($im, 0, 0, 0), 'larabiefont.ttf', $randomString);
+                    
+                    header ('Content-type: image/png');
+                    imagepng($im, NULL, 0);
+                    imagedestroy($im); 
+                ?>
+                    
+         </dd> 
+   		</dt>
+        <?php }// } ?>
+       <?php if($_code == 'authorizenet'){?>
+        <dt>
+    	<?php if(!$oneMethod): ?>
+        	<input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->htmlEscape($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php //if($this->getSelectedMethodCode()==$_code): ?> checked="checked"<?php //endif; ?> class="radio" />
+    	<?php else: ?>
+        	<span class="no-display"><input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" /></span>
+        	<?php $oneMethod = $_code; ?>
+    	<?php endif; ?>
+    	    <label   for="p_method_<?php echo $_code ?>"><?php echo $this->escapeHtml($this->getMethodTitle($_method)) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+   		</dt>
+        <?php } ?>
+                <?php if($_code == 'ugiftcert'){?>
+        <dt>
+    	<?php if(!$oneMethod): ?>
+        	<input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->htmlEscape($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php //if($this->getSelectedMethodCode()==$_code): ?> checked="checked"<?php //endif; ?> class="radio" />
+    	<?php else: ?>
+        	<span class="no-display"><input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" /></span>
+        	<?php $oneMethod = $_code; ?>
+    	<?php endif; ?>
+    	    <label   for="p_method_<?php echo $_code ?>"><?php echo $this->escapeHtml($this->getMethodTitle($_method)) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+   		</dt>
+        <?php } ?>
+    	
+    	<?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
+    	<dd>
+        	<?php echo $html; ?>
+    	</dd>
+    	<?php endif; ?>
+    <?php }?>
+    <br clear="all" />
+<?php endforeach;  endif; ?>
+</dl>
+
+<?php echo $this->getChildChildHtml('additional'); ?>
+<script type="text/javascript">
+if(jQuery('#p_method_cashondelivery').attr("checked")){
+		  jQuery("#captcha").show('slow');
+		   //jQuery("#answer").removeAttr('disabled');
+		   jQuery("#answer").removeAttr('disabled', 'disabled');
+}
+if(jQuery('#p_method_authorizenet').attr("checked")){
+	 jQuery("#answer").removeAttr('disabled');
+ //jQuery("#codbtn").hide();
+//jQuery("#paymentsave").removeAttr('disabled', 'disabled');
+}
+//Display div when clicking a COD
+jQuery('#checkout-step-payment').change(function() {
+	// jQuery("#codbtn").hide();
+//jQuery('#p_method_cashondelivery').click(function(){
+     if(jQuery('#p_method_cashondelivery').attr("checked")){
+		  jQuery("#captcha").show('slow');
+		  jQuery("#answer").removeAttr('disabled');
+		//  jQuery("#codbtn").show();
+		 ////  jQuery("#paymentsave").hide();
+		  //jQuery("#paymentsave").attr('disabled', 'disabled');
+	 } else {
+		  jQuery("#captcha").hide();	
+		  // jQuery("#codbtn").hide();
+		 //  jQuery("#paymentsave").show();
+		//  jQuery("#paymentsave").removeAttr('disabled', 'disabled');	 
+	 }
+});
+//End
+//
+
+//
+function valid()
+{
+
+}
+
+
+function validatecaptcha(){
+var captcha = 	document.getElementById('answer').value;
+var randomcode = 	document.getElementById('randomcode').value;
+
+if(randomcode == captcha){
+	
+//jQuery("#codbtn").hide();
+//jQuery("#paymentsave").show();
+		//jQuery("#paymentsave").removeAttr('disabled', 'disabled');
+	}else{
+		
+		if(captcha == '')
+		{
+		//		alert('Please enter code filed');
+		}else{
+				if(jQuery('#p_method_cashondelivery').attr("checked")){
+				//alert('Please enter valid code');
+		
+		//jQuery("#paymentsave").attr('disabled', 'disabled');
+		}
+		}
+		}
+}
+//
+/*function codbtn(){
+	var captcha = 	document.getElementById('answer').value;
+	var randomcode = 	document.getElementById('randomcode').value;
+	if(randomcode == captcha){
+		
+	}else{
+		if(captcha =='')
+		{
+			alert('Please enter code');
+		}else{
+		alert('Please enter valid code');
+		}
+	}
+}
+
+*/
+//
+</script>
+<script type="text/javascript">
+//<![CDATA[
+<?php echo $this->getChildChildHtml('scripts'); ?>
+payment.init();
+<?php if (is_string($oneMethod)): ?>
+    payment.switchMethod('<?php echo $oneMethod ?>');
+<?php endif; ?>
+//]]>
+</script>

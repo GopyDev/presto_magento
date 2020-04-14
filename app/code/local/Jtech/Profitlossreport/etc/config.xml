@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+
+<!-- 
+/************************************************************************
+ * 
+ * jtechextensions @ J-Tech LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.jtechextensions.com/LICENSE-M1.txt
+ *
+ * @package    Inventory Report
+ * @copyright  Copyright (c) 2012-2013 jtechextensions @ J-Tech LLC. (http://www.jtechextensions.com)
+ * @license    http://www.jtechextensions.com/LICENSE-M1.txt
+************************************************************************/
+-->
+
+<config>
+
+    <modules>
+        <Jtech_Profitlossreport>
+            <version>1.0.0</version>
+			<platform>ce</platform>
+        </Jtech_Profitlossreport>
+    </modules>
+    
+    <global>
+    	<models>
+    		<profitlossreport>
+    			<class>Jtech_Profitlossreport_Model</class>
+    			<resourceModel>profitlossreport_mysql4</resourceModel>
+    		</profitlossreport>
+    		
+    		<profitlossreport_mysql4>
+    			<class>Jtech_Profitlossreport_Model_Mysql4</class>
+    			<entities>
+    				<report>
+    					<table>jtech_pl_reports</table>
+    				</report>
+    				<attribute>
+    					<table>jtech_pl_attributes</table>
+    				</attribute>
+    			</entities>
+    		</profitlossreport_mysql4>
+    	</models>
+    	
+    	<resources>
+    		<profitlossreport_setup>
+    			<setup>
+    				<module>Jtech_Profitlossreport</module>
+    				<class>Jtech_Profitlossreport_Model_Resource_Mysql4_Setup</class>
+    			</setup>
+    			<connection>
+    				<use>core_setup</use>
+    			</connection>
+    		</profitlossreport_setup>
+    		
+    		<profitlossreport_write>
+    			<connection>
+    				<use>core_write</use>
+    			</connection>
+    		</profitlossreport_write>
+    		
+    		<profitlossreport_read>
+    			<connection>
+    				<use>core_read</use>
+    			</connection>
+    		</profitlossreport_read>
+    	</resources>
+    
+    	<blocks>
+            <profitlossreport>
+                <class>Jtech_Profitlossreport_Block</class>
+            </profitlossreport>
+        </blocks>
+    
+    	<helpers>
+    	    <profitlossreport>
+    	        <class>Jtech_Profitlossreport_Helper</class>
+    	    </profitlossreport>
+    	</helpers>
+	</global>
+    
+    <admin>
+        <routers>
+            <profitlossreport>
+                <use>admin</use>
+                <args>
+                    <module>Jtech_Profitlossreport</module>
+                    <frontName>profitlossreport</frontName>
+                </args>
+            </profitlossreport>
+        </routers>
+    </admin>
+    
+    <adminhtml>
+        <menu>
+        	<report>
+                <children>
+                    <marcore>
+						<children>
+							<profitlossreport translate="title" module="profitlossreport">
+								<title>Profit &amp; Loss Report</title>
+								<sort_order>0</sort_order>
+								<children>
+									<managereport translate="title" module="profitlossreport">
+										<title>Manage &amp; View Reports</title>
+										<action>profitlossreport/manage/viewall</action>
+									</managereport>
+									<manageattribute translate="title" module="profitlossreport">
+										<title>Manage Revenue &amp; Expenses</title>
+										<action>profitlossreport/manage/viewattribute</action>
+									</manageattribute>
+								</children>
+							</profitlossreport>
+						</children>
+                    </marcore>
+                </children>
+            </report>
+        </menu>
+        
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <report>
+                            <children>
+                                <marcore>
+									<children>
+										<profitlossreport>
+											<title>Profit &amp; Loss Report</title>
+											<children>
+												<managereport>
+													<title>Manage &amp; View Reports</title>
+												</managereport>
+												<manageattribute>
+													<title>Manage Revenue &amp; Expenses</title>
+												</manageattribute>
+											</children>
+										</profitlossreport>
+									</children>
+                                </marcore>
+                            </children>
+                        </report>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <profitlossreport>
+                    <file>profitlossreport.xml</file>
+                </profitlossreport>
+            </updates>
+        </layout>
+    </adminhtml>
+    
+</config>

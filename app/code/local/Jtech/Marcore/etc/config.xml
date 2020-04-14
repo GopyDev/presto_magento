@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+
+<!--
+/************************************************************************
+ * 
+ * jtechextensions @ J-Tech LLC.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.jtechextensions.com/LICENSE-M1.txt
+ *
+ * @package    Inventory Report
+ * @copyright  Copyright (c) 2012-2013 jtechextensions @ J-Tech LLC. (http://www.jtechextensions.com)
+ * @license    http://www.jtechextensions.com/LICENSE-M1.txt
+************************************************************************/
+-->
+
+<config>
+    <modules>
+        <Jtech_Marcore>
+            <version>1.0.0</version>
+			<platform>ce</platform>
+        </Jtech_Marcore>
+    </modules>
+    
+    <global>
+        <models>
+            <marcore>
+                <class>Jtech_Marcore_Model</class>
+                <resourceModel>marcore_mysql4</resourceModel>
+            </marcore>
+            <marcore_mysql4>
+                <class>Jtech_Marcore_Model_Mysql4</class>
+            </marcore_mysql4>
+        </models>
+		
+		<resources>
+    		<marcore_setup>
+    			<setup>
+    				<module>Jtech_Marcore</module>
+    				<class>Jtech_Marcore_Model_Resource_Mysql4_Setup</class>
+    			</setup>
+    			<connection>
+    				<use>core_setup</use>
+    			</connection>
+    		</marcore_setup>
+    		
+    		<marcore_write>
+    			<connection>
+    				<use>core_write</use>
+    			</connection>
+    		</marcore_write>
+    		
+    		<marcore_read>
+    			<connection>
+    				<use>core_read</use>
+    			</connection>
+    		</marcore_read>
+    	</resources>
+		
+        <blocks>
+            <marcore>
+                <class>Jtech_Marcore_Block</class>
+            </marcore>
+        </blocks>
+		
+        <helpers>
+            <marcore>
+                <class>Jtech_Marcore_Helper</class>
+            </marcore>  
+        </helpers>
+    </global>
+    
+    <admin>
+        <routers>
+            <marcore>
+                <use>admin</use>
+                <args>
+                    <module>Jtech_Marcore</module>
+                    <frontName>marcore</frontName>
+                </args>
+            </marcore>
+        </routers>
+    </admin>
+    
+    <adminhtml>
+        <translate>
+            <modules>
+                <mage_adminhtml>
+                    <files>
+                        <marcore>Jtech_Marcore.csv</marcore>
+                    </files>
+                </mage_adminhtml>
+            </modules>
+        </translate>
+        
+        <menu>
+            <report>
+                <children>
+                    <marcore translate="title" module="marcore">
+                        <title>Jtech Reporting</title>
+						<sort_order>9</sort_order>
+						<children>
+							<settings>
+								<title>Settings</title>
+								<action>marcore/settings</action>
+								<sort_order>1000</sort_order>
+							</settings>
+						</children>
+                    </marcore>
+                </children>
+            </report>
+        </menu>
+        
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <report>
+                            <children>
+                                <marcore>
+                                    <title>Jtech Reporting</title>
+									<children>
+										<settings>
+											<title>Settings</title>
+										</settings>
+									</children>
+                                </marcore>
+                            </children>
+                        </report>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <marcore>
+                    <file>marcore.xml</file>
+                </marcore>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

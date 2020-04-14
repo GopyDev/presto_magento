@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap:http://magento.instantsearchplus.com/ext_sitemap?u=00020ef7-df91-4801-886e-c845f1ec5b56

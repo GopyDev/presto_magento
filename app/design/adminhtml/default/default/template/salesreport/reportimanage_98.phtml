@@ -1,0 +1,468 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+<?php 
+    $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+	
+	if(!empty($_REQUEST['from']) ){
+		/*====================== Start Code for Magento Orders Product =====================*/
+		//echo "<pre>";
+		$orders_row = array();
+		
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+	    
+		$rr=explode("/",$from);
+		$adate=$rr[1]."_".$rr[0]."_".$rr[2];
+	
+		$to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		$from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+	}
+?>
+<div id="anchor-content" class="middle">
+  <div id="page:main-container">
+    <div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Specialty Department Report");?></h3></td>
+            <td class="form-buttons"><button style="" onclick="filterFormSubmit.submit()" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Show Report</span></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <?php /*?><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><?php */?>
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Delivery Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $from; ?>" id="sales_report_from" name="from" />
+                      <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_from",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_from_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	<?php
+	  if(!empty($_REQUEST['from']) ){
+	?>
+	<style>
+	.page
+	{
+	   width:90%;
+	}
+	
+	td, th 
+	{
+	   padding-top:5px !important;
+	   padding-left:5px !important;
+	   padding-right:5px !important;
+	   padding-bottom:5px !important;
+	}
+	
+	table
+	{
+	   border-collapse:collapse;
+	}
+	</style>
+	<?php
+		 $rdate = explode("_",$adate);
+		 $opdate = $rdate[1]."-".$rdate[0]."-".$rdate[2];
+		 $bpil = 0;
+	?>
+		  <br/>
+		  <div style="font-weight:bold;" >
+		  Customers :- 
+		  <?php
+		            $sql31 = "SELECT mog.customer_id,mog.increment_id from mg_sales_flat_order_grid mog 
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					where msw.`window` LIKE '%".$adate."' and mog.status!='canceled' and msw.order_number!='100005785' and mog.customer_id is not NULL";
+					$rows31 = $connection->fetchAll($sql31); 
+					foreach ($rows31 as $value31) {
+						 $customer = Mage::getModel('customer/customer')->load($value31["customer_id"]);
+						 echo $customer->getName();
+						 echo " , ";
+					}
+		  ?>			
+		  </div>
+		  <br/>
+		  <script type="text/javascript">
+		function divprintlove()
+		{
+            var divContents = jQuery("#divlove").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title> </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+		  
+		  <a href="javascript:void(0);" onClick="divprintlove();"> Print All</a>  
+    <div id="divlove">	  
+    <div id="dvContainer">
+		  Date :- <?php  echo $opdate; ?> &nbsp;&nbsp;&nbsp;&nbsp; Product Type :- CUT MEAT 
+		  <table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;" >
+				   <tr>
+				   <th >Sr.</th>
+				   <th># Order Id </th>
+				   <th >Product Name</th>
+				   <th>Qty. Order</th>
+				   </tr>
+		  <?php
+					$sql3 = "SELECT mei.value,msi.product_id,msi.qty_ordered as qotd,msi.name,msi.sku,mog.`increment_id` FROM `mg_sales_flat_order_item` msi
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					where msw.`window` LIKE '%".$adate."' and mog.status!='canceled' and msw.order_number!='100005785' AND mei.value=146 order by msi.name,msw.order_number";
+					$rows3 = $connection->fetchAll($sql3); 
+				   foreach ($rows3 as $value3) {
+					$bpil = $bpil + $value3["qotd"];
+					 $green = $green + 1;
+					 $qrt = explode(".",$value3["qotd"]);
+				   ?>
+					<tr>
+					<td><?php echo $green; ?></td>
+					<td><?php echo $value3["increment_id"]; ?></td>
+					<td><?php echo $value3["name"]; ?></td>
+					<td><?php echo $qrt[0]; ?></td>
+					</tr>
+				   <?php
+				   } 
+				   ?>
+				   <tr>
+					<td colspan=4 align="right" style="text-align:right; padding-right:54px;"> Total : <?php echo $bpil; ?></td>
+					</tr>
+		  </table>
+		  </div>
+		  <br/>
+		 <!-- <script type="text/javascript">
+		function divprint2()
+		{
+            var divContents = jQuery("#dvContainer2").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title> BAKERY</title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script> -->
+		   <!-- <a href="javascript:void(0);" onClick="divprint2();"> Print </a> -->
+		   <div id="dvContainer2" style="page-break-before:always;">
+		   Date :- <?php  echo $opdate; ?> &nbsp;&nbsp;&nbsp;&nbsp; Product Type :- BAKERY  
+		  <table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;"  >
+				   <tr>
+				   <th>Sr.</th>
+				   <th># Order Id </th>
+				   <th >Product Name</th>
+				   <th>Qty. Order</th>
+				   </tr>
+		  <?php
+		  
+					$sql3 = "SELECT mei.value,msi.product_id,msi.qty_ordered as qotd,msi.name,msi.sku,mog.`increment_id` FROM `mg_sales_flat_order_item` msi
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					where msw.`window` LIKE '%".$adate."' and mog.status!='canceled' and msw.order_number!='100005785' AND mei.value=141 order by msw.order_number,msi.name";
+					$rows3 = $connection->fetchAll($sql3); 
+					$bpil = 0;
+				   foreach ($rows3 as $value3) {
+					$bpil = $bpil + $value3["qotd"];
+					 $green = $green + 1;
+					 $qrt = explode(".",$value3["qotd"]);
+				   ?>
+					<tr>
+					<td><?php echo $green; ?></td>
+					<td><?php echo $value3["increment_id"]; ?></td>
+					<td><?php echo $value3["name"]; ?></td>
+					<td><?php echo $qrt[0]; ?></td>
+					</tr>
+				   <?php
+				   } 
+				   ?>
+				   <tr>
+					<td colspan=4 align="right" style="text-align:right; padding-right:54px;"> Total : <?php echo $bpil; ?></td>
+					</tr>
+		  </table>
+		  </div>
+		  <br/>
+		 
+		  <div id="dvContainer3" style="page-break-before:always;">
+		  Date :- <?php  echo $opdate; ?> &nbsp;&nbsp;&nbsp;&nbsp; Product Type :- Sea Food  
+		  <table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;"  >
+				   <tr>
+				   <th >Sr.</th>
+				   <th># Order Id </th>
+				   <th >Product Name</th>
+				   <th>Qty. Order</th>
+				   </tr>
+		  <?php
+		  
+					$sql3 = "SELECT mei.value,msi.product_id,msi.qty_ordered as qotd,msi.name,msi.sku,mog.`increment_id` FROM `mg_sales_flat_order_item` msi
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					where msw.`window` LIKE '%".$adate."' and mog.status!='canceled' and msw.order_number!='100005785' AND mei.value=145 order by msi.name,msw.order_number";
+					$rows3 = $connection->fetchAll($sql3); 
+				    $bpil = 0;
+				     foreach ($rows3 as $value3) {
+					 $bpil = $bpil + $value3["qotd"];
+					 $green = $green + 1;
+					 $qrt = explode(".",$value3["qotd"]);
+				   ?>
+					<tr>
+					<td><?php echo $green; ?></td>
+					<td><?php echo $value3["increment_id"]; ?></td>
+					<td><?php echo $value3["name"]; ?></td>
+					<td><?php echo $qrt[0]; ?></td>
+					</tr>
+				   <?php
+				   } 
+				   ?>
+				   <tr>
+				   <td colspan=4 align="right" style="text-align:right; padding-right:54px;"> Total : <?php echo $bpil; ?></td>
+				   </tr>
+		  </table>
+		  </div>
+		  <br/>
+	      <div id="dvContainer4" style="page-break-before:always;">
+		  Date :- <?php  echo $opdate; ?> &nbsp;&nbsp;&nbsp;&nbsp; Product Type :- Deli   
+		  <table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;"  > 
+				   <tr>
+				   <th >Sr.</th>
+				   <th># Order Id </th>
+				   <th >Product Name</th>
+				   <th>Qty. Order</th>
+				   </tr>
+		  <?php
+					$sql3 = "SELECT mei.value,msi.product_id,msi.qty_ordered as qotd,msi.name,msi.sku,mog.`increment_id` FROM `mg_sales_flat_order_item` msi
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					where msw.`window` LIKE '%".$adate."' and mog.status!='canceled' and msw.order_number!='100005785' AND mei.value=144 order by msi.name,msw.order_number";
+					$rows3 = $connection->fetchAll($sql3); 
+				    $bpil = 0;
+				   	foreach ($rows3 as $value3) {
+					$bpil = $bpil + $value3["qotd"];
+					 $green = $green + 1;
+					 $qrt = explode(".",$value3["qotd"]);
+				   ?>
+					<tr>
+					<td><?php echo $green; ?></td>
+					<td><?php echo $value3["increment_id"]; ?></td>
+					<td><?php echo $value3["name"]; ?></td>
+					<td><?php echo $qrt[0]; ?></td>
+					</tr>
+				   <?php
+				   } 
+				   ?>
+				   <tr>
+					<td colspan=4 align="right" style="text-align:right; padding-right:54px;"> Total : <?php echo $bpil; ?></td>
+					</tr>
+		  </table>
+		  </div>
+          </div>
+		  <br/>
+		   <br/>
+		    <br/>
+		  <a href="javascript:void(0);" onClick="divprintl();"> Print </a>
+		  <div id="dvContainer44">
+		 <table>
+		 <?php $sql3e = "SELECT mei.value,msi.product_id,msi.qty_ordered ,msi.name as proname,msi.sku,mog.`increment_id` FROM `mg_sales_flat_order_item` msi
+					left join mg_catalog_product_entity_int mei on msi.product_id = mei.entity_id and mei.attribute_id =  251
+					left join mg_sales_flat_order_grid mog on msi.`order_id` = mog.`entity_id`
+					left join mg_shipping_delivery_window msw on mog.`increment_id` = msw.`order_number`
+					where msw.`window` LIKE '%".$adate."' and mog.status!='canceled' and msw.order_number!='100005785' AND ( mei.value=144 or mei.value=145 or mei.value=146 or mei.value=141 )  order by mei.value desc,msw.order_number,msi.name";
+					$rows3e = $connection->fetchAll($sql3e); 
+					$kk=0;
+					foreach ($rows3e as $value3eer) {
+					
+					$_id = $value3eer["product_id"];
+                    $_resource = Mage::getSingleton('catalog/product')->getResource();
+                    $optionValue = $_resource->getAttributeRawValue($_id,'units', Mage::app()->getStore());
+					$optionValue2 = $_resource->getAttributeRawValue($_id,'size', Mage::app()->getStore());
+					$tempnameeee = explode("-",$value3eer["proname"]);
+					
+					$wrong = $tempnameeee[0];
+					$kkk=sizeof($tempnameeee);
+					if($kkk==2)
+					{
+					  $wrong = $tempnameeee[0];
+					}
+					
+					else if($kkk==3)
+					{
+					  $wrong = $tempnameeee[0]."-".$tempnameeee[1];
+					}
+					
+					else if($kkk==4)
+					{
+					  $wrong = $tempnameeee[0]."-".$tempnameeee[1]."-".$tempnameeee[2];
+					}
+					
+					
+					if($wrong=='Ground Beef (80')
+					{
+					   $wrong = 'Ground Beef (80-85% Lean)';
+					}
+					
+					if($wrong=="Zagara's Own Cheddar Bacon Burger Patties (4 ct / Approx 1.3 Lb)")
+					{
+					   $wrong = "Zagara's Own Cheddar Bacon Burger Patties (4 ct)";
+					}
+					
+					if($wrong=="Zagara's Own Cajun Blue Cheese Burger Patties (4 ct / Approx 1.3 Lb)")
+					{
+					   $wrong = "Zagara's Own Cajun Blue Cheese Burger Patties (4 ct)";
+					}
+					
+					
+					$tail=0;
+					
+					if($value3eer["proname"]=="Zagara's Own Chocolate Chip Muffin 1 CT" || $value3eer["proname"]=="Zagara's Own Blueberry Muffin 1 CT" || $value3eer["proname"]=="Zagara's Own Banana Nut Muffin 1 CT" || $value3eer["proname"]=="Zagara's Own Corn Muffin 1 CT" || $value3eer["proname"]=="Zagara's Own Lemon Poppy Muffin 1 CT" || $value3eer["proname"]=="Zagara's Own Cinnamon Chip Muffin 1 CT" || $value3eer["proname"]=="Zagara's Own Butter Rum Muffin 1 CT" || $value3eer["proname"]=="Zagara's Own Cranberry Orange Muffin – 1 CT" || $value3eer["proname"]=="Zagara's Own Cranberry Orange Muffin 1 CT" )
+					{
+					
+					        $tail=1;
+					        $optionValue2 = round($value3eer["qty_ordered"],0);
+						    $value3eer["qty_ordered"] = ceil($value3eer["qty_ordered"]/4);
+							$name=explode("1 CT",$value3eer["proname"]);
+							$wrong = $name[0];
+					}
+					
+					
+					if($value3eer["proname"]=="Zagara's Own Fresh Bagel – Onion 1 CT" || $value3eer["proname"]=="Zagara's Own Fresh Bagel - Cinnamon Raisin 1 CT" || $value3eer["proname"]=="Zagara's Own Fresh Bagel - Poppyseed 1 CT" || $value3eer["proname"]=="Zagara's Own Fresh Bagel - Plain 1 CT" || $value3eer["proname"]=="Zagara's Own Fresh Plain Bagel 1 CT" )		
+						{
+						
+						$tail=1;
+						$optionValue2 = round($value3eer["qty_ordered"],0);
+					    $value3eer["qty_ordered"] = ceil($value3eer["qty_ordered"]/6);
+						$wrong = $value3eer["proname"];
+						$name=explode("1 CT",$value3eer["proname"]);
+							$wrong = $name[0];
+						
+					}
+					
+					
+					
+					for($l=1;$l<=$value3eer["qty_ordered"];$l++)
+					{
+					   // $wrong = $value3eer["proname"];
+					     if($kk==0) { '<table>'; }
+					     if($kk==10 || $kk==20 || $kk==30 || $kk==40 || $kk==50 || $kk==60 || $kk==70 || $kk==80 || $kk==90 ) { echo '<table style="page-break-before: always;">'; }
+						
+					    if (!$kk%2) echo '<tr>';
+		?>			
+					
+		 
+		  <td valign="top" style="width:360px;padding-left:20pt;padding-right:20pt;height:143.5pt;padding-top:9pt;verticle-align:top;">
+		  <p style="font-size:11px;font-family:Calibri;margin-top:15px;">
+   
+    <strong>Name:</strong>
+    <?php echo $wrong; ?>
+</p>
+<p style="font-size:11px;font-family:Calibri;">
+    <strong>Weight: </strong>
+	<?php if($value3eer["value"]!=141) { ?>
+    Aprx. <?php echo $optionValue2; ?> <?php echo $optionValue; ?>
+	<?php } else { ?>
+	<?php echo $optionValue2; ?> <?php echo $optionValue; ?>
+	<?php } ?>
+	
+</p>
+<p style="font-size:11px;font-family:Calibri;">
+    <strong>Packed On: </strong>
+    <?php echo $_GET["from"]; ?>
+</p>
+<?php if($value3eer["value"]!="141") { ?>
+<p style="font-size:8px;font-family:Calibri;">
+    Meat Instructions: This product was prepared from inspected and passed meat and/or poultry. Some food products may contain bacteria that could cause
+    illness if the product is mishandled or cooked improperly. For your protection, follow these safe handling instructions. Keep refrigerated or frozen. Thaw
+    in refrigerator or microwave. Keep raw meat and poultry separate from other foods, wash working surfaces (including cutting boards), utensils, and hands
+    after touching raw meat or poultry. Keep hot foods hot. Refrigerate leftovers.
+</p>
+<?php } else { ?>
+<p style="font-size:22px;font-family:Calibri;text-align:center;margin-top:25px;margin-bottom:25px;verticle-align:middle;">
+    Baked Fresh Daily!!
+</p>
+<?php } ?>
+
+		  </td>
+		 <?php  if($kk%2) echo '</tr>';  
+		 if($kk==9) { echo '</table>'; }
+		 if($kk==19 || $kk==29 || $kk==39 || $kk==49 || $kk==59 || $kk==69 || $kk==79 || $kk==89 || $kk==99 ) { echo '</table>'; }
+		 $kk++;   ?>
+		   <?php } } ?>
+		 <?php if($kk+1%10!=0) { ?>
+		 </table>
+		 <?php } ?>
+		   </div>
+		   <script type="text/javascript">
+		function divprintl()
+		{
+            var divContents = jQuery("#dvContainer44").html();
+            var printWindow = window.open('', '', 'height=400,width=900');
+            printWindow.document.write('<html><head><title> Label </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+	<?php 
+	} ?>  
+	<script type="text/javascript">
+       	 //<![CDATA[
+        	var filterFormSubmit  = new varienForm('filter_form');
+         //]]>
+        </script> 
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script> 
+</body>
+</html>

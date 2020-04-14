@@ -1,0 +1,342 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Shoping cart sidebar
+ *
+ * @see Mage_Checkout_Block_Cart_Sidebar
+ */
+
+?>
+<style type="text/css">
+.block-cart-header .product-name{ line-height:14px; height:auto!important;}
+.right-columns {
+    float: right;
+    width: 698px;
+	margin-top: 0.4%;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 979px) {
+.right-columns {
+    float: left;
+    width: 100%;
+}
+
+.headercartblock #search_mini_form_mini{
+float: left;
+ margin-left: 1%;
+}
+
+.block-cart-header {
+min-width:185px;
+}
+
+.header .logo img {
+    max-width: 70%;
+}
+
+.header .welcome-msg{
+margin: 0
+}
+
+#popup_flexi {
+   width:720px;
+}
+</style>
+<?php if ($this->getIsNeedToDisplaySideBar()):?>
+<div class="headercartblock">
+    <div class="block-cart-header" id="cart_sidebar">
+       <!-- <h1>My Cart</h1>-->
+	    <?php $_cartQty = $this->getSummaryCount() ?>
+        <?php /*?><div class="block-title">
+            <strong><span><?php echo $this->__('My Cart') ?></span></strong>
+        </div><?php */?>
+         <?php if ($_cartQty>0): ?>
+            <div class="block-content empty">
+            <div class="summary">
+                    <?php if ($_cartQty==1): ?>
+                        <p class="amount-2"><?php echo $this->__('<strong id="carttems" title="%s">%s item</strong>', $this->getUrl('checkout/cart'), $_cartQty) ?>
+                        <span id="toptotal"><?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?></span></p>
+                    <?php else: ?>
+                        <p class="toptotal">
+					    <a href="<?php echo $this->getUrl('checkout/cart'); ?>" style="text-decoration:underline;color:#fff;" ><?php echo $this->__('<strong id="carttems" title="%s">%s items</strong>', $this->getUrl('checkout/cart'), $_cartQty) ?></a>
+                       <a href="<?php echo $this->getUrl('checkout/cart'); ?>"  style="text-decoration:underline;color:#fce702;"  >
+                       <span id="toptotal"><?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?></span></a>
+                    <?php endif ?>
+                </div>
+            <div class="cart-content" id="smallcart" style="background:none; padding:0;">
+            <div class="cart-indent">
+            <?php $_items = $this->getRecentItems() ?>
+            <?php if(count($_items)): ?>
+                <p class="block-subtitle"><?php echo $this->__('Recently added item(s)') ?></p>
+            <ul>    <!-- <ul class="products-grid-sidebar" id="cart-sidebar">-->
+                <?php foreach($_items as $_item): ?>
+
+                    <?php echo $this->getItemHtml($_item) ?>
+                <?php endforeach; ?>
+                </ul>
+                <div class="small_cart_summary">
+                    <?php if($_cartQty && $this->isPossibleOnepageCheckout()): ?>
+                        <?php if ($_cartQty>0): ?>
+                            <div class="summary" style="display:none">
+                                <a class="top-cart" href="<?php echo $this->getUrl('checkout/cart')?>"><?php echo $this->__('<span>%s</span>', count($_items));//$_cartQty ?></a>
+                                <p class="subtotal">
+                                    <?php if ($this->canApplyMsrp()): ?>
+                                        <span class="map-cart-sidebar-total"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?></span>
+                                    <?php else: ?>
+                                        <span class="label"><?php echo $this->__('Cart Subtotal:') ?></span><span id="subtotal"> <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?></span>
+                                        <?php if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?>
+                                            <br />(<?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?> <?php echo Mage::helper('tax')->getIncExcText(true) ?>)
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                        <?php endif ?>
+
+                    <?php endif ?>
+                </div>
+
+                <script type="text/javascript">decorateList('cart-sidebar', 'none-recursive')</script>
+            <?php else: ?>
+               <?php /*?> <p class="empty"><?php echo $this->__('You have no items in your shopping cart.') ?></p><?php */?>
+            <?php endif ?>
+            </div>
+            <div class="actions" style="background: #65ae01;float: left;text-align: center;width: 100%;margin: 0px 0;padding: 8px 0;">
+                            <?php echo $this->getChildHtml('extra_actions') ?>
+                            <button style="float:none;" type="button" title="<?php echo $this->__('Checkout') ?>" class="button" onclick="setLocation('<?php echo $this->getCheckoutUrl() ?>')"><span><span><?php echo $this->__('Checkout') ?></span></span></button>
+                            <button style="float:none" type="button" title="<?php echo $this->__('Cart')?>" class="button" onclick="setLocation('<?php echo $this->getUrl('checkout/cart')?>')"><span style=" padding:0 10px 0"><span><?php echo $this->__('Cart')?></span></span></button>
+                        </div>
+
+            </div>
+
+
+            </div>
+         <?php else: ?>
+                <div class="empty">
+			    <?php echo $this->__('0 item(s)') ?> <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?>
+                <div class="cart-content">
+			    <p class="empty">	<?php echo $this->__('You have no items in your shopping cart.') ?></p>
+                </div>
+            </div>
+        <?php endif ?>
+    </div>
+
+    <!-- Search Within Category with asc sort Order_ xoom 08-09-2014 -->
+
+    <?php
+    $cats = Mage::getModel('catalog/category')->load(2)->getChildren();
+    $catIds = explode(',', $cats);
+    $categories = array();
+    $sortcatid = array();
+    $subCategories = array();
+    foreach ($catIds as $catId) {
+        $category = Mage::getModel('catalog/category')->load($catId);
+	    //get category name with sorting
+        $categories[$category->getName()] = $category->getId();
+	    //end
+	    //get category id with sorting
+	    $sortcatid[] =  $category->getId();
+	    //end
+        $subcats = Mage::getModel('catalog/category')->load($catId)->getChildren();
+        $subcatIds = explode(',', $subcats);
+        if ($subcats) {
+            foreach ($subcatIds as $subcatId) {
+                $subCategory = Mage::getModel('catalog/category')->load($subcatId);
+                $subCategories[$category->getName()][$subCategory->getName()] = $subCategory->getUrl();
+            }
+            ksort($subCategories[$category->getName()], SORT_STRING);
+        }
+    }
+     ksort($categories, SORT_STRING);
+
+	    $extra_options='';
+
+    foreach ($categories as $name => $sortcatid){
+
+    $selected = (in_array($name, $categories['name']))?'SELECTED':'';
+    $catoptions = 	$category->load($name)->getName();
+
+    $_category = Mage::getModel('catalog/category')->loadByAttribute('name',$name);
+
+
+	    if($sortcatid!='1207' && $sortcatid!='1091' && $sortcatid!='1206')
+	    {
+	    $extra_options.= '<option value="' . $sortcatid . '" ' . ($_GET['cat'] == $sortcatid ? 'selected = "selected" ': ''). '>' . $name . '</option>' . "\n";
+	    }
+    }
+    //print('<pre>');	print_r($categories);
+
+    ?>
+
+    <!--
+    <form id="search_mini_form_mini" action="<?php echo $this->helper('catalogSearch')->getResultUrl() ?>" method="get">
+        <fieldset id="search_mini_fieldset">
+            <legend><?php echo $this->__('Search All Products with Autofill') ?></legend>
+            <div class="mini-search" >
+               <div class="left-portion">
+                <input  id="search" type="text" style="border: 1px solid #fcc502" size="25" placeholder="Search within category" class="input-text" name="<?php echo $this->helper('catalogSearch')->getQueryParamName() ?>" value="<?php echo $this->helper('catalogSearch')->getEscapedQueryText() ?>" />
+                <select style="border: 1px solid #fcc502;color: #5a5959; margin:8px 0;" name="cat" id="cat" class="input-text">
+                <option value="">All Category</option>
+
+                <?=  $extra_options ?>
+               </select>
+               </div>
+                <input type="submit" id="go_search" class="category-go" value="Go" onclick="validate()" alt="<?php echo $this->__('Search') ?>" />
+                <div id="search_autocomplete" class="search-autocomplete"></div>
+                <script type="text/javascript">
+                //<![CDATA[
+                    var searchForm = new Varien.searchForm('search_mini_form', 'search', '<?php echo $this->__('Enter Keyword to Search') ?>');
+                    searchForm.initAutocomplete('<?php echo $this->helper('catalogSearch')->getSuggestUrl() ?>', 'search_autocomplete');
+                //]]>
+
+                </script>
+            </div>
+        </fieldset>
+    </form>
+     -->
+
+</div>
+<?php endif;?>
+<script type="text/javascript">
+function validate()
+{
+	if(document.getElementById('search_mini').value == '')
+	{
+		alert('Enter Keyword');
+	}
+	if(document.getElementById('cat').value == '')
+	{
+		alert('select category');
+	}
+
+}
+</script>
+<?php /*?><?php if ($this->getIsNeedToDisplaySideBar()):?>
+<div class="block-cart-header" id="blockcart">
+    <?php $_cartQty = $this->getSummaryCount() ?>
+    <!-- <h3><?php echo $this->__('Cart') ?>:</h3> -->
+    <div class="block-content">
+    <?php if ($_cartQty>0): ?>
+        <div class="summary">
+            <?php if ($_cartQty==1): ?>
+                <p class="amount-2"><?php echo $this->__('<strong id="carttems" title="%s">%s item</strong>', $this->getUrl('checkout/cart'), $_cartQty) ?>
+				<span id="toptotal"><?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?></span></p>
+            <?php else: ?>
+                <p class="toptotal"><?php echo $this->__('<strong id="carttems" title="%s">%s items</strong>', $this->getUrl('checkout/cart'), $_cartQty) ?>
+				<span id="toptotal"><?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?></span></p>
+            <?php endif ?>
+		</div>
+            <div class="cart-content">
+                <div class="cart-indent">
+                    <p class="subtotal">
+                        <?php if ($this->canApplyMsrp()): ?>
+                            <span class="map-cart-sidebar-total"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?></span>
+                        <?php else: ?>
+                            <span class="label"><?php echo $this->__('Cart Subtotal:') ?></span><span id="subtotal-csrtsidebar"><?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?></span>
+                            <?php if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?>
+                                <br />(<?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?> <?php echo Mage::helper('tax')->getIncExcText(true) ?>)
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </p>
+                    <?php endif ?>
+                    <?php if($_cartQty && $this->isPossibleOnepageCheckout()): ?>
+                    <?php endif ?>
+                    <?php $_items = $this->getRecentItems() ?>
+                    <?php if(count($_items)): ?>
+                        <p class="block-subtitle"><?php echo $this->__('Recently added item(s)') ?></p>
+                        <ul id="cart-sidebar" class="products-grid-sidebar mini-products-list">
+
+                        <?php $i = 0;foreach($_items as $_item): ?>
+
+                       <!-- New content-->
+                            <?php  echo $this->getItemHtml($_item) ?>
+                        <?php endforeach; ?>
+                        </ul>
+                        <div class="small_cart_summary" style="display:none">
+			<?php if($_cartQty && $this->isPossibleOnepageCheckout()): ?>
+    			<?php if ($_cartQty>0): ?>
+        			<div class="summary">
+       		    	    <a class="top-cart" href="<?php echo $this->getUrl('checkout/cart')?>"><?php echo $this->__('<span>%s</span>', count($_items));//$_cartQty ?></a>
+        		    	<p class="subtotal">
+        		    	    <?php if ($this->canApplyMsrp()): ?>
+        		    	        <span class="map-cart-sidebar-total"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?></span>
+        		    	    <?php else: ?>
+        		    	        <span class="label"><?php echo $this->__('Cart Subtotal:') ?></span><span class="price"> <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?></span>
+        		    	        <?php if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?>
+        		    	            <br />(<?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?> <?php //echo Mage::helper('tax')->getIncExcText(true) ?>)
+        		    	        <?php endif; ?>
+        		    	    <?php endif; ?>
+        		    	</p>
+        			</div>
+    			<?php endif ?>
+
+    		<?php endif ?>
+    	</div>
+                    <div class="actions">
+
+                        <button type="button" title="<?php echo $this->__('Checkout') ?>" class="button" onclick="setLocation('<?php echo $this->getCheckoutUrl() ?>')"><span><span><?php echo $this->__('Checkout') ?></span></span></button>
+                        <button type="button" title="<?php echo $this->__('My Cart') ?>" class="button" onclick="setLocation('<?php echo $this->getUrl('checkout/cart') ?>')"><span><span><?php echo $this->__('My Cart') ?></span></span></button>
+                    </div>
+                    <script type="text/javascript">decorateList('cart-sidebar', 'none-recursive')</script>
+                </div>
+            </div>
+    <?php else: ?>
+        <div class="empty">
+			<?php echo $this->__('0 item(s)') ?> <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?>
+            <div class="cart-content">
+				<?php echo $this->__('You have no items in your shopping cart.') ?>
+            </div>
+        </div>
+    <?php endif ?>
+    </div>
+</div>
+<?php endif;?><?php */?>
+
+<script>
+/*
+jQuery(document).ready(function (){
+	jQuery('#go_search').live('click',function(e){
+		if (document.cookie.indexOf('visited=true') == -1){
+			var fifteenDays = 1000*60*60*24*15;
+			var expires = new Date((new Date()).valueOf() + fifteenDays);
+			document.cookie = "visited=true;expires=" + expires.toUTCString();
+			jQuery.fancybox({
+				'href': '#homepage_popup',
+				'maxWidth': 580
+			});
+			e.preventDefault();
+			e.stopPropagation();
+		}
+    });
+});
+*/
+</script>
+<div style='display:none'>
+<div id='homepage_popup_header' style='padding:10px;text-align: justify;'>
+Please note that we highly recommend shopping while logged in. This will ensure that the items added to your cart are saved permanently.
+<img style="clear:both;display:block;width:100%;padding-top:10px;padd" src="<?php echo  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>/skin/frontend/default/theme509/images/map-faq.png">
+</div>
+</div>

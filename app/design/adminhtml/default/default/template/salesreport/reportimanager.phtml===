@@ -1,0 +1,49 @@
+<?php
+     $kbt45=0;
+     $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+     if(isset($_GET["idff"]) && $_GET["idff"] > 0 )
+	 {
+		 $update="update pickerlog set pickerst='".$_GET["picid"]."' where id='".$_GET["idff"]."'";
+         $connection->query($update);
+		 $kbt45=1;
+	 }
+	 
+	 if(isset($_GET["datenew"]))
+	 {
+	     // print_r($_GET);
+		 
+		 $dodate2=explode("/",$_GET["datenew"]);
+		 
+		 for($i=1;$i<=9;$i++)
+		 {
+		    if($dodate2[1]>=$i)
+			{
+			   $dodate2[1]="0".$dodate2[1];
+			}
+		 }
+		 
+		 $dodate=$dodate2[1]."_".$dodate2[0]."_".$dodate2[2];
+		 
+		 
+		 echo $insert="insert into pickerlog set pickerst='".$_GET["workinghours"]."',pickerid='".$_GET["emph"]."',dodate='".$dodate."'";
+		  $connection->query($insert);
+		  
+		  $newgreen=1;
+		  
+		  
+	 }
+	 
+	 if(isset($_GET["drivid"]) && isset($_GET["route"]))
+	 {
+		  $update="update route_driver set starttime='".$_GET["starttime"]."',endtime='".$_GET["endtime"]."' where driver_id='".$_GET["drivid"]."' and route='".$_GET["route"]."'";
+         $connection->query($update);
+		 $kbt45=1;
+	 }
+	 
+	 
+	  if(isset($_GET["semail"]) && isset($_GET["dodate2"]) && isset($_GET["proex"]))
+	 {
+		 $sel_check="select pickerst2 from expenses where semail='".$_GET["semail"]."' and dodate2='".$_GET["dodate2"]."'";
+		 $check=$connection->fetchOne($sel_check);
+		 
+		 if

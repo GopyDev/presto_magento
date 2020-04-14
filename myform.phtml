@@ -1,0 +1,912 @@
+<?php 
+    ini_set('default_charset', 'utf-8');
+	
+	$baseApiURL = "http://vrp.viamente.com/api/vrp/v2";
+    $key = '3320e017-0d1b-4c67-a8e6-40d0767cc55e';
+	$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+	
+	function json_encode_ex($data) {
+     return json_encode($data, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
+    }
+
+function json_indent($json) {
+  $result      = '';
+  $pos         = 0;
+  $strLen      = strlen($json);
+  $indentStr   = '  ';
+  $newLine     = "\n";
+  $prevChar    = '';
+  $outOfQuotes = true;
+
+  for ($i=0; $i<=$strLen; $i++) {
+    // Grab the next character in the string.
+    $char = substr($json, $i, 1);
+
+    // Are we inside a quoted string?
+    if ($char == '"' && $prevChar != '\\') {
+      $outOfQuotes = !$outOfQuotes;
+
+    // If this character is the end of an element,
+    // output a new line and indent the next line.
+    } else if(($char == '}' || $char == ']') && $outOfQuotes) {
+      $result .= $newLine;
+      $pos --;
+      for ($j=0; $j<$pos; $j++) {
+        $result .= $indentStr;
+      }
+    }
+
+    // Add the character to the result string.
+    $result .= $char;
+
+    // If the last character was the beginning of an element,
+    // output a new line and indent the next line.
+    if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
+      $result .= $newLine;
+      if ($char == '{' || $char == '[') {
+        $pos ++;
+      }
+
+      for ($j = 0; $j < $pos; $j++) {
+        $result .= $indentStr;
+      }
+    }
+
+    $prevChar = $char;
+  }
+  return $result;
+}
+	
+	function executeRest($url, $method, $key, $data = "") {
+  $headers = array(
+    'Accept: application/json',
+    'Content-Type: application/json'
+  );
+
+  $url .= '?key='.$key;
+
+  $handle = curl_init();
+  curl_setopt($handle, CURLOPT_URL, $url);
+  curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 10);
+  curl_setopt($handle, CURLOPT_TIMEOUT, 360);
+
+  switch($method)
+  {
+    case 'GET':
+    break;
+
+    case 'POST':
+    curl_setopt($handle, CURLOPT_POST, true);
+    curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
+    break;
+
+    case 'PUT':
+    curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
+    break;
+
+    case 'DELETE':
+    curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'DELETE');
+    break;
+  }
+
+  $response = curl_exec($handle);
+  $status = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+ /* echo "<br>Response status: ".$status."\n";
+  echo "<br>Response body: \n";
+  echo "<br><pre>".json_indent($response)."</pre>\n";
+  echo "<br><br>\n"; */
+
+  if(php_sapi_name() != "cli") {
+    flush();
+    ob_flush();
+  }
+
+  return json_indent($response); }
+  
+	echo "<h1>List saved routeplans</h1>\n";
+   
+	
+	if(isset($_GET["idr"]))
+	{  
+	
+       $csv_terminated = "|";
+	$csv_separator = ",";
+	$csv_enclosed = '"';
+	$csv_escaped = "\\";
+		
+   $title1="Route";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title1)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+ 
+   
+   $title1="Time Window";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title1)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+	
+   $title2="Customer Name";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";	
+
+   $title2="Delivery Address";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+   $title2="Instructions";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+  $title2="Contact No.";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+  $title2="Unattend?";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";		
+		
+   $title2="D";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+   $title2="C/F";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";		
+		
+   $title2="Bag";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";	
+		
+	$title2="Loose";
+    $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ";";	
+				
+		
+	$out = trim(substr($schema_insert, 0, -1));
+	$out .= $csv_terminated;
+	$bbr = $out;
+	
+	?>
+	   
+     <?php
+	    $b = executeRest($baseApiURL."/routeplans/".$_GET["idr"], 'GET', $key);
+        $barr =  json_decode($b, true);
+		$namer = $barr["name"];
+		$rr=0;
+		
+  foreach ($barr["routes"] as $driver) {
+  ?>
+  
+  <table cellspacing="0" class="grid-header">
+        <tr>
+            <td class="a-right">
+                <button onclick="numberchange(<?php echo $rr+1; ?>);editForm.submit()" class="scalable save" type="button"><span>Get CSV <?php echo $rr+1; ?></span></button>
+            </td>
+        </tr>
+    </table>
+	
+	<br/>
+  
+  <?php
+          
+      	   foreach ($driver["stops"] as $driver2) {
+		   
+		       if($driver2["type"]=='origin')
+		       {
+			   
+			        // echo $driver[driverID];
+					// echo "<br/>";
+					 
+					 $minutes = round($driver2["departureTimeSec"] / 60) ;
+					 $zero    = new DateTime('@0');
+					 $offset  = new DateTime('@' . $minutes * 60);
+					 $diff    = $zero->diff($offset);
+					 $timea = $diff->format('%h:%i:00');
+					 $sk = date("g:i a", strtotime($timea));
+					 $std[$driver[driverID]] =  $sk;
+		       }
+		   
+		   if($driver2["type"]=='destination')
+		       {
+			   
+			     // print_r($driver2);
+			     // echo "<br/>";
+				 
+			     $minutes = round($driver2["arrivalTimeSec"] / 60) ;
+                 $zero    = new DateTime('@0');
+                 $offset  = new DateTime('@' . $minutes * 60);
+                 $diff    = $zero->diff($offset);
+                 $timea = $diff->format('%h:%i:00');
+			     $sk = date("g:i a", strtotime($timea));
+			     $std2[$driver[driverID]] =  $sk;
+			     $rr++;
+		      }
+		 } 
+	}	   
+
+ 
+ //print_r($std);
+ //echo "<br/>";
+ // print_r($std2);
+ 
+ 
+ $address = array();
+ $jk = 0;
+ foreach ($barr["orders"] as $row) {
+ 
+      $address[$jk] = $row["location"]["address"];
+	  $name[$jk] =  $row["name"];
+	  if($jk==0)
+	  {   
+	      $sql = "SELECT m.window FROM `mg_shipping_delivery_window` m  where m.`order_number`=".$row['name'];
+	      $rows12 = $connection->fetchOne($sql); 
+		  $ddate = explode("|",$rows12);
+	  }
+	  
+	  if($row['name']!="")
+	  {
+	      $sql22 = "SELECT unattended_shipping FROM `mg_shipping_delivery_window` where `order_number`=".$row['name'];
+	      $rows1222 = $connection->fetchOne($sql22); 
+	   }
+	   $un[$jk] =  $rows1222;
+	foreach ($row["timeWindows"] as $window) {
+		 if($window["startMin"]=='780' && $window["stopMin"]=='900')
+		 {
+		    $oor[$jk] = '1:00pm - 3:00pm';
+		 }
+		 
+		 else if($window["startMin"]=='900' && $window["stopMin"]=='1020')
+		 {
+		    $oor[$jk] = '3:00pm - 5:00pm';
+		 }
+		 
+		 else if($window["startMin"]=='1020' && $window["stopMin"]=='1140')
+		 {
+		    $oor[$jk] = '5:00pm - 7:00pm';
+		 }
+		 
+		 else if($window["startMin"]=='1140' && $window["stopMin"]=='1260')
+		 {
+		    $oor[$jk] = '7:00pm - 9:00pm';
+		 }
+		 
+		 else if($window["startMin"]=='780' && $window["stopMin"]=='1260')
+		 {
+		    $oor[$jk] = '1:00pm - 9:00pm';
+		 }
+		 
+		 else 
+		 { 
+				 $minutes = $window["startMin"];
+				 $zero    = new DateTime('@0');
+				 $offset  = new DateTime('@' . $minutes * 60);
+				 $diff    = $zero->diff($offset);
+				 $timea = $diff->format('%h:%i:00');
+				 $minutes = $window["stopMin"];
+				 $zero    = new DateTime('@0');
+				 $offset  = new DateTime('@' . $minutes * 60);
+				 $diff    = $zero->diff($offset);
+				 $timeb = $diff->format('%h:%i:00');
+				 $sk = date("g:i a", strtotime($timea));
+				 $sk2 = date("g:i a", strtotime($timeb));
+				 $oor[$jk] = $sk." - ".$sk2;
+
+		 }
+	      $starttime[$jk] = $window["startMin"] / 60 ;
+		  $endtime[$jk] = $window["stopMin"] / 60 ;
+	}
+	 $jk = $jk + 1;
+ } 
+
+$rkl = $rr-1 ;
+$loo = 0;
+$jala = 1;
+
+// rsort($std);
+// rsort($std2);
+
+
+ echo '<a href="javascript:void(0);" onClick="divprintl();"> Print </a> <br/><br/><div id="divp">';
+ foreach ($barr["drivers"] as $row) {
+ 
+ $out = "";
+ $schema_insert = "" ;
+ 
+  $csv_terminated = "|";
+	$csv_separator = ",";
+	$csv_enclosed = '"';
+	$csv_escaped = "\\";
+		
+		$title1="Truck Number";
+        $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+		stripslashes($title1)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+		$title1="Scheduled Depart Time";
+        $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+		stripslashes($title1)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+		$title1="Drive Time";
+        $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+		stripslashes($title1)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+	    $title1="Route";
+        $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+		stripslashes($title1)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+ 
+   $title1="Time Window";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title1)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+	
+   $title2="Customer Name";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";	
+
+   $title2="Delivery Address";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+  $title2="Delivery City, State";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+				
+		
+   $title2="Instructions";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+  $title2="Contact No.";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+ $title2="Unattend?";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";		
+		
+  $title2="D";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";
+		
+   $title2="C/F";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";		
+		
+   $title2="Bag";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ",";	
+		
+	$title2="Loose";
+   $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
+			stripslashes($title2)) . $csv_enclosed;
+		$schema_insert .= $l;
+		$schema_insert .= ";";	
+				
+		
+	$out = trim(substr($schema_insert, 0, -1));
+	$out .= $csv_terminated;
+	
+	$bbr = $out;
+ 
+ echo'
+   <div ';
+   if($loo>0) { 
+    echo 'style="page-break-before: always;">';
+	}
+   else
+   { 
+      echo '>';
+   }	
+  echo '<table border=1 style="border-collapse:collapse;font-size:12px;">
+  <tr>
+  <td style="padding:7px;width:200px;"><b>Date</b></td><td style="padding:7px;width:200px;">'.$ddate[1].'</td>
+  <td style="padding:7px;width:200px;"><b>Scheduled Departure Time</b></td><td style="padding:7px;width:200px;">'.$std[$row["id"]].'</td>
+  </tr>
+  <tr>
+  <td style="padding:7px;width:200px;"><b>Driver Name</b></td><td style="padding:7px;width:200px;"></td>
+  <td style="padding:7px;width:200px;"><b>Scheduled Finish Time</b></td><td style="padding:7px;width:200px;">'.$std2[$row["id"]].'</td>
+  </tr>
+  <tr>
+  <td style="padding:7px;width:200px;"><b>Trip Departure</b></td><td style="padding:7px;width:200px;"></td>
+  <td style="padding:7px;width:200px;"></td><td style="padding:7px;width:200px;"></td>
+  </tr>
+  <tr>
+  <td style="padding:7px;width:200px;"><b>Trip Arrival</b></td><td style="padding:7px;width:200px;"></td>
+  <td style="padding:7px;width:200px;"><b>Miles</b></td><td 
+  ></td>
+  </tr>
+  </table>
+  
+  <br/>
+ 
+ <table border="1" style="border-collapse:collapse;font-size:11px;" >
+ 
+ <tr>
+ <td style="padding:5px;font-weight:bold;width:87px;">Time Window</td>
+ <td style="padding:5px;font-weight:bold;width:80px;">Customer Name</td>
+  <td style="padding:5px;font-weight:bold;width:270px;">Delivery Address</td>
+  <td style="padding:5px;font-weight:bold;width:60px;">Instructions</td>
+  <td style="padding:5px;font-weight:bold;width:85px;">Contact No.</td>
+ <td style="padding:5px;font-weight:bold;width:50px;">Unattend?</td>
+ <td style="padding:5px;font-weight:bold;width:50px;">D</td>
+ <td style="padding:5px;font-weight:bold;width:50px;">C/F</td>
+ <td style="padding:5px;font-weight:bold;width:115px;">Bag</td>
+ <td style="padding:5px;font-weight:bold;width:100px;">Loose</td>
+ </tr>';
+ 
+ 
+ foreach ($barr["routes"] as $driver) {
+          
+		   $eee = 1;
+      	   foreach ($driver["stops"] as $driver2) {
+		   
+	       if($address[$driver2["orderIdx"]]!="")
+		   {
+		   
+		      if($row["id"]==$driver["driverID"])
+			  {
+			  
+			   $oid = explode(".",$name[$driver2["orderIdx"]]);
+			   $order22 = Mage::getModel('sales/order')->load($oid[0], 'increment_id');
+			  
+			  
+			    $sqlstatus  = "SELECT d FROM packinginfo  where order_number='".$oid[0]."'";
+		        $number["d"] = $connection->fetchOne($sqlstatus);
+				
+				$sqlstatus  = "SELECT cf FROM packinginfo  where order_number='".$oid[0]."'";
+		        $number["cf"] = $connection->fetchOne($sqlstatus);
+				
+				$sqlstatus  = "SELECT bag FROM packinginfo  where order_number='".$oid[0]."'";
+		        $number["bag"] = $connection->fetchOne($sqlstatus);
+				
+				$sqlstatus  = "SELECT loose FROM packinginfo  where order_number='".$oid[0]."'";
+		        $number["loose"] = $connection->fetchOne($sqlstatus);
+				
+			  
+			  $bbb = sizeof($order22);
+			 
+			  if($order22->getCustomerName()!="Guest")
+			  {
+			  	$shipping_info = $order22->getShippingAddress()->getData();
+			  }
+			  
+			  else
+			  {
+			  }
+			
+			 
+			   echo '<tr>';
+			   
+			   echo '<td style="padding:5px;width:87px;">';
+			   echo $oor[$driver2["orderIdx"]];
+			    // echo $driver["driverID"].'hir';
+			   echo '</td>';
+			   
+			   echo '<td style="padding:5px;width:80px;">';
+			   if($order22->getCustomerName()!="Guest")
+			  {
+			    echo $shipping_info['firstname']." ".$shipping_info['lastname'];
+				}
+				else
+				{
+				    // echo $shipping_info['firstname']." ".$shipping_info['lastname'];
+				}
+			   echo '</td>';
+			   
+			    echo '<td style="padding:5px;width:270px;">';
+			   echo $address[$driver2["orderIdx"]]."</td>";
+			   
+			    echo '<td style="padding:5px;width:60px;">';
+			   if($shipping_info["information"]=="")
+			   {
+			      echo "N";
+			   }
+			   else
+			   {
+			      echo "Y";
+			   }
+			   echo '</td>';  
+			   
+			   
+			    echo '<td style="padding:5px;width:85px;">';
+			   echo $shipping_info["telephone"];
+			   echo '</td>';
+			   
+			 
+			   echo '<td style="padding:5px;width:50px;">';
+			   echo $un[$driver2["orderIdx"]];
+			   echo '</td>';
+			   
+			   echo '<td style="padding:5px;width:50px;">';
+			   echo $number["d"];
+			   echo '</td>';
+			   
+			   echo '<td style="padding:5px;width:50px;">';
+			   echo $number["cf"];
+			   echo '</td>';
+			   
+			   echo '<td style="padding:5px;width:115px;">';
+			   echo $number["bag"];
+			   echo '</td>';
+			   
+			   echo '<td style="padding:5px;width:100px;">';
+			   echo $number["loose"];
+			   echo '</td>';	
+			  
+			   echo '</tr>';
+			   
+			   
+			   
+			   if($shipping_info["information"]!="")
+			   {
+			       echo '<tr>';
+				   echo '<td colspan="10" style="padding:5px;font-weight:bold;"> Instructions : '.$shipping_info["information"].'</td>';
+			       echo '</tr>';
+			   }
+			   
+			   
+			    $schema_insert = '';
+				
+				if($eee==1)
+				{
+					$null=$row['id'];
+					if ($csv_enclosed == '')
+							{
+								$schema_insert.= $null;
+							}
+					else
+					{
+					$schema_insert .= $csv_enclosed .
+					str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+					}	
+				}
+				else
+				{
+				    $null="";
+					if ($csv_enclosed == '')
+							{
+								$schema_insert.= $null;
+							}
+					else
+					{
+					$schema_insert .= $csv_enclosed .
+					str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+					}	
+				}	
+				
+				$schema_insert .= ',';
+				
+				if($eee==1)
+				{
+					$null=$std[$row["id"]];
+					if ($csv_enclosed == '')
+							{
+								$schema_insert.= $null;
+							}
+					else
+					{
+					$schema_insert .= $csv_enclosed .
+					str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+					}	
+				}
+				else
+				{
+				    $null="";
+					if ($csv_enclosed == '')
+							{
+								$schema_insert.= $null;
+							}
+					else
+					{
+					$schema_insert .= $csv_enclosed .
+					str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+					}	
+				}	
+				
+				$schema_insert .= ',';
+				
+				if($eee==1)
+				{
+					$null=$std2[$row["id"]];
+					if ($csv_enclosed == '')
+							{
+								$schema_insert.= $null;
+							}
+					else
+					{
+					$schema_insert .= $csv_enclosed .
+					str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+					}	
+				}
+				else
+				{
+				    $null="";
+					if ($csv_enclosed == '')
+							{
+								$schema_insert.= $null;
+							}
+					else
+					{
+					$schema_insert .= $csv_enclosed .
+					str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+					}	
+				}	
+				
+				$schema_insert .= ',';
+				
+				if ($csv_enclosed == '')
+						{
+							$schema_insert.= $eee;
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,$eee) . $csv_enclosed;
+				}
+				
+				$schema_insert .= ',';
+				
+				if ($csv_enclosed == '')
+						{
+							$schema_insert.=$oor[$driver2["orderIdx"]];
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $oor[$driver2["orderIdx"]]) . $csv_enclosed;
+				}
+				
+				$schema_insert .= ',';
+				
+				if ($csv_enclosed == '')
+						{
+							$schema_insert.= $shipping_info['firstname']." ".$shipping_info['lastname'];
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $shipping_info['firstname']." ".$shipping_info['lastname']) . $csv_enclosed;
+				}
+				
+				$schema_insert .= ',';
+				
+			   if ($csv_enclosed == '')
+						{
+							$schema_insert.= $address[$driver2["orderIdx"]];
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $address[$driver2["orderIdx"]]) . $csv_enclosed;
+				}
+				
+				
+				$schema_insert .= ',';
+			    if ($csv_enclosed == '')
+						{
+							$schema_insert.= $shipping_info["city"].' '.$shipping_info["region"];
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $shipping_info["city"].' '.$shipping_info["region"]) . $csv_enclosed;
+				}
+				
+				
+				$schema_insert .= ',';
+			    if ($csv_enclosed == '')
+						{
+							$schema_insert.= str_replace('Cleveland Â', "Cleveland", $shipping_info["information"]);
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, str_replace('Cleveland Â', "Cleveland", $shipping_info["information"])) . $csv_enclosed;
+				}
+				
+				
+				$schema_insert .= ',';
+			    if ($csv_enclosed == '')
+						{
+							$schema_insert.= $shipping_info["telephone"];
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $shipping_info["telephone"]) . $csv_enclosed;
+				}
+				$schema_insert .= ',';
+			    if ($csv_enclosed == '')
+						{
+							$schema_insert.= $un[$driver2["orderIdx"]];
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $un[$driver2["orderIdx"]]) . $csv_enclosed;
+				}
+				
+				
+				$schema_insert .= ',';
+				$null=$number["d"];
+				if ($csv_enclosed == '')
+						{
+							$schema_insert.= $null;
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+				}
+				
+				$null=$number["cf"];
+				$schema_insert .= ',';
+				if ($csv_enclosed == '')
+						{
+							$schema_insert.= $null;
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+				}
+				
+				$null=$number["bag"];
+				$schema_insert .= ',';
+				if ($csv_enclosed == '')
+						{
+							$schema_insert.= $null;
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+				}
+				
+				$null=$number["loose"];
+				$schema_insert .= ',';
+				if ($csv_enclosed == '')
+						{
+							$schema_insert.= $null;
+						}
+				else
+				{
+				$schema_insert .= $csv_enclosed .
+				str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, $null) . $csv_enclosed;
+				}
+				$out .= $schema_insert;
+		        $out .= $csv_terminated;
+			   
+			    $eee++;
+			   }
+		   }   
+	   
+	        
+	       }
+
+ }
+ 
+ echo "</table></div>";
+     $loo++;
+	 $rkl--;
+	 
+	 $data[$jala]=$out;
+	 $jala++;
+				
+    }
+   }
+ echo '</div>';
+	 $kkk = executeRest($baseApiURL."/routeplans", 'GET', $key);
+	 $barr =  json_decode($kkk, true);
+?>
+<form id="edit_form" name="edit_form" method="post" action="<?=$this->getUrl('*/*/post')?>">
+        <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+		<input name="namer" type="hidden" value='<?php echo $namer; ?>' />
+		<!-- <input name="data" type="hidden" value='<?php echo $out; ?>' /> -->
+		<?php
+				for($uu=1;$uu<=$jala;$uu++)
+				{
+		?>
+		<input name="datagth-<?php echo $uu; ?>" type="hidden" value='<?php echo $data[$uu]; ?>' />
+		<?php } ?>
+		
+		<input name="getnumber" id="getnumber" type="hidden" value='' />
+</form>
+
+<script type="text/javascript">
+        
+		function divprintl()
+		{
+            var divContents = jQuery("#divp").html();
+            var printWindow = window.open('', '', 'height=400,width=900');
+            printWindow.document.write('<html><head><title> Driver Sheet </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+
+<br/>
+<br/>
+<table border="1" style="border-collapse:collapse; " >
+   <tr>
+   <th style="padding:5px;width:500px;">Route Plan</th>
+   <th style="padding:5px;">Created At</th>
+   <th style="padding:5px;">Drivers</th>
+   <th style="padding:5px;">Orders</th>
+   <th style="padding:5px;">View</th>
+   </tr>
+<?php	
+	foreach ($barr["routeplans"] as $row) {
+?>
+	<tr><td style="padding:5px;width:500px;"><?php echo $row["name"]; ?></td>
+	<td style="padding:5px;width:150px;"><?php echo $row["createDate"]; ?></td>
+	<td style="padding:5px;width:100px;"><?php echo $row["drivers"]; ?></td>
+	<td style="padding:5px;width:100px;"><?php echo $row["orders"]; ?></td>
+	<td style="padding:5px;width:100px;"><a href="?idr=<?php echo $row["id"]; ?>">View</a></td>
+	</tr>
+<?php	
+	}
+?>
+</table>
+ 
+<script type="text/javascript">
+    var editForm = new varienForm('edit_form');
+	function numberchange(kid)
+	{
+	   jQuery("#getnumber").val(kid);
+	}
+</script>

@@ -1,0 +1,430 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl()?>js/jquery.fancybox.js"></script>
+<link type="text/css"  rel="stylesheet" href="<?php echo $this->getSkinUrl()?>css/jquery.fancybox.css"/>
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery('.fancybox').fancybox();
+});
+</script>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php $_orders = $this->getOrders(); ?>
+<div class="page-title">
+    <h1><?php echo $this->__('My Orders') ?></h1>
+</div>
+
+
+<style>
+.main-table{
+  width:100%;
+  }
+th{
+    /*padding: 10px;*/
+	padding: 0 0 10px;
+    width: 100px;
+}
+#my-orders-table{
+/*width:100%;*/
+}
+/*tr{
+height:75px;
+}*/
+.heading{
+background-color:#3f7e19;
+}
+.heading-text{color:#fff !important;}
+.main-table{border:1px solid; #000;}
+.product_name{width:450px;}
+.main-order{background-color:#eee;}
+.inner-items-table{
+box-shadow: 10px 10px 5px #888888;
+	border:1px solid #000000;
+	-moz-border-radius-bottomleft:9px;
+	-webkit-border-bottom-left-radius:9px;
+	border-bottom-left-radius:9px;
+	-moz-border-radius-bottomright:9px;
+	-webkit-border-bottom-right-radius:9px;
+	border-bottom-right-radius:9px;
+	-moz-border-radius-topright:9px;
+	-webkit-border-top-right-radius:9px;
+	border-top-right-radius:9px;
+	-moz-border-radius-topleft:9px;
+	-webkit-border-top-left-radius:9px;
+	border-top-left-radius:9px;
+}
+.inner-heading{background-color:#3f7e19}
+.inner-heading.odd > th{color:#fff !important;}
+.inner-heading.even > th{color:#fff !important;}
+.data-table th{font-weight:400px !important;}
+.price{margin-left:-18px;}
+/*  start media query*/
+
+@media screen and (max-width: 640px) {
+	table {
+		overflow-x: auto;
+		display: block;
+		width:auto;
+	}
+	 thead tr {
+		/*position: absolute;*/
+		top: -9999px;
+		left: -9999px;
+	}
+		/* Force table to not be like tables anymore */
+	 table,
+	 thead,
+	 tbody,
+	 th,
+	 td,
+	 tr {
+		display: block;
+	}
+	.heading{display:none;}
+    .inner-heading{display:none;}
+	.inner-items-table {
+		overflow-x: auto;
+		display: block;
+		width:80%;
+		 overflow: auto;
+	}
+	.even > td {
+    text-align: center !important;
+	}
+	.odd > td {
+    text-align: center !important;
+	}
+	.inner-items-table{margin-left:23px;}
+	.product_name{width:auto;}
+	.inner-heading{display:none !important;}
+	#my-orders-table > thead {display:block !important;}
+	.sepratorMobile{display:block;}
+}
+
+</style>
+
+<!--Files for expand -->
+
+ <!--<script type="text/javascript"  src="http://www.prestofreshgrocery.com/skin/frontend/default/theme509/js/jquery-1.7.min.js"></script> -->
+
+  <style type="text/css">
+    .mycontainer {
+    /*width:100%;*/
+    /*border:1px solid #d3d3d3;*/
+}
+.mycontainer div {
+    width:96%;
+}
+.mycontainer .header {
+    /*background-color:#d3d3d3;*/
+    padding: 2px;
+    cursor: pointer;
+	color:#5a5959;
+	padding:5px;
+}
+.mycontainer .content {
+    display: none;
+    padding : 5px;
+}
+.mycontainer >.header{
+/*margin-top: -70px;*/
+font-size:12px;
+font-weight:400px;
+color:#65ae01;
+
+}
+.nobr > a{font-size:12px;}
+  </style>
+
+
+
+<script type="text/javascript">//<![CDATA[
+
+jQuery(window).load(function(){
+jQuery(".header").click(function () {
+//debugger;
+    jQueryheader = jQuery(this);
+    //getting the next element
+    jQuerycontent = jQueryheader.next();
+    //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+    jQuerycontent.slideToggle(300, function () {
+        //execute this after slideToggle is done
+        //change text of header based on visibility of content div
+        jQueryheader.text(function () {
+            //change text based on condition
+			//jQuery('.content').show();
+            return jQuerycontent.is(":visible") ? "Collapse All" : "View Order";
+
+        });
+    });
+
+});
+});
+//]]>
+ /* jQuery(document).ready(function() {
+        jQuery('.header').click(function() {
+                jQuery('.content').toggle("slide");
+        });
+    }); */
+</script>
+<!--End files expand -->
+<?php echo $this->getPagerHtml(); ?>
+<?php if($_orders->getSize()): ?>
+<!-- <table class="data-table" id="my-orders-table"> -->
+
+<table id="my-orders-table" class="main-table" cellspacing="5" cellpadding="5" style="font-size:13px;">
+    <col width="1" />
+    <col width="1" />
+    <col />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <thead>
+        <tr class="heading">
+            <th class="heading-text"><?php echo $this->__('Order #') ?></th>
+            <th class="heading-text"><?php echo $this->__('Order Date') ?></th>
+            <th class="heading-text" style="width:115px"><?php echo $this->__('Delivery Date/Time')?></th>
+            <th class="heading-text"><?php echo $this->__('Ship To') ?></th>
+            <th class="heading-text" style="text-align:center;"><span class="nobr"><?php echo $this->__('Order Total') ?></span></th>
+           <!-- <th><span class="nobr"><?php //echo $this->__('Order Status') ?></span></th>-->
+             <th class="heading-text" style="text-align:center;"><span class="nobr"><?php echo $this->__(' ') ?></span></th>
+            <th class="heading-text">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $_odd = ''; ?>
+        <?php
+		$count = 1;
+		foreach ($_orders as $_order): ?>
+        <tr class="main-order">
+            <td class="order-id"><?php echo $_order->getRealOrderId() ?></td>
+            <td class="order-date"><span class="nobr"><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></span></td>
+            <td><?php
+					$resource = Mage::getSingleton('core/resource');
+					$readConnection = $resource->getConnection('core_read');
+					$table = $resource->getTableName('shipping_delivery_window');
+					$query = "select * from mg_shipping_delivery_window where order_number ='".$_order->getRealOrderId()."'";
+					 $result = $readConnection->fetchAll($query);
+				foreach($result as $row ){
+
+						$a = explode('|',$row['window']);
+						$array = sizeof($a);
+						if($array == '2'){
+						//echo $row['window'];
+
+							$a[1];
+							$date = str_replace('_','/',$a[1]);
+								list($dd,$mm,$yy) = explode("/", $date);
+								$yy = substr($yy,2,4);
+								echo $mm.'/'.$dd.'/'.$yy;
+							echo '<br />';
+							$a[0];
+							$time = str_replace('_',':',$a[0]);
+							$time1 = str_replace('pm:','pm - ',$time);
+							echo $time1;
+
+						} else{
+							$row['window'];
+							$date = str_replace('_','/',$row['window']);
+							//echo $date ;
+
+
+								list($dd,$mm,$yy) = explode("/", $date);
+								$yy = substr($yy,2,4);
+
+								echo $mm.'/'.$dd.'/'.$yy;
+							}
+							}
+					//print('<pre>');print_r($this->getRequest()->getParams());print('</pre>'); ?></td>
+            <td class="order-ship"><?php echo $_order->getShippingAddress() ? $this->htmlEscape($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
+            <td class="order-total" style="text-align:center;"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
+         <?php /*?>   <td class="order-status"><em><?php echo $_order->getStatusLabel() ?></em></td><?php */?>
+          <td class="order-edit" style="text-align:center;font-size:12px;padding:2px;"><a class="fancybox" onclick="popup('<?php echo $_order->getIncrementId() ?>')" href="#inline1_<?php echo $_order->getIncrementId()?>">Change <br/>Delivery Time</a></td>
+
+            <td style="vertical-align:middle;">
+                <span class="nobr">
+				<a href="<?php echo $this->getViewUrl($_order) ?>"><?php echo $this->__('View Invoice') ?></a>
+				<br/>
+                    <?php /*<span class="separator">|</span><a href="<?php echo $this->getTrackUrl($_order) ?>"><?php echo $this->__('Track Order') ?></a>&nbsp;*/ ?>
+                    <?php if ($this->helper('sales/reorder')->canReorder($_order)) :
+				//echo '<pre>';	print_r($_order);exit;?>
+                    <!-- <span class="separator">|</span> -->
+					<a href="<?php echo $this->getReorderUrl($_order) ?>"><?php echo $this->__('Reorder Entire Order') ?></a>
+
+                <?php endif ?>
+                </span>
+            </td>
+        </tr>
+		<?php
+				//require 'app/Mage.php';
+				Mage::app();
+
+				$orderNumber = $_order->getRealOrderId();
+				$order = Mage::getModel('sales/order')->loadByIncrementId($orderNumber);
+				// get order total value
+
+				// get order item collection
+				$orderItems = $order->getItemsCollection();
+
+				?>
+		<tr>
+			<td colspan="7" >
+			<!-- start expand-->
+				<div class="mycontainer">
+				 <div class="header" id="myheader" style="font-size:12px;font-weight:400px;text-align:left;">View Order</div>
+				<div class="content" style="display: none;">
+
+
+			<input type="hidden" name="form_key" value="<?php echo $formKey; ?>" />
+				<table class="data-table inner-items-table" id="my-orders-table">
+				<thead>
+				<tr class="inner-heading">
+					<th align="center" style="text-align:center!important">Image</th>
+					<th>Product Name</th>
+					<th align="center" style="text-align:center!important">Unit Price</th>
+					<th align="center" style="text-align:center!important">Qty</th>
+					<th align="center" style="text-align:center!important">Subtotal</th>
+					<th align="center" style="text-align:center!important">Add to Cart</th>
+				</tr>
+			<?php
+				foreach ($orderItems as $item){
+							$product_id = $item->product_id;
+							$product_sku = $item->sku;
+							$product_name = $item->getName();
+							$product_qty = $item->getQty();
+							$_product = Mage::getModel('catalog/product')->load($product_id);
+							$cats = $_product->getCategoryIds();
+							$category_id = $cats[0]; // just grab the first id
+							$category = Mage::getModel('catalog/category')->load($category_id);
+							$category_name = $category->getName();
+							$product = Mage::getModel('catalog/product')->load($product_id);
+							$full_path_url = Mage::helper('catalog/image')->init($product, 'thumbnail');
+							$product->getUrlPath();
+							$product->getTypeId();
+							//$_productCollection=$this->getLoadedProductCollection();
+							//$_helper = $this->helper('catalog/output');
+
+					?>
+					<!--<form method="post" action="http://www.prestofreshgrocery.com/newstaging/checkout/cart/add/product/<?php //echo $this->getFormActionUrl() ?>" id="reorder-validate-detail">-->
+					<tr>
+
+							<?php
+								$formKey = Mage::getSingleton('core/session')->getFormKey();
+							?>
+						<td ><img src="<?php echo Mage::helper('catalog/image')->init($product, 'small_image')->resize(100,100);?>" width="100" alt=""></td>
+						<td class="product_name"><a href="<?php  echo $product->getUrlInStore(); ?>"><?php echo $product_name?></a>
+						</td>
+						<td align="center" style="text-align:center!important"><?php echo "$".number_format($item->getPrice(),2);?></td>
+						<td style="color:#7b7b7b;text-align:center!important" align="center"><?php echo number_format($item->getQtyOrdered(),0);?></td>
+						<td><?php echo "$".number_format($item->getPrice()*$item->getQtyOrdered(),2);?></td>
+						<td style="text-align:center;">
+						<input type="hidden" name="qty_<?php echo $product_id;?>" value="<?php echo $item->getQtyOrdered();?>" />
+						<input type="hidden" name="tmp" id="tmp" value="<?php echo number_format($item->getQtyOrdered(),0);?>" />
+						<?php
+						$url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'checkout/cart/add/uenc/'.$formKey.'/product/'.$product_id.'/';
+						?>
+						<!--<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setaLocation('<?php //echo $url; ?>',<?php //echo $product_id;?>,'<?php //echo number_format($item->getQtyOrdered(),0);?>')"><span><span><?php //echo $this->__('Add to Cart') ?></span></span></button> -->
+						<?php
+							$product = Mage::getModel('catalog/product')->load($_product->getId());
+							$qty = number_format($product->getStockItem()->getQty(),0);
+							//echo "Qty is ".$qty;
+							if($qty >0 && $product->getStatus() == 1){
+						?>
+						 <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setaLocation('<?php echo $url; ?>',<?php echo $_product->getId();?>,'<?php echo number_format($item->getQtyOrdered(),0);?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+						 <?php
+							}else{
+								echo '<span style="color:red;">Not Currently Available</span>';
+							}
+						 ?>
+						</td>
+
+					</tr>
+					<!-- </form> -->
+					<?php
+						}
+
+			?>
+				</table>
+
+				</div>
+			</div>
+			<!-- End expand-->
+				<?php
+					if(!isset($_GET['limit']))
+					{
+						if($count != 10){
+						?>
+							<hr class="sepratorMobile"/>
+							<?php
+						}
+					}
+				else if( $count != $_GET['limit']) {
+				?>
+				<hr class="sepratorMobile"/>
+				<?php
+					}
+
+				?>
+			</td>
+
+		</tr>
+
+        <div id="inline1_<?php echo $_order->getIncrementId()?>" class="delivery_alert"  style="width:400px;display: none;">
+       	        	<p> Are You looking to make a order change after 7pm the day prior to scheduled delivery? That It will incur the overnight processing fee by making change.   </p><a style=" background: none repeat scroll 0 0 #3f7e19; color: #beeb20; border-radius: 4px; display: inline-block; margin-top: 10px; padding: 5px;" href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'Edit_Order/index/index/?ordernumber='.$_order->getIncrementId();?>">Confirm</a>
+                </div>
+        <?php
+		$count ++;
+
+		endforeach; ?>
+    </tbody>
+</table>
+
+<script type="text/javascript">decorateTable('my-orders-table');</script>
+<?php echo $this->getPagerHtml(); ?>
+<?php else: ?>
+    <p><?php echo $this->__('You have placed no orders.'); ?></p>
+
+	<script type="text/javascript">
+//<![CDATA[
+    var reorderFormDetail = new VarienForm('reorder-validate-detail');
+//]]>
+</script>
+<?php endif ?>
+ <script type="text/javascript">
+    //<![CDATA[
+function setaLocation(url,pid,qty){
+/*var tmp='qty_'+pid
+var qty=document.getElementById(tmp).value;*/
+
+
+var totalurl=url+'qty/'+qty;
+setLocation(totalurl);
+
+}
+ //]]>
+    </script>
+

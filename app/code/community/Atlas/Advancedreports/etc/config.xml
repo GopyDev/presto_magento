@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Atlas Extensions
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Atlas Commercial License
+ * that is available through the world-wide-web at this URL:
+ *
+ * @copyright   Copyright (c) 2015 Atlas Extensions
+ * @license     Commercial
+ */
+-->
+<config>
+    <modules>
+        <Atlas_Advancedreports>
+            <version>0.1.3</version>
+        </Atlas_Advancedreports>
+    </modules>
+    <global>
+        <blocks>
+            <advancedreports>
+                <class>Atlas_Advancedreports_Block</class>
+            </advancedreports>
+        </blocks>
+        <helpers>
+            <advancedreports>
+                <class>Atlas_Advancedreports_Helper</class>
+            </advancedreports>
+        </helpers>
+
+        <models>
+            <advancedreports>
+                <class>Atlas_Advancedreports_Model</class>
+                <resourceModel>advancedreports_mysql4</resourceModel>
+            </advancedreports>
+            <advancedreports_mysql4>
+                <class>Atlas_Advancedreports_Model_Mysql4</class>
+            </advancedreports_mysql4>
+            <advancedreports_product_resource>
+                <class>Atlas_Advancedreports_Model_Resource</class>
+            </advancedreports_product_resource>
+        </models>
+    </global>
+    
+    <adminhtml>
+        <layout>
+            <updates>
+                <advancedreports>
+                    <file>atlas/advancedreports/advancedreports.xml</file>
+                </advancedreports>
+            </updates>
+        </layout>
+    </adminhtml>
+
+    <admin>
+        <routers>
+            <advancedreports>
+                <use>admin</use>
+                <args>
+                    <module>Atlas_Advancedreports</module>
+                    <frontName>advancedreports</frontName>
+                </args>
+            </advancedreports>
+        </routers>
+    </admin>  
+</config>

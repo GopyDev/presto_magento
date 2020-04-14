@@ -1,0 +1,56 @@
+<div class="content-header">
+    <h3 class="icon-head head-adminhtml-import">Import Products</h3>
+    <p class="form-buttons">
+    	<button style="" onclick="setLocation('<?php echo $this->getBack();?>')" class="scalable back" type="button" title="Back"><span><span><span>Back</span></span></span></button>
+        <button style="" onclick="setLocation(window.location.href)" class="scalable " type="button" title="Reset"><span><span><span>Reset</span></span></span></button>
+    </p>
+</div>
+
+
+<div class="entry-edit">
+    <form enctype="multipart/form-data" method="post" action="<?php echo $this->getPosturl()?>" id="upc_form" name="upc_form">
+    	<div>
+        	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+            <input type="hidden" name="upc_method" value="search" />
+        </div>
+        <div class="entry-edit-head">
+    		<h4 class="icon-head head-edit-form fieldset-legend">Import Settings</h4>
+    		<div class="form-buttons"></div>
+		</div>
+    	<div id="base_fieldset" class="fieldset ">
+    		<div class="hor-scroll">
+            	<table cellspacing="0" class="form-list">
+            	<tbody>
+                	<tr>
+       					<td class="label"><label for="entity">Product Search Keyword</label></td>
+    					<td class="value">
+        					<input type="text" name="keyword" id="keyword" class="required-entry input-text"/>
+                            <p class="note"><span>Enter a keyword to search products.</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td></td>
+                        <td><br /><button class="scalable save" type="submit" title="Import Products"><span><span><span>Search Products</span></span></span></button></td>
+                        <td></td>
+                    </tr>
+            		</tbody>
+        		</table>
+            </div>
+        </div>
+	</form>
+</div>
+<script type="text/javascript">
+    var upc_form = new varienForm('upc_form');
+</script>
+<script type="text/javascript">
+/*function reset_upc_form(_i, _id){
+	ids = new Array('single_upc', 'upc_codes');//, 'import_file'
+	c_id = _id;
+	$(_id).removeAttribute('disabled');
+	ids.each(function(id){
+		if(id != c_id){
+			$(id).setAttribute('disabled', 'disabled');
+		}
+	});
+}*/
+</script>

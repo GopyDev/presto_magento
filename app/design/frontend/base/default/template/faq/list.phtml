@@ -1,0 +1,288 @@
+<?php
+
+/**
+
+ * Magento
+
+ *
+
+ * NOTICE OF LICENSE
+
+ *
+
+ * This source file is subject to the Academic Free License (AFL 3.0)
+
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+
+ * It is also available through the world-wide-web at this URL:
+
+ * http://opensource.org/licenses/afl-3.0.php
+
+ * If you did not receive a copy of the license and are unable to
+
+ * obtain it through the world-wide-web, please send an email
+
+ * to license@magentocommerce.com so we can send you a copy immediately.
+
+ *
+
+ * DISCLAIMER
+
+ *
+
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+
+ * versions in the future. If you wish to customize Magento for your
+
+ * needs please refer to http://www.magentocommerce.com for more information.
+
+ * 
+
+ * @category   design_default
+
+ * @package    Flagbit
+
+ * @copyright  Copyright (c) 2009 Flagbit GmbH & Co. KG (http://www.flagbit.de)
+
+ * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+
+ */
+
+/* @var $this Flagbit_Faq_Block_Frontend_List */
+
+?>
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl()?>css/jquery-ui.css" />
+<?php /*?><script src="//code.jquery.com/jquery-1.10.2.js"></script><?php */?>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<?php /*?><script src="<?php echo $this->getSkinUrl()?>js/jquery-1.10.2.js"></script>
+<script src="<?php echo $this->getSkinUrl()?>js/jquery-ui.js"></script><?php */?>
+<script>
+jQuery(function() {
+	// jQuery( "#accordiona" ).accordion();
+	jQuery.noConflict();
+    jQuery("#accordiona").show().accordion({
+        active: false,
+        autoHeight: false,
+        navigation: true,
+        collapsible: true
+    });
+    });
+</script>
+<style type="text/css">
+#overlay {
+/*position: fixed;*/
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: #000;
+filter:alpha(opacity=70);
+-moz-opacity:0.7;
+-khtml-opacity: 0.7;
+opacity: 0.7;
+z-index: 100;
+display: none;
+}
+.content a{
+text-decoration: none;
+}
+.popup{
+width: 100%;
+margin: 0 auto;
+display: none;
+position: absolute;
+z-index: 10000;
+}
+.content{
+min-width: 600px;
+width: 600px;
+min-height: 150px;
+margin: 100px auto;
+background: #f3f3f3;
+position: relative;
+z-index: 1000;
+padding: 10px;
+border-radius: 5px;
+box-shadow: 0 -4px 21px #000;
+/*box-shadow: 0 2px 5px #000;*/
+}
+.content p{
+clear: both;
+color: #555555;
+text-align: justify;
+}
+.content p a{
+color: #6f9e15;
+font-weight: bold;
+}
+.content .x{
+float: right;
+height: 35px;
+left: 22px;
+position: relative;
+top: -25px;
+width: 34px;
+}
+.content .x:hover{
+cursor: pointer;
+}
+.close{margin-top:30px;opacity:1 !important;}
+@media screen and (max-width: 568px) 
+{
+  .popup .content
+   {
+	background: #f3f3f3 none repeat scroll 0 0;
+    border-radius: 5px;
+    box-shadow: 0 -4px 21px #000000;
+    margin: 100px auto;
+    min-height: 225px;
+    min-width: 250px;
+    padding: 9px;
+    position: relative;
+    width: 75%;
+    z-index: 1000;
+	}
+	.popup .content .close 
+	{
+		margin-top: 12px;
+	}
+}
+</style>
+<script type='text/javascript'>
+jQuery(function(){
+var overlay = jQuery('<div id="overlay"></div>');
+jQuery('.close').click(function(){
+jQuery('.popup').hide();
+overlay.appendTo(document.body).remove();
+return false;
+});
+
+jQuery('.x').click(function(){
+jQuery('.popup').hide();
+overlay.appendTo(document.body).remove();
+return false;
+});
+
+jQuery('.click').click(function(){
+overlay.show();
+overlay.appendTo(document.body);
+jQuery('.popup').show();
+return false;
+});
+});
+</script>
+<div class='popup' style="background: transparent none repeat scroll 0 0;">
+<div class='content'>
+<!--<img src='http://www.developertips.net/demos/popup-dialog/img/x.png' alt='quit' class='x' id='x' /> -->
+
+<p style="padding:10px;">
+<b>Please call 216-397-8564 to report an issue with your delivery.</b><br/>
+If it is outside of 10a-6p on Monday-Friday, please either leave a voicemail or send an email via our  <a href="http://www.prestofreshgrocery.com/contacts">Contact Us</a> Page. The on call supervisor will receive your message and follow up as needed. Thank you!<br/><br/>
+ <a href='' class="close" style='color:#65ae01;font-family: "Open Sans",sans-serif;font-size:14px; '>Close</a>
+</p>
+</div>
+</div>
+<div class="page-title" style="margin-top:20px;margin-bottom:20px;border: 1px solid #808080;border-radius:11px;    padding: 10px;">
+
+	<h1><?php //echo $this->__('Frequently Asked Questions'); ?></h1>
+	<h1>Need help? No problem! See below for answers to a list of common questions.<br/>If you still have a question, please <a href="http://www.prestofreshgrocery.com/contacts">contact us</a> and we will get back to you shortly! </h1><br/><br>
+	<div id='container'><h3 style="margin-bottom:0px;">Please <a href='' class='click'>click here</a> if you need to report an issue with your delivery.</h3></div>
+	<br/>
+
+</div>
+
+
+
+<?php if ($this->hasFaq()): ?>
+
+
+
+<?php /*?><h2><?php echo $this->__('Questions'); ?></h2>
+<?php */?>
+<?php if ($this->getCategoryCollection()) : ?>
+
+<dl class="faq-list">
+
+    <?php foreach ($this->getCategoryCollection() as $category) : ?>
+
+       <?php /*?> <dt><?php echo $this->htmlEscape($category->getName()); ?></dt><?php */?>
+        <dd><ul class="faq-list">
+
+        <?php foreach ($this->getItemCollectionByCategory($category) as $item) : ?>
+
+            <li>
+
+                <a href="#faq-item-<?php echo $item->getId() ?>">
+
+                    <?php //echo $this->htmlEscape($item->getQuestion()); ?>
+
+                </a>
+
+            </li>
+
+        <?php endforeach; ?>
+
+        </ul></dd>
+
+    <?php endforeach; ?>
+
+</dl>
+
+<?php else : ?>
+
+<ul class="faq-list">
+
+    <?php foreach ($this->getFaqCollection() as $faqItem): ?>
+
+    <li>
+
+        <a href="#faq-item-<?php echo $faqItem->getId() ?>">
+
+            <?php //echo $this->htmlEscape($faqItem->getQuestion()) ?>
+
+        </a>
+
+    </li>
+
+    <?php endforeach; ?>
+
+</ul>
+
+<?php endif; ?>
+
+
+
+
+<style type="text/css">
+.faq-index-index .page-title { margin-left:10px;}
+.main {
+min-height: 458px;
+}
+</style>
+
+<dl class="faq-items" style="margin-left:10px;">
+<div id="accordiona">
+	<?php $i = 1; foreach ($this->getFaqCollection() as $faqItem): ?>
+
+	<h2><dt id="faq-item-<?php echo $faqItem->getId() ?>"><span class="number"><?php echo $i++;?></span><?php echo $this->htmlEscape($faqItem->getQuestion()) ?></dt></h2>
+
+	<div>
+    <dd>
+
+		<?php echo ($faqItem->getAnswerHtml() ? $faqItem->getAnswer() : '<p>' . implode('</p><p>', explode("\n", $this->htmlEscape($faqItem->getAnswer()))) . '</p>') ?>
+
+	</dd>
+	<?php if($this->htmlEscape($faqItem->getQuestion())=='Where do you deliver?') { ?>
+	<div style="text-align:center;"><img src="http://www.prestofreshgrocery.com/skin/frontend/default/theme509/images/map-faq.png" /></div>
+	<?php } ?>
+	</div>
+	<?php  endforeach; ?>
+</div>
+</dl>
+
+<?php else: ?>
+
+<p class="faq-items"><?php echo $this->__('There are no FAQ items at the moment.') ?></p>
+
+<?php endif; ?>
+

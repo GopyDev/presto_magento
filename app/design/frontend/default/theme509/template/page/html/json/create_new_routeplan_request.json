@@ -1,0 +1,162 @@
+{
+  "name": "Example deliveries",
+  "label": "Your label text here",
+  "workingDayStartMin": 0,
+  "horizonDays": 2,
+  "driversSpeedPercent": 100,
+  "trafficProfile": {
+    "name": "Lancaster",
+    "description": "",
+    "trafficRegions": [{
+      "trafficLevelPercent": 50,
+      "region": [{
+        "lat": 34.707610,
+        "lng": -118.175640
+      }, {
+        "lat": 34.708033,
+        "lng": -118.231430
+      }, {
+        "lat": 34.661028,
+        "lng": -118.243618
+      }, {
+        "lat": 34.626004,
+        "lng": -118.216323
+      }, {
+        "lat": 34.631512,
+        "lng": -118.157100
+      }, {
+        "lat": 34.693356,
+        "lng": -118.151950
+      }, {
+        "lat": 34.700130,
+        "lng": -118.161220
+      }]
+    }]
+  },
+  "loadUnitType": "Goods",
+  "loadUnit2Type": "Pounds",
+  "subfleetID": "flt-11111111-2222-3333-4444-555555555555",
+  "orders": [{
+    "name": "Nelson Torgersen",
+    "loadUnits": 1,
+    "loadUnits2": 10,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "43534 Kirkland Ave, Lancaster, CA 93535, USA"
+    },
+    "eligibleDays": [1],
+    "timeWindows": [{
+      "startMin": 510,
+      "stopMin": 540
+    }],
+    "importance": "higher",
+    "skillsInclude": ["plumbing", "powertools"],
+    "skillsExclude": ["landscaping"],
+    "customFields": {
+      "orderID": "XY-1234",
+      "customerID": "AAA-9999",
+      "phoneNumber": "(987) 654-3210"
+    }
+  }, {
+    "name": "Jamie Rozman",
+    "loadUnits": 2,
+    "loadUnits2": 15,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "1027 W Newgrove St, Lancaster, CA 93534, USA"
+    },
+    "eligibleDays": [2],
+    "timeWindows": [{
+      "startMin": 375,
+      "stopMin": 450
+    }]
+  }, {
+    "name": "Jessie Blewett",
+    "loadUnits": 2,
+    "loadUnits2": 18,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "1235 W Kettering St, Lancaster, CA 93534, USA"
+    },
+    "eligibleDays": [1, 2],
+    "timeWindows": [{
+      "startMin": 510,
+      "stopMin": 570
+    }]
+  }, {
+    "name": "Marcie Ocon",
+    "importance": "highest",
+    "loadUnits": 1,
+    "loadUnits2": 7,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "45419 10th St W, Lancaster, CA 93534, USA"
+    },
+    "timeWindows": [{
+      "startMin": 390,
+      "stopMin": 390
+    }]
+  }, {
+    "name": "Earlene Saur",
+    "loadUnits": 2,
+    "loadUnits2": 22,
+    "serviceTimeMin": 0,
+    "location": {
+      "address": "44924 5th St E, Lancaster, CA 93535, USA"
+    },
+    "timeWindows": [{
+      "startMin": 510,
+      "stopMin": 600
+    }]
+  }, {
+    "name": "Clayton Hervey",
+    "loadUnits": 1,
+    "loadUnits2": 4,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "425 E Ave H 11, Lancaster, CA 93535, USA"
+    },
+    "timeWindows": [{
+      "startMin": 540,
+      "stopMin": 600
+    }]
+  }, {
+    "name": "Earnestine Harnett",
+    "loadUnits": 1,
+    "loadUnits2": 7,
+    "serviceTimeMin": 0,
+    "location": {
+      "address": "Earnestine Harnett's front door",
+      "lat": 34.66239,
+      "lng": -118.18351
+    },
+    "timeWindows": [{
+      "startMin": 510,
+      "stopMin": 660
+    }]
+  }, {
+    "name": "Nelson Lufkin",
+    "loadUnits": 3,
+    "loadUnits2": 38,
+    "serviceTimeMin": 0,
+    "location": {
+      "address": "43420 22nd St W, Lancaster, CA 93536, USA"
+    },
+    "timeWindows": [{
+      "startMin": 480,
+      "stopMin": 540
+    }]
+  }, {
+    "name": "Jerri Ertl",
+    "loadUnits": 3,
+    "loadUnits2": 32,
+    "serviceTimeMin": 2,
+    "location": {
+      "address": "44044 36th St W, Lancaster, CA 93536, USA"
+    },
+    "timeWindows": [{
+      "startMin": 450,
+      "stopMin": 510
+    }]
+  }]
+}

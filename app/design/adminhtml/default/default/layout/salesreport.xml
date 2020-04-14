@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<layout>
+	<salesreport_adminhtml_sales_reportmanage>
+        <update handle="salesreport_sales_reportmanage"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales" template="salesreport/reportmanage.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_reportmanage>
+	
+	<salesreport_adminhtml_sales_reportimanage>
+        <update handle="salesreport_sales_reportimanage"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales2" template="salesreport/reportimanage.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_reportimanage>
+	
+	<salesreport_adminhtml_sales_newreport>
+        <update handle="salesreport_sales_newreport"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales4" template="salesreport/newreport.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_newreport>
+	
+	<salesreport_adminhtml_sales_newreport2>
+        <update handle="salesreport_sales_newreport2"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales4" template="salesreport/newreport2.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_newreport2>
+	
+	
+	<salesreport_adminhtml_sales_newreport888>
+        <update handle="salesreport_sales_newreport888"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales4" template="salesreport/newreport888.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_newreport888>
+	
+	
+	<salesreport_adminhtml_sales_proreport>
+        <update handle="salesreport_sales_proreport"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales5" template="salesreport/proreport.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_proreport>
+	
+	<salesreport_adminhtml_sales_ordrshreport>
+        <update handle="salesreport_sales_ordrshreport"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales6" template="salesreport/ordrshreport.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_ordrshreport>
+	
+	<salesreport_adminhtml_sales_ordrshreport5>
+        <update handle="salesreport_sales_ordrshreport5"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales66" template="salesreport/ordrshreport5.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_ordrshreport5>
+	
+	<salesreport_adminhtml_sales_scat>
+        <update handle="salesreport_sales_ordrshreport"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales8" template="salesreport/scat.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_scat>
+	
+	
+	<salesreport_adminhtml_sales_dashreport>
+        <update handle="salesreport_sales_dashreport"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales7" template="salesreport/dashboard.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_dashreport>
+	
+	<salesreport_adminhtml_sales_reportimanager>
+        <update handle="salesreport_sales_reportimanager"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="sales3" template="salesreport/reportimanager.phtml"/>
+        </reference>
+    </salesreport_adminhtml_sales_reportimanager>
+	
+	
+	
+</layout>

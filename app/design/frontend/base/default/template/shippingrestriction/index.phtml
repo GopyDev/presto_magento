@@ -1,0 +1,37 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<h1> Search Shipping Locations </h1>
+<script>
+function Checkshipping()
+{
+		var zipcode = document.getElementById('zipcode').value;
+		jQuery( "#result" ).empty();
+
+		if (zipcode == '')
+		{
+			jQuery("#zipcode").css("border","2px dotted #E84100");return false;
+		}
+		jQuery.ajax({
+		type:"POST",
+		xhrFields: {
+		withCredentials: false
+		},
+		url:"<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>shippingrestriction/index/front",
+		data:{'zipcode':zipcode},
+		success: function (data, status) {
+				jQuery("#zipcode").css("border","none");
+				jQuery( "#result" ).empty(data);
+				jQuery( "#result" ).append(data);
+
+    		},
+		error: function (xhr, desc, err) {
+
+			alert("Error Processing your request!Please try again later!");
+			alert(xhr.toSource());
+			alert("Desc: " + desc + "\nErr:" + err);
+		}
+		});
+}
+</script>
+	<input type="text" id="zipcode">
+	<button onclick="Checkshipping()" title="Continue" class="button" type="button"><span><span>Go</span></span></button>
+	<div id ="result"></div>

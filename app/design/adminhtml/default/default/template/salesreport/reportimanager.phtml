@@ -1,0 +1,1821 @@
+<?php
+     $kbt45=0;
+     $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+     if(isset($_GET["idff"]) && $_GET["idff"] > 0 )
+	 {
+		 $update="update pickerlog set pickerst='".$_GET["picid"]."' where id='".$_GET["idff"]."'";
+         $connection->query($update);
+		 $kbt45=1;
+	 }
+	 if(isset($_GET["datenew"]))
+	 {
+		 $dodate2=explode("/",$_GET["datenew"]);
+		 for($i=1;$i<=9;$i++)
+		 {
+		    if($dodate2[1]>=$i)
+			{
+			   $dodate2[1]="0".$dodate2[1];
+			}
+		 }
+		  $dodate=$dodate2[1]."_".$dodate2[0]."_".$dodate2[2];
+		  $insert="insert into pickerlog set pickerst='".$_GET["workinghours"]."',pickerid='".$_GET["emph"]."',dodate='".$dodate."'";
+		  $connection->query($insert);
+		  $newgreen=1;
+	 }
+	 if(isset($_GET["drivid"]) && isset($_GET["route"]))
+	 {
+		  $update="update route_driver set starttime='".$_GET["starttime"]."',endtime='".$_GET["endtime"]."' where driver_id='".$_GET["drivid"]."' and route='".$_GET["route"]."'";
+          $connection->query($update);
+		  $kbt45=1;
+	 }
+	  if(isset($_GET["semail"]) && isset($_GET["dodate2"]) && isset($_GET["proex"]))
+	 {
+		 $sel_check="select pickerst2 from expenses where semail='".$_GET["semail"]."' and dodate2='".$_GET["dodate2"]."'";
+		 $check=$connection->fetchOne($sel_check);
+		 if($check=="")
+		 {
+		     $update="insert into expenses set pickerst2='".$_GET["proex"]."' ,semail='".$_GET["semail"]."', dodate2='".$_GET["dodate2"]."'";
+         	 $connection->query($update);
+		 	 $kbt46=1;
+		 }
+
+		 else
+		 {
+		 	$update="update expenses set pickerst2='".$_GET["proex"]."' where semail='".$_GET["semail"]."' and dodate2='".$_GET["dodate2"]."'";
+         	$connection->query($update);
+		 	$kbt46=1;
+		 }
+	 }
+	  if(isset($_GET["semail"]) && isset($_GET["dodate2"]) && isset($_GET["supex"]))
+	 {
+		  $sel_check="select pickerst3 from expenses where semail='".$_GET["semail"]."' and dodate2='".$_GET["dodate2"]."'";
+		  $check=$connection->fetchOne($sel_check);
+		  if($check=="")
+		  {
+
+		    $update="insert into expenses set pickerst3='".$_GET["supex"]."' ,semail='".$_GET["semail"]."', dodate2='".$_GET["dodate2"]."'";
+         	$connection->query($update);
+		 	$kbt47=1;
+		  }
+		  else
+ 		  {
+		 	$update="update expenses set pickerst3='".$_GET["supex"]."' where semail='".$_GET["semail"]."' and dodate2='".$_GET["dodate2"]."'";
+         	$connection->query($update);
+		 	$kbt47=1;
+		 }
+	 }
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+		function printp() {
+		    divId = 'op';
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+		function printpd() {
+		    divId = 'opd';
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+<?php 
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+	if(!empty($_REQUEST['from']) ){
+		/*====================== Start Code for Magento Orders Product =====================*/
+		$orders_row = array();
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+		$rr=explode("/",$from);
+		$adate=$rr[1]."_".$rr[0]."_".$rr[2];
+		$adate3=$rr[2]."-".$rr[0]."-".$rr[1];
+		$rr2=explode("/",$to);
+		$adate2=$rr2[1]."_".$rr2[0]."_".$rr2[2];
+		$to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		$from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+		$datetime1 = new DateTime($from_date);
+		$datetime2 = new DateTime($to_date);
+		$interval = $datetime1->diff($datetime2);
+		$kdf =  $interval->format('%R%a');
+	}
+?>
+<div id="anchor-content" class="middle">
+<div class="entry-edit">
+<form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="add_form">
+<?php if($newgreen==1) { ?>
+   <div style="background:green;color:#fff;padding:20px;margin-bottom:10px;">Working hour has been updated successfully.</div>
+<?php } ?>
+<div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Add New Employee</h4>
+            <div class="form-buttons"></div>
+          </div>
+<div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class="required-entry input-text" title="From" value="" id="datenew" name="datenew">
+                      <img style="" title="Select Date" id="datenewb" class="v-middle" alt="" src="http://www.prestofreshgrocery.com/skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "datenew",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "datenewb",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  <tr>
+				  <td class="label"><label for="sales_report_from">Employee<span class="required">*</span></label></td>
+				  <td class="value" >
+				  <select name="emph" id="emph" class="required-entry">
+				  <option value=""> Select </option>
+	 			 <?php
+				 $sql444 = "select * from mg_pickers order by name";
+	             $rows444 = $connection->fetchAll($sql444); 
+				 foreach ($rows444 as $value444) {
+				 if($rows3wr=="")
+				 {
+				   $rows3wr=0;
+				 }
+				 ?>
+				<?php echo $value444["name"]; ?>
+				<option value="<?php echo $value444["id"]; ?>" <?php if($value444["id"]==$_GET["emp"]) { ?> selected <?php } ?> > <?php echo $value444["name"]; ?></option>
+				 <?php } ?>
+				 </select>
+				 </td>
+				 </tr>
+				  <tr>
+                    <td class="label"><label for="workinghours">Working Hours<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class="required-entry input-text" title="Working Hours" value="" id="workinghours" name="workinghours"></td>
+				 </tr>
+				 <tr>
+                    <td class="label"><label for="workinghours">Start Time</label></td>
+                    <td class="value"><select name="starttime" id="starttime">
+                    <option> Select </option>
+					<option value="0900" <?php if($starttime=='0900') { ?> selected <?php } ?> >09:00</option>
+					<option value="0915" <?php if($starttime=='0915') { ?> selected <?php } ?> >09:15</option>
+					<option value="0930" <?php if($starttime=='0930') { ?> selected <?php } ?> >09:30</option>
+					<option value="0945" <?php if($starttime=='0945') { ?> selected <?php } ?> >09:45</option>
+					<option value="1000" <?php if($starttime=='1000') { ?> selected <?php } ?> >10:00</option>
+					<option value="1015" <?php if($starttime=='1015') { ?> selected <?php } ?> >10:15</option>
+					<option value="1030" <?php if($starttime=='1030') { ?> selected <?php } ?> >10:30</option>
+					<option value="1045" <?php if($starttime=='1045') { ?> selected <?php } ?> >10:45</option>
+					<option value="1100" <?php if($starttime=='1100') { ?> selected <?php } ?> >11:00</option>
+					<option value="1115" <?php if($starttime=='1115') { ?> selected <?php } ?> >11:15</option>
+					<option value="1130" <?php if($starttime=='1130') { ?> selected <?php } ?> >11:30</option>
+					<option value="1145" <?php if($starttime=='1145') { ?> selected <?php } ?> >11:45</option>
+					<option value="1200" <?php if($starttime=='1200') { ?> selected <?php } ?> >12:00</option>
+					<option value="1215" <?php if($starttime=='1215') { ?> selected <?php } ?> >12:15</option>
+					<option value="1230" <?php if($starttime=='1230') { ?> selected <?php } ?> >12:30</option>
+					<option value="1245" <?php if($starttime=='1245') { ?> selected <?php } ?> >12:45</option>
+					<option value="1300" <?php if($starttime=='1300') { ?> selected <?php } ?> >13:00</option>
+					<option value="1315" <?php if($starttime=='1315') { ?> selected <?php } ?> >13:15</option>
+					<option value="1330" <?php if($starttime=='1330') { ?> selected <?php } ?> >13:30</option>
+					<option value="1345" <?php if($starttime=='1345') { ?> selected <?php } ?> >13:45</option>
+					<option value="1400" <?php if($starttime=='1400') { ?> selected <?php } ?> >14:00</option>
+					<option value="1415" <?php if($starttime=='1415') { ?> selected <?php } ?> >14:15</option>
+					<option value="1430" <?php if($starttime=='1430') { ?> selected <?php } ?> >14:30</option>
+					<option value="1445" <?php if($starttime=='1445') { ?> selected <?php } ?> >14:45</option>
+					<option value="1500" <?php if($starttime=='1500') { ?> selected <?php } ?> >15:00</option>
+					<option value="1515" <?php if($starttime=='1515') { ?> selected <?php } ?> >15:15</option>
+					<option value="1530" <?php if($starttime=='1530') { ?> selected <?php } ?> >15:30</option>
+					<option value="1545" <?php if($starttime=='1545') { ?> selected <?php } ?> >15:45</option>
+					<option value="1600" <?php if($starttime=='1600') { ?> selected <?php } ?> >16:00</option>
+					<option value="1615" <?php if($starttime=='1615') { ?> selected <?php } ?> >16:15</option>
+					<option value="1630" <?php if($starttime=='1630') { ?> selected <?php } ?> >16:30</option>
+					<option value="1645" <?php if($starttime=='1645') { ?> selected <?php } ?> >16:45</option>
+					<option value="1700" <?php if($starttime=='1700') { ?> selected <?php } ?> >17:00</option>
+					<option value="1715" <?php if($starttime=='1715') { ?> selected <?php } ?> >17:15</option>
+					<option value="1730" <?php if($starttime=='1730') { ?> selected <?php } ?> >17:30</option>
+					<option value="1745" <?php if($starttime=='1745') { ?> selected <?php } ?> >17:45</option>
+					<option value="1800" <?php if($starttime=='1800') { ?> selected <?php } ?> >18:00</option>
+					<option value="1815" <?php if($starttime=='1815') { ?> selected <?php } ?> >18:15</option>
+					<option value="1830" <?php if($starttime=='1830') { ?> selected <?php } ?> >18:30</option>
+					<option value="1845" <?php if($starttime=='1845') { ?> selected <?php } ?> >18:45</option>
+					<option value="1900" <?php if($starttime=='1900') { ?> selected <?php } ?> >19:00</option>
+					<option value="1915" <?php if($starttime=='1915') { ?> selected <?php } ?> >19:15</option>
+					<option value="1930" <?php if($starttime=='1930') { ?> selected <?php } ?> >19:30</option>
+					<option value="1945" <?php if($starttime=='1945') { ?> selected <?php } ?> >19:45</option>
+					<option value="2000" <?php if($starttime=='2000') { ?> selected <?php } ?> >20:00</option>
+					<option value="2015" <?php if($starttime=='2015') { ?> selected <?php } ?> >20:15</option>
+					<option value="2030" <?php if($starttime=='2030') { ?> selected <?php } ?> >20:30</option>
+					<option value="2045" <?php if($starttime=='2045') { ?> selected <?php } ?> >20:45</option>
+					<option value="2100" <?php if($starttime=='2100') { ?> selected <?php } ?> >21:00</option>
+					<option value="2115" <?php if($starttime=='2115') { ?> selected <?php } ?> >21:15</option>
+					<option value="2130" <?php if($starttime=='2130') { ?> selected <?php } ?> >21:30</option>
+					<option value="2145" <?php if($starttime=='2145') { ?> selected <?php } ?> >21:45</option>
+					<option value="2200" <?php if($starttime=='2200') { ?> selected <?php } ?> >22:00</option>
+					<option value="2215" <?php if($starttime=='2215') { ?> selected <?php } ?> >22:15</option>
+					<option value="2230" <?php if($starttime=='2230') { ?> selected <?php } ?> >22:30</option>
+					<option value="2245" <?php if($starttime=='2245') { ?> selected <?php } ?> >22:45</option>
+					<option value="2300" <?php if($starttime=='2300') { ?> selected <?php } ?> >23:00</option>
+					<option value="2315" <?php if($starttime=='2315') { ?> selected <?php } ?> >23:15</option>
+					<option value="2330" <?php if($starttime=='2330') { ?> selected <?php } ?> >23:30</option>
+					<option value="2345" <?php if($starttime=='2345') { ?> selected <?php } ?> >23:45</option>
+					<option value="0100" <?php if($starttime=='0100') { ?> selected <?php } ?> >01:00</option>
+					<option value="0115" <?php if($starttime=='0115') { ?> selected <?php } ?> >01:15</option>
+					<option value="0130" <?php if($starttime=='0130') { ?> selected <?php } ?> >01:30</option>
+					<option value="0145" <?php if($starttime=='0145') { ?> selected <?php } ?> >01:45</option>
+					<option value="0200" <?php if($starttime=='0200') { ?> selected <?php } ?> >02:00</option>
+					<option value="0215" <?php if($starttime=='0215') { ?> selected <?php } ?> >02:15</option>
+					<option value="0230" <?php if($starttime=='0230') { ?> selected <?php } ?> >02:30</option>
+					<option value="0245" <?php if($starttime=='0245') { ?> selected <?php } ?> >02:45</option>
+					<option value="0300" <?php if($starttime=='0300') { ?> selected <?php } ?> >03:00</option>
+					<option value="0315" <?php if($starttime=='0315') { ?> selected <?php } ?> >03:15</option>
+					<option value="0330" <?php if($starttime=='0330') { ?> selected <?php } ?> >03:30</option>
+					<option value="0345" <?php if($starttime=='0345') { ?> selected <?php } ?> >03:45</option>
+					<option value="0400" <?php if($starttime=='0400') { ?> selected <?php } ?> >04:00</option>
+					<option value="0415" <?php if($starttime=='0415') { ?> selected <?php } ?> >04:15</option>
+					<option value="0430" <?php if($starttime=='0430') { ?> selected <?php } ?> >04:30</option>
+					<option value="0445" <?php if($starttime=='0445') { ?> selected <?php } ?> >04:45</option>
+					<option value="0500" <?php if($starttime=='0500') { ?> selected <?php } ?> >05:00</option>
+					<option value="0515" <?php if($starttime=='0515') { ?> selected <?php } ?> >05:15</option>
+					<option value="0530" <?php if($starttime=='0530') { ?> selected <?php } ?> >05:30</option>
+					<option value="0545" <?php if($starttime=='0545') { ?> selected <?php } ?> >05:45</option>
+					<option value="0600" <?php if($starttime=='0600') { ?> selected <?php } ?> >06:00</option>
+					<option value="0615" <?php if($starttime=='0615') { ?> selected <?php } ?> >06:15</option>
+					<option value="0630" <?php if($starttime=='0630') { ?> selected <?php } ?> >06:30</option>
+					<option value="0645" <?php if($starttime=='0645') { ?> selected <?php } ?> >06:45</option>
+					<option value="0700" <?php if($starttime=='0700') { ?> selected <?php } ?> >07:00</option>
+					<option value="0715" <?php if($starttime=='0715') { ?> selected <?php } ?> >07:15</option>
+					<option value="0730" <?php if($starttime=='0730') { ?> selected <?php } ?> >07:30</option>
+					<option value="0745" <?php if($starttime=='0745') { ?> selected <?php } ?> >07:45</option>
+					<option value="0800" <?php if($starttime=='0800') { ?> selected <?php } ?> >08:00</option>
+					<option value="0815" <?php if($starttime=='0815') { ?> selected <?php } ?> >08:15</option>
+					<option value="0830" <?php if($starttime=='0830') { ?> selected <?php } ?> >08:30</option>
+					<option value="0845" <?php if($starttime=='0845') { ?> selected <?php } ?> >08:45</option>
+					</select></td>
+				 </tr>
+				 <tr>
+                    <td class="label"><label for="workinghours">End Time</label></td>
+                    <td class="value"><select name="endtime" id="endtime">
+					<option> Select </option>
+					<option value="0900" <?php if($endtime=='0900') { ?> selected <?php } ?> >09:00</option>
+					<option value="0915" <?php if($endtime=='0915') { ?> selected <?php } ?> >09:15</option>
+					<option value="0930" <?php if($endtime=='0930') { ?> selected <?php } ?> >09:30</option>
+					<option value="0945" <?php if($endtime=='0945') { ?> selected <?php } ?> >09:45</option>
+					<option value="1000" <?php if($endtime=='1000') { ?> selected <?php } ?> >10:00</option>
+					<option value="1015" <?php if($endtime=='1015') { ?> selected <?php } ?> >10:15</option>
+					<option value="1030" <?php if($endtime=='1030') { ?> selected <?php } ?> >10:30</option>
+					<option value="1045" <?php if($endtime=='1045') { ?> selected <?php } ?> >10:45</option>
+					<option value="1100" <?php if($endtime=='1100') { ?> selected <?php } ?> >11:00</option>
+					<option value="1115" <?php if($endtime=='1115') { ?> selected <?php } ?> >11:15</option>
+					<option value="1130" <?php if($endtime=='1130') { ?> selected <?php } ?> >11:30</option>
+					<option value="1145" <?php if($endtime=='1145') { ?> selected <?php } ?> >11:45</option>
+					<option value="1200" <?php if($endtime=='1200') { ?> selected <?php } ?> >12:00</option>
+					<option value="1215" <?php if($endtime=='1215') { ?> selected <?php } ?> >12:15</option>
+					<option value="1230" <?php if($endtime=='1230') { ?> selected <?php } ?> >12:30</option>
+					<option value="1245" <?php if($endtime=='1245') { ?> selected <?php } ?> >12:45</option>
+					<option value="1300" <?php if($endtime=='1300') { ?> selected <?php } ?> >13:00</option>
+					<option value="1315" <?php if($endtime=='1315') { ?> selected <?php } ?> >13:15</option>
+					<option value="1330" <?php if($endtime=='1330') { ?> selected <?php } ?> >13:30</option>
+					<option value="1345" <?php if($endtime=='1345') { ?> selected <?php } ?> >13:45</option>
+					<option value="1400" <?php if($endtime=='1400') { ?> selected <?php } ?> >14:00</option>
+					<option value="1415" <?php if($endtime=='1415') { ?> selected <?php } ?> >14:15</option>
+					<option value="1430" <?php if($endtime=='1430') { ?> selected <?php } ?> >14:30</option>
+					<option value="1445" <?php if($endtime=='1445') { ?> selected <?php } ?> >14:45</option>
+					<option value="1500" <?php if($endtime=='1500') { ?> selected <?php } ?> >15:00</option>
+					<option value="1515" <?php if($endtime=='1515') { ?> selected <?php } ?> >15:15</option>
+					<option value="1530" <?php if($endtime=='1530') { ?> selected <?php } ?> >15:30</option>
+					<option value="1545" <?php if($endtime=='1545') { ?> selected <?php } ?> >15:45</option>
+					<option value="1600" <?php if($endtime=='1600') { ?> selected <?php } ?> >16:00</option>
+					<option value="1615" <?php if($endtime=='1615') { ?> selected <?php } ?> >16:15</option>
+					<option value="1630" <?php if($endtime=='1630') { ?> selected <?php } ?> >16:30</option>
+					<option value="1645" <?php if($endtime=='1645') { ?> selected <?php } ?> >16:45</option>
+					<option value="1700" <?php if($endtime=='1700') { ?> selected <?php } ?> >17:00</option>
+					<option value="1715" <?php if($endtime=='1715') { ?> selected <?php } ?> >17:15</option>
+					<option value="1730" <?php if($endtime=='1730') { ?> selected <?php } ?> >17:30</option>
+					<option value="1745" <?php if($endtime=='1745') { ?> selected <?php } ?> >17:45</option>
+					<option value="1800" <?php if($endtime=='1800') { ?> selected <?php } ?> >18:00</option>
+					<option value="1815" <?php if($endtime=='1815') { ?> selected <?php } ?> >18:15</option>
+					<option value="1830" <?php if($endtime=='1830') { ?> selected <?php } ?> >18:30</option>
+					<option value="1845" <?php if($endtime=='1845') { ?> selected <?php } ?> >18:45</option>
+					<option value="1900" <?php if($endtime=='1900') { ?> selected <?php } ?> >19:00</option>
+					<option value="1915" <?php if($endtime=='1915') { ?> selected <?php } ?> >19:15</option>
+					<option value="1930" <?php if($endtime=='1930') { ?> selected <?php } ?> >19:30</option>
+					<option value="1945" <?php if($endtime=='1945') { ?> selected <?php } ?> >19:45</option>
+					<option value="2000" <?php if($endtime=='2000') { ?> selected <?php } ?> >20:00</option>
+					<option value="2015" <?php if($endtime=='2015') { ?> selected <?php } ?> >20:15</option>
+					<option value="2030" <?php if($endtime=='2030') { ?> selected <?php } ?> >20:30</option>
+					<option value="2045" <?php if($endtime=='2045') { ?> selected <?php } ?> >20:45</option>
+					<option value="2100" <?php if($endtime=='2100') { ?> selected <?php } ?> >21:00</option>
+					<option value="2115" <?php if($endtime=='2115') { ?> selected <?php } ?> >21:15</option>
+					<option value="2130" <?php if($endtime=='2130') { ?> selected <?php } ?> >21:30</option>
+					<option value="2145" <?php if($endtime=='2145') { ?> selected <?php } ?> >21:45</option>
+					<option value="2200" <?php if($endtime=='2200') { ?> selected <?php } ?> >22:00</option>
+					<option value="2215" <?php if($endtime=='2215') { ?> selected <?php } ?> >22:15</option>
+					<option value="2230" <?php if($endtime=='2230') { ?> selected <?php } ?> >22:30</option>
+					<option value="2245" <?php if($endtime=='2245') { ?> selected <?php } ?> >22:45</option>
+					<option value="2300" <?php if($endtime=='2300') { ?> selected <?php } ?> >23:00</option>
+					<option value="2315" <?php if($endtime=='2315') { ?> selected <?php } ?> >23:15</option>
+					<option value="2330" <?php if($endtime=='2330') { ?> selected <?php } ?> >23:30</option>
+					<option value="2345" <?php if($endtime=='2345') { ?> selected <?php } ?> >23:45</option>
+					<option value="0100" <?php if($endtime=='0100') { ?> selected <?php } ?> >01:00</option>
+					<option value="0115" <?php if($endtime=='0115') { ?> selected <?php } ?> >01:15</option>
+					<option value="0130" <?php if($endtime=='0130') { ?> selected <?php } ?> >01:30</option>
+					<option value="0145" <?php if($endtime=='0145') { ?> selected <?php } ?> >01:45</option>
+					<option value="0200" <?php if($endtime=='0200') { ?> selected <?php } ?> >02:00</option>
+					<option value="0215" <?php if($endtime=='0215') { ?> selected <?php } ?> >02:15</option>
+					<option value="0230" <?php if($endtime=='0230') { ?> selected <?php } ?> >02:30</option>
+					<option value="0245" <?php if($endtime=='0245') { ?> selected <?php } ?> >02:45</option>
+					<option value="0300" <?php if($endtime=='0300') { ?> selected <?php } ?> >03:00</option>
+					<option value="0315" <?php if($endtime=='0315') { ?> selected <?php } ?> >03:15</option>
+					<option value="0330" <?php if($endtime=='0330') { ?> selected <?php } ?> >03:30</option>
+					<option value="0345" <?php if($endtime=='0345') { ?> selected <?php } ?> >03:45</option>
+					<option value="0400" <?php if($endtime=='0400') { ?> selected <?php } ?> >04:00</option>
+					<option value="0415" <?php if($endtime=='0415') { ?> selected <?php } ?> >04:15</option>
+					<option value="0430" <?php if($endtime=='0430') { ?> selected <?php } ?> >04:30</option>
+					<option value="0445" <?php if($endtime=='0445') { ?> selected <?php } ?> >04:45</option>
+					<option value="0500" <?php if($endtime=='0500') { ?> selected <?php } ?> >05:00</option>
+					<option value="0515" <?php if($endtime=='0515') { ?> selected <?php } ?> >05:15</option>
+					<option value="0530" <?php if($endtime=='0530') { ?> selected <?php } ?> >05:30</option>
+					<option value="0545" <?php if($endtime=='0545') { ?> selected <?php } ?> >05:45</option>
+					<option value="0600" <?php if($endtime=='0600') { ?> selected <?php } ?> >06:00</option>
+					<option value="0615" <?php if($endtime=='0615') { ?> selected <?php } ?> >06:15</option>
+					<option value="0630" <?php if($endtime=='0630') { ?> selected <?php } ?> >06:30</option>
+					<option value="0645" <?php if($endtime=='0645') { ?> selected <?php } ?> >06:45</option>
+					<option value="0700" <?php if($endtime=='0700') { ?> selected <?php } ?> >07:00</option>
+					<option value="0715" <?php if($endtime=='0715') { ?> selected <?php } ?> >07:15</option>
+					<option value="0730" <?php if($endtime=='0730') { ?> selected <?php } ?> >07:30</option>
+					<option value="0745" <?php if($endtime=='0745') { ?> selected <?php } ?> >07:45</option>
+					<option value="0800" <?php if($endtime=='0800') { ?> selected <?php } ?> >08:00</option>
+					<option value="0815" <?php if($endtime=='0815') { ?> selected <?php } ?> >08:15</option>
+					<option value="0830" <?php if($endtime=='0830') { ?> selected <?php } ?> >08:30</option>
+					<option value="0845" <?php if($endtime=='0845') { ?> selected <?php } ?> >08:45</option>
+								</select></td>
+				 </tr>
+				 <tr>
+				 <td></td>
+				 <td class="value" ><button style="" onclick="addFormSubmit.submit()" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Add Hours</span></button></td>
+				 </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+		  </form>
+      </div>
+	  <script type="text/javascript">
+       	 //<![CDATA[
+        	var addFormSubmit  = new varienForm('add_form');
+         //]]>
+      </script> 
+  <div id="page:main-container">
+    <div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Employee Report");?></h3></td>
+            <td class="form-buttons"><button style="" onclick="filterFormSubmit.submit()" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Show Report</span></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <?php /*?><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><?php */?>
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Start Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $from; ?>" id="sales_report_from" name="from" />
+                      <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_from",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_from_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  <tr>
+                    <td class="label"><label for="sales_report_from">End Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $to; ?>" id="sales_report_to" name="to" />
+                      <img style="" title="Select Date" id="sales_report_to_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_to",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_to_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  <tr>
+				  <td class="label"><label for="sales_report_from">Employee<span class="required">*</span></label></td>
+				  <td>
+				    <select name="emp" id="emp">
+					<option value=""> All </option>
+					 <?php
+					 $sql444 = "select * from mg_pickers order by name";
+					 $rows444 = $connection->fetchAll($sql444); 
+					 foreach ($rows444 as $value444) {
+					 if($rows3wr=="")
+					 {
+					   $rows3wr=0;
+					 }
+					 ?>
+					<?php echo $value444["name"]; ?>
+					<option value="<?php echo $value444["id"]; ?>" <?php if($value444["id"]==$_GET["emp"]) { ?> selected <?php } ?> > <?php echo $value444["name"]; ?></option>
+					 <?php } ?>
+					 </select>
+				 </td>
+				 </tr>
+				 <tr>
+				  <td class="label"><label for="sales_report_from">Send Emails to Pickers</label></td>
+				  <td>
+				    <input type="checkbox" name="sep" id="sep" value="1" <?php if(isset($_GET["sep"]) && $_GET["sep"]==1 ) { ?> checked <?php } ?> > Send Emails 
+				 </td>
+				 </tr>
+				 <tr>
+				  <td class="label"><label for="sales_report_from">Send Emails to Driver</label></td>
+				  <td>
+				    <input type="checkbox" name="dep" id="dep" value="1" <?php if(isset($_GET["dep"]) && $_GET["dep"]==1 ) { ?> checked <?php } ?> > Send Emails 
+				 </td>
+				 </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	<?php
+	  if(!empty($_REQUEST['from']) ){
+	?>
+	<style>
+	.page
+	{
+	   width:90%;
+	}
+	td, th 
+	{
+	   padding-top:5px !important;
+	   padding-left:5px !important;
+	   padding-right:5px !important;
+	   padding-bottom:5px !important;
+	}
+	table
+	{
+	   border-collapse:collapse;
+	}
+	</style>
+	 <script type="text/javascript">
+		function divprintlove(id)
+		{
+            var divContents = jQuery("#div-"+id).html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title> </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+	<table style="color:#000;width:100%;text-align:center;" border="0">
+	<tr><td style="text-align:center;font-weight:bold;font-size:18px;">Picker Scorecard</td></tr>
+	<tr>
+	<td>
+	<div>
+	<table style="color:#000;width:100%;text-align:center;" border="1">
+	<tr>
+	<th>Picker</th>
+	<th>Orders Packed</th>
+	<th>Item Packed</th>
+	<th>Error Reported</th>
+	<th> % Perfect Packing </th>
+	<th> % Perfect Orders </th>
+	<th> Customer Satisfication (1-10)</th>
+	</tr>
+	 <?php
+				    if(isset($_GET["emp"]) && $_GET["emp"] > 0 )
+				    {
+				        $sql3 = "select * from mg_pickers where id = '".$_GET["emp"]."'";
+				    }
+				    else
+				    {
+				         $sql3 = "select * from mg_pickers order by name";
+				    }
+					$rows3 = $connection->fetchAll($sql3); 
+					$jpeg=0;
+					$emails="";
+				    foreach ($rows3 as $value3) {
+							 $items=0;
+							 $totalbc=0;
+							 $total_del=0;
+							 $terror=0;
+							 $errors = 0 ;
+							 $error_data="";
+							 $errorinorder=0;
+							 $biggestpro=0;
+							 $pp=0;
+							 $rating_count=0;
+							 $rating_per=0;
+
+						  for($i=0;$i<=$kdf;$i++){
+							$Date1 = $adate3;
+							$date = new DateTime($Date1);
+							$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+							$kbt = $date->format('d_m_Y');
+							$nod_sel = "SELECT count(order_number) FROM mg_order_picker where picker_id='".$value3["id"]."' and window LIKE '%".$kbt."' and order_number>=1";
+		                    $nod = $connection->fetchOne($nod_sel);
+							if($nod>=1)
+							{
+							$sel_two="select order_number,items,order_id from mg_order_picker where picker_id='".$value3["id"]."' and window LIKE '%".$kbt."' and order_number>=1";
+							$two = $connection->fetchAll($sel_two);
+							   foreach ($two as $tval) {
+							      $items = $items + $tval["items"];
+								  $sel_items2="select item_id from mg_sales_flat_order_item where order_id='".$tval["order_id"]."' and txtref!=''";				  
+								  $items2 = $connection->fetchAll($sel_items2);
+								  $sel_rating="select survey_result_id from mg_survey_result where survey_qn_id=1 and order_id='".$tval["order_number"]."' and picker_id='".$value3["id"]."' group by order_id";
+								  $rating_id=$connection->fetchOne($sel_rating);
+								  
+								  if($rating_id!="")
+								  {
+								     $rating_count = $rating_count + 1;
+									 $sel_total="select survey_result_value from mg_survey_result_value where survey_result_id='".$rating_id."'";
+									 $total_point=$connection->fetchOne($sel_total);
+									 $sel_total2="select survey_ans_title from mg_survey_answer where survey_ans_qn_id=1 and survey_ans_id='".$total_point."'";
+									 $total_point2=$connection->fetchOne($sel_total2);
+									 $rating_per = $rating_per + $total_point2;
+								  }
+
+					              $sel_items2="select item_id,txtref from mg_sales_flat_order_item where order_id='".$tval["order_id"]."'";
+								  $items2 = $connection->fetchAll($sel_items2);
+								  $grro=0;
+								  foreach ($items2 as $tval2) {
+								             if($tval2["txtref"]!="")
+											 {
+												   $errors = $errors + 1;
+												   $error_data.=$tval2["item_id"].",";
+												   $grro=1;
+											 }
+								  }
+								  if($grro==1)
+								  {
+									 $errorinorder = $errorinorder + 1;
+								  }
+							   }
+							$total_del = $total_del + $nod;
+							$terror = $errors;
+							}
+						}	
+						if($total_del>0)
+						{
+						   $biggestpro = $total_del - $errorinorder;
+						   $pp = $items - $errors;
+						   $hocky = round(($rating_per/$rating_count),2);
+						   
+						   if($hocky==0)
+						   {
+						      $hocky='n/a';
+						   }
+						?>
+						<tr>
+						<td style="text-align:left;">
+						<a href="javascript:void(0);" onClick="showrr('<?php echo $value3["id"]; ?>p');" style="font-weight:bold;">
+						<?php echo $value3["name"]; ?>
+						</a>
+						</td>
+						<td style="text-align:left;"> <?php echo $total_del; ?></td>
+						<td style="text-align:left;"><?php echo $items; ?></td>
+						<td style="text-align:left;"><?php echo $terror; ?></td>
+						<td style="text-align:left;">(<?php echo $pp; ?>) <?php echo round(($pp/$items)*100,2) ; ?>% </td>
+						<td style="text-align:left;">(<?php echo $biggestpro; ?>) <?php echo round(($biggestpro/$total_del)*100,2) ; ?>% </td>				
+						<td style="text-align:left;"><?php echo $hocky; ?></td>
+						</tr>
+						<?php 
+						    $pp = $items - $terror;
+							$jemp = explode(",",$error_data);
+						    $result = array_unique($jemp);
+						    $kk=sizeof($result)-1;
+							$jempo = round($rating_per/$rating_count,2);
+							if($jempo==0)
+						   {
+						      $jempo='n/a';
+						   }
+						?>
+						<tr id="tbl-<?php echo $value3["id"]; ?>p"  style="display:none;" >
+						<td colspan="9" style="text-align:left;" > 
+						<div id="aid-<?php echo $value3['id']; ?>"><a href="javascript:void(0);" onClick="divprintlove('<?php echo $value3["id"]; ?>');"> Print </a></div> 
+						<div id="div-<?php echo $value3["id"]; ?>" >
+						<?php $emails.=$value3["email"].","; ?>
+						<?php $mailbody = '<table border=1 cellpadding="6" cellspacing="5" style="border-collapse:collapse;" name="tbl-'.$value3["id"].'" >
+						<tr><td style="text-align:center;font-size:14px;font-weight:bold;" colspan="6">'.$value3["name"].' ( '.$_GET["from"].' to '.$_GET["to"].' )</td></tr>
+						<tr>
+						 <td style="text-align:left;" colspan="6" > 
+						 <table style="border-collapse:collapse;width:98%;" border="1">
+						 <tr>
+						 <td style="text-align:center;" > <b> Orders </b> </td>
+						 <td style="text-align:center;" > <b> Items </b> </td>
+						 <td style="text-align:center;" > <b> Errors </b> </td>
+						 <td style="text-align:center;" > <b> Perfect Packing </b></td>
+						 <td style="text-align:center;" > <b> Perfect Orders </b> </td>
+						 <td style="text-align:center;" > <b> Customer Satisfication (1-10) </b> </td>
+						</tr>
+						 <tr>
+						 <td style="text-align:center;" >'.$total_del.'</td>
+						 <td style="text-align:center;" >'.$items.'</td>
+						 <td style="text-align:center;" >'.$terror.'</td>
+						 <td style="text-align:center;" > ('.$pp.') '.round(($pp/$items)*100,2).'% </td>
+						 <td style="text-align:center;" > ('.$biggestpro.')'.round(($biggestpro/$total_del)*100,2).'% </td>
+                         <td style="text-align:center;" >'.$jempo.'</td> 
+						</tr>
+						</table></td>
+						</tr>';
+						
+						if($kk>=1) {
+						
+						$mailbody.='<tr>
+						<td style="padding:5px;font-weight:bold;width:90px;">Order Number</td>
+						<td style="padding:5px;font-weight:bold;width:90px;">Customer Name</td>
+						<td style="padding:5px;font-weight:bold;width:130px">Item</td>
+						<td style="padding:5px;font-weight:bold;width:150px;">Error Category.</td>
+						<td style="padding:5px;font-weight:bold;width:150px;">Error.</td>
+                       </tr>';
+					   
+					   }
+					   else
+					   {
+					    
+						$mailbody.='<tr>
+						<td colspan="4" style="text-align:center;" > <b> No Error Reported ! </b> </td>
+                       </tr>';
+					   
+					   }
+					          for($l=0;$l<=$kk;$l++)
+							  {
+							      if($result[$l]!="")
+								  {
+								      $sqlstatus  = "SELECT name FROM mg_sales_flat_order_item  where item_id='".$result[$l]."'";
+					                  $number["name"] = $connection->fetchOne($sqlstatus);
+									  $sqlstatus  = "SELECT selref FROM mg_sales_flat_order_item  where item_id='".$result[$l]."'";
+					                  $number["selref"] = $connection->fetchOne($sqlstatus);
+									  $sqlstatus  = "SELECT order_id FROM mg_sales_flat_order_item  where item_id='".$result[$l]."'";
+					                  $number["order_id"] = $connection->fetchOne($sqlstatus);
+									  $sqlstatus  = "SELECT txtref FROM mg_sales_flat_order_item  where item_id='".$result[$l]."'";
+					                  $number["txtref"] = $connection->fetchOne($sqlstatus);
+									  $order22 = Mage::getModel('sales/order')->load($number["order_id"]);
+									  $shipping_info = $order22->getShippingAddress()->getData();
+									  $mistake1[$jpeg] = $order22->getIncrementId();
+									  $mistake2[$jpeg] = $shipping_info['firstname']." ".$shipping_info['lastname'];
+									  $mistake3[$jpeg] = $number["name"];
+									  $mistake4[$jpeg] = $number["selref"];
+									  $mistake5[$jpeg] = $number["txtref"];
+									  $jpeg = $jpeg + 1;
+										$mailbody.='<tr>
+										<td>'.$order22->getIncrementId().'</td>
+										<td>'.$shipping_info['firstname']." ".$shipping_info['lastname'].'</td>
+										<td>'.$number["name"].'</td>
+										<td>'.$number["selref"].'</td>
+										<td>'.$number["txtref"].'</td>
+										</tr>';
+
+										 }} 
+										$mailbody.='</table>';
+										?>
+										<?php echo $mailbody; ?>
+										<?php
+										if(isset($_GET["sep"]) && $_GET["sep"]==1 ) {
+										 $to = $value3["email"];
+										 $subject = 'Your Scorecard (Picker) at Prestofresh';
+										 $message = $mailbody;
+										 $headers = 'MIME-Version: 1.0' . "\r\n";
+                                         $headers.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+										 $headers .= 'Bcc: steve@prestofreshgrocery.com' . "\r\n";
+										 mail($to, $subject, $message, $headers);
+										 }
+                                       ?>
+										</div>
+										</td>
+										</tr>
+						<?php }}?>
+	</table>			   
+	</div>			   
+	</td>		
+	</tr>	   
+	</table>
+	<a href="javascript:void(0);" onClick="showallpmis();" style="font-weight:bold;margin-top:10px;margin-left:5px;display:block;">View All Picker Mistake</a>
+	<div id="allmistakepickerd" style="display:none;">
+	<a href="javascript:void(0);" onClick="printp();" style="font-weight:bold;margin-top:5px;margin-left:5px;display:block;">Print</a>
+	<br/>
+	                   <div id="op">
+					   <?php
+					   $allmistake='<table style="color:#000;width:100%;text-align:center;border-collapse:collapse;" border="1" id="allmistakepickertbl">
+					   <tr>
+					   <td colspan="5" style="padding:5px;font-weight:bold;"> Picker Mistake(s) Report at Prestofresh ( '.$_GET["from"].' to '.$_GET["to"].' ) </td>
+					   </tr>';
+					   
+					   if($jpeg>=1) {
+						$allmistake.='<tr>
+						<td style="padding:5px;font-weight:bold;width:90px;">Order Number</td>
+						<td style="padding:5px;font-weight:bold;width:90px;">Customer Name</td>
+						<td style="padding:5px;font-weight:bold;width:130px">Item</td>
+						<td style="padding:5px;font-weight:bold;width:150px;">Error Category.</td>
+						<td style="padding:5px;font-weight:bold;width:150px;">Error.</td>
+                       </tr>';
+					   }
+					   else
+					   {
+						$allmistake.='<tr>
+						<td colspan="4" style="text-align:center;" > <b> No Error Reported ! </b> </td>
+                       </tr>';
+					   }
+	                    
+					         for($l=0;$l<=$jpeg-1;$l++)
+							   {
+						                $allmistake.='<tr>
+										<td>'.$mistake1[$l].'</td>
+										<td>'.$mistake2[$l].'</td>
+										<td>'.$mistake3[$l].'</td>
+										<td>'.$mistake4[$l].'</td>
+										<td>'.$mistake5[$l].'</td>
+										</tr>';
+						        } 
+	                   $allmistake.='</table>';
+					   echo $allmistake; 
+					   $ae=explode(",",$emails);
+					   for($rl=0;$rl<=sizeof($ae);$rl++)
+					   {
+					      if($ae[$rl]!="")
+						  {
+							  if(isset($_GET["sep"]) && $_GET["sep"]==1 ) {
+
+							            $to = $ae[$rl];
+										$subject = 'Picker Mistake Report at Prestofresh';
+										$message = $allmistake;
+										$headers = 'MIME-Version: 1.0' . "\r\n";
+                                        $headers.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                                        $headers .= 'Bcc: steve@prestofreshgrocery.com' . "\r\n";
+										mail($to, $subject, $message, $headers);
+								}
+						  }
+					   }
+					   ?>
+					   </div>
+					   </div>
+	<br/>
+	<br/>
+	<table style="color:#000;width:100%;text-align:center;" border="0">
+	<tr><td style="text-align:center;font-weight:bold;font-size:18px;">Driver Scorecard</td></tr>
+	<tr>
+	<td>
+	<div>
+	<table style="color:#000;width:100%;text-align:center;" border="1">
+	<tr>
+	<th>Driver Name</th>
+	<th>Working Hours</th>
+	<th>Total Tip</th>
+	<th>Avg Cost / Delivery</th>
+	<th>No of Deliveries</th>
+	<th> % On Time </th>
+	<th> Errors Reported </th>
+	<th> Perfect Deliveries (%) </th>
+	<th> Customer Satisfication (1-10) </th>
+	</tr>
+	 <?php
+				    if(isset($_GET["emp"]) && $_GET["emp"] > 0 )
+				    {
+				        $sql3 = "select * from mg_pickers where id = '".$_GET["emp"]."'";
+				    }
+				    else
+				    {
+				         $sql3 = "select * from mg_pickers order by name";
+				    }
+					$gjk = 0;
+					$emails="";
+					$rows3 = $connection->fetchAll($sql3); 
+				    foreach ($rows3 as $value3) {
+							 $totalb=0;
+							 $totalbc=0;
+							 $totaltip=0;
+							 $total_del=0;
+							 $total_late_del=0;
+						     $avg_cost=0;
+						     $total_late_del_window=0;
+						     $tbz=0;
+						     $bgh=0;
+							 $perfect=0;
+							 $orders="";
+							 $rating_count=0;
+							 $rating_per=0;
+						  for($i=0;$i<=$kdf;$i++){
+							$Date1 = $adate3;
+							$date = new DateTime($Date1);
+							$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+							$kbt = $date->format('d_m_Y');
+							$sql2gkr = "SELECT work_hour FROM route_driver where driver_id='".$value3["id"]."' and dodate LIKE '%".$kbt."'";
+		                    $rows2gkr = $connection->fetchOne($sql2gkr);
+							$nod_sel = "SELECT count(id) FROM mg_shipping_delivery_window where driver_email='".$value3["email"]."' and window LIKE '%".$kbt."' and order_number!=''";
+		                    $nod = $connection->fetchOne($nod_sel);
+							$nod_sele = "SELECT count(id) FROM mg_shipping_delivery_window where driver_email='".$value3["email"]."' and window LIKE '%".$kbt."' and order_number!='' and popup <= -1 and nowtime!='0000-00-00 00:00:00'";
+		                    $node = $connection->fetchOne($nod_sele);
+							if($nod>=1)
+							{
+							$sel_two="select rt,order_number from mg_shipping_delivery_window where driver_email='".$value3["email"]."' and window LIKE '%".$kbt."'";
+							   $two = $connection->fetchAll($sel_two);
+							   foreach ($two as $tval) {
+							          $sqlstatus  = "SELECT nowtime FROM drivlist  where ordernumber='".$tval["order_number"]."'";
+					                  $number["nowtime"] = $connection->fetchOne($sqlstatus);
+									  $sel_bzr = "SELECT count(id) FROM mg_shipping_delivery_window where order_number='".$tval["order_number"]."' and drivermistake!=''";
+									  $sel_rating="select survey_result_id from mg_survey_result where survey_qn_id=5 and order_id='".$tval["order_number"]."' and driver_id='".$value3["id"]."' group by order_id";
+								  $rating_id=$connection->fetchOne($sel_rating);
+								  if($rating_id!="")
+								  {
+								     $rating_count = $rating_count + 1;
+									 $sel_total="select survey_result_value from mg_survey_result_value where survey_result_id='".$rating_id."'";
+									 $total_point=$connection->fetchOne($sel_total);
+									 $sel_total2="select survey_ans_title from mg_survey_answer where survey_ans_qn_id=5 and survey_ans_id='".$total_point."'";
+									 $total_point2=$connection->fetchOne($sel_total2);
+									 $rating_per = $rating_per + $total_point2;
+								  }
+										$bzr = $connection->fetchOne($sel_bzr);
+										$bgh = $bgh + $bzr;
+							         $temp1=explode("-",$tval["rt"]);
+							         $time = $temp1[1] ; 
+								     $estt=date("H:i", strtotime($time));
+								     $estt = $estt.":00";
+								     $estt=strtotime($estt);
+									 $temp2=explode(" ",$number["nowtime"]);
+									 $time2 = $temp2[1] ; 
+									 $estt2=strtotime($time2);
+								     $diff = $estt - $estt2;
+								   if($diff<0)
+								   {
+								      $tbz = $tbz + 1;
+									  $orders.=$tval["order_number"].",";
+								   }
+									if($bzr>=1)
+									{
+									   $orders.=$tval["order_number"].",";
+									}
+							   }
+							$total_late_del_window = $total_late_del_window + $tbz ;
+							$total_del = $total_del + $nod;
+							$totalbc = $totalbc + $rows2gkr;
+							$sql2gkrrr = "SELECT tip FROM route_driver where driver_id='".$value3["id"]."' and dodate LIKE '%".$kbt."'";
+		                    $rkrrr = $connection->fetchOne($sql2gkrrr);
+							$totaltip = $totaltip + $rkrrr ;
+							}
+							$ontimed=$total_del-$tbz;
+							$perfect = $total_del-$bgh;
+						}	
+						$kk = 0;
+						if($totalbc>0)
+						{
+						    $avg_cost = ($totalbc*10) / $total_del ;
+						    $jemp = explode(",",$orders);
+							$result = array_unique($jemp);
+							$kk=sizeof($result)-1;
+							$ho=round(($ontimed/$total_del)*100,2);
+							$ho2=round(($perfect/$total_del)*100,2);
+							$ho3=$total_del-$bgh;
+							$spd=round(($rating_per/$rating_count),2);
+							if($spd==0)
+							{
+							  $spd = "n/a";
+							}
+						?>
+						<tr>
+						<td style="text-align:left;">
+						<a href="javascript:void(0);" onClick="showrr('<?php echo $value3["id"]; ?>');" style="font-weight:bold;">
+						<?php echo $value3["name"]; ?>
+						</a>
+						</td>
+						<td style="text-align:left;"><?php echo $totalbc; ?></td>
+						<td style="text-align:left;">$<?php echo $totaltip; ?></td>
+						<td style="text-align:left;">$<?php echo round($avg_cost,2); ?></td>
+						<td style="text-align:left;"><?php echo $total_del; ?></td>
+						<td style="text-align:left;">( <?php echo $ontimed; ?> ) <?php echo round(($ontimed/$total_del)*100,2) ; ?>%</td>					<td style="text-align:left;"><?php echo $bgh; ?></td>
+						<td style="text-align:left;">( <?php echo $total_del-$bgh; ?> ) <?php echo round(($perfect/$total_del)*100,2) ; ?>%</td>				<td style="text-align:left;"><?php echo $spd ; ?></td>
+						</tr>
+						<?php 
+						$grt = round($rating_per/$rating_count,2);
+						if($grt==0)
+						{
+						  $grt = "n/a";
+						}
+						?>
+						<tr id="tbl-<?php echo $value3["id"]; ?>"  style="display:none;" >
+						<td colspan="9" style="text-align:left;" > 
+						<div id="aid-<?php echo $value3['id']; ?>"><a href="javascript:void(0);" onClick="divprintlove('<?php echo $value3["id"]; ?>');"> Print </a></div> 
+						<div id="div-<?php echo $value3["id"]; ?>" >
+						<?php $emails.=$value3["email"].","; ?>
+						<?php
+						$tmistake='<table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;" name="tbl-'.$value3["id"].'" >
+						<tr><td style="text-align:center;font-size:14px;font-weight:bold;" colspan="9">'.$value3["name"].'( '.$_GET["from"].' to '.$_GET["to"].')</td></tr>
+						<tr><td style="text-align:center;font-size:14px;font-weight:bold;" colspan="9">
+						<table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;width:98%;" >
+						<tr><td style="text-align:center;"> <b> Hours </b> </td>
+						<td style="text-align:center;"> <b> Total Tip </b> </td>
+						<td style="text-align:center;"> <b> Avg Cost </b> </td>
+						<td style="text-align:center;"> <b> Deliveries </b> </td>
+						<td style="text-align:center;"> <b> % On Time </b> </td>
+						<td style="text-align:center;"> <b> Perfect Deliveries (%) </b> </td>
+						<td style="text-align:center;"> <b> Customer Satisfication (1-10)</b> </td>
+						</tr>
+						<tr>
+						<td style="text-align:center;">'.$totalbc.'</td>
+						<td style="text-align:center;">$'.$totaltip.'</td>
+						<td style="text-align:center;">$'.round($avg_cost,2).'</td>
+						<td style="text-align:center;">'.$total_del.'</td>
+						<td style="text-align:center;">('.$ontimed.') '.$ho.' %</td>
+						<td style="text-align:center;">('.$ho3.') '.$ho2.' %</td>
+<td style="text-align:center;">'.$grt.'</td>
+						</tr>
+						</table>
+						</td></tr>';
+						
+						if($kk>=1) {
+						$tmistake.='<tr>
+						  <td style="padding:5px;font-weight:bold;width:87px;">Time Window</td>
+						  <td style="padding:5px;font-weight:bold;width:90px;">Customer Name</td>
+						  <td style="padding:5px;font-weight:bold;width:130px">Address</td>
+						  <td style="padding:5px;font-weight:bold;width:80px;">Order Number</td>
+						  <td style="padding:5px;font-weight:bold;width:150px;">Driver Note</td>
+						  <td style="padding:5px;font-weight:bold;width:150px;">Error.</td>
+						  <td style="padding:5px;font-weight:bold;width:50px;">ETA</td>
+						  <td style="padding:5px;font-weight:bold;width:85px;">Delivery Time</td>
+                       </tr>';
+					   }
+					   else
+					   {
+						$tmistake.='<tr>
+						<td colspan="8" style="text-align:center;" > <b> No Error Reported ! </b> </td>
+                       </tr>';
+					   }
+					           for($l=0;$l<=$kk;$l++)
+							    {
+							      if($result[$l]!="")
+								  {
+								     $sqlstatus  = "SELECT dnote FROM drivlist  where ordernumber='".$result[$l]."'";
+					                  $number["dnote"] = $connection->fetchOne($sqlstatus);
+									  $sqlstatus  = "SELECT nowtime FROM drivlist  where ordernumber='".$result[$l]."'";
+					                  $number["nowtime"] = $connection->fetchOne($sqlstatus);
+									  $ntime=explode(" ",$number["nowtime"]);
+					                  $ntime2=date("g:i a", strtotime($ntime[1]));
+									  $sqlstatus  = "SELECT rt FROM mg_shipping_delivery_window  where order_number='".$result[$l]."'";
+					                  $number["rt"] = $connection->fetchOne($sqlstatus);
+									  $sqlstatus  = "SELECT estt FROM mg_shipping_delivery_window  where order_number='".$result[$l]."'";
+					                  $number["estt"] = $connection->fetchOne($sqlstatus);
+									  $sqlstatus  = "SELECT drivermistake FROM mg_shipping_delivery_window  where order_number='".$result[$l]."'";
+					                  $number["drivermistake"] = $connection->fetchOne($sqlstatus);
+									  $order22 = Mage::getModel('sales/order')->load($result[$l], 'increment_id');
+									  $shipping_info = $order22->getShippingAddress()->getData();
+									  if($number["drivermistake"]!="")
+									  {
+										  $mistake1[$gjk] = $number["rt"];
+										  $mistake2[$gjk] = $shipping_info['firstname']." ".$shipping_info['lastname'];
+										  $mistake3[$gjk] =  $shipping_info["street"]."  ".$shipping_info["city"]."  ". $shipping_info["region"]."  ".$shipping_info["postcode"];
+										  $mistake4[$gjk] = $result[$l];
+										  $mistake5[$gjk] = $number["dnote"];
+										  $mistake6[$gjk] = $number["drivermistake"];
+										  $mistake7[$gjk] = $number["estt"];
+										  $mistake8[$gjk] = $ntime2;
+										  $gjk = $gjk +1 ;
+									  }
+										$tmistake.='<tr>
+										<td>'.$number["rt"].'</td>
+										<td>'.$shipping_info['firstname']." ".$shipping_info['lastname'].'</td>
+										<td>'.$shipping_info["street"]." ".$shipping_info["city"]." ".$shipping_info["region"]." ".$shipping_info["postcode"].'</td>
+										<td>'.$result[$l].'</td>
+										<td>'.$number["dnote"].'</td>
+										<td>'.$number["drivermistake"].'</td>
+										<td>'.$number["estt"].'</td>
+										<td>'.$ntime2.'</td>
+										</tr>';
+											}
+										} 
+										$tmistake.='</table>';
+										echo $tmistake; ?>
+										<?php
+										if(isset($_GET["dep"]) && $_GET["dep"]==1 ) {
+												$to = $value3["email"];
+												$subject = 'Your Scorecard (Driver) at Prestofresh';
+												$message = $tmistake;
+												$headers = 'MIME-Version: 1.0' . "\r\n";
+												$headers.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+												$headers .= 'Bcc: steve@prestofreshgrocery.com' . "\r\n";
+										        mail($to, $subject, $message, $headers);
+										 }
+                                       ?>
+										</div>
+										</td>
+										</tr>
+						<?php  } } ?>
+	</table>			   
+	</div>			   
+	</td>		
+	</tr>	   
+	</table>
+	<a href="javascript:void(0);" onClick="showallpmisd();" style="font-weight:bold;margin-top:10px;margin-left:5px;display:block;">View All Driver Mistake</a>
+	<div id="allmistakepickerdd" style="display:none;">
+	<a href="javascript:void(0);" onClick="printpd();" style="font-weight:bold;margin-top:5px;margin-left:5px;display:block;">Print</a>
+	<br/>
+	                   <div id="opd">
+					   <?php
+					   $dallmistake='<table style="color:#000;width:100%;text-align:center;border-collapse:collapse;" border="1" id="allmistakepickertbld">
+                        <tr>
+					   <td colspan="8" style="padding:5px;font-weight:bold;"> Driver Mistake(s) Report at Prestofresh ( '.$_GET["from"].' to '.$_GET["to"].' ) </td>
+					   </tr>';
+					   if($gjk>=1) {
+						$dallmistake.='<tr>
+						  <td style="padding:5px;font-weight:bold;width:87px;">Time Window</td>
+						  <td style="padding:5px;font-weight:bold;width:90px;">Customer Name</td>
+						  <td style="padding:5px;font-weight:bold;width:130px">Address</td>
+						  <td style="padding:5px;font-weight:bold;width:80px;">Order Number</td>
+						  <td style="padding:5px;font-weight:bold;width:150px;">Driver Note</td>
+						  <td style="padding:5px;font-weight:bold;width:150px;">Error.</td>
+						  <td style="padding:5px;font-weight:bold;width:50px;">ETA</td>
+						  <td style="padding:5px;font-weight:bold;width:85px;">Delivery Time</td>
+                       </tr>';
+					   }
+					   else
+					   {
+						$dallmistake.='<tr>
+						<td colspan="8" style="text-align:center;" > <b> No Error Reported ! </b> </td>
+                       </tr>';
+					   }
+					   
+					         for($l=0;$l<=$gjk-1;$l++)
+							 {
+						                $dallmistake.='<tr>
+										<td>'.$mistake1[$l].'</td>
+										<td>'.$mistake2[$l].'</td>
+										<td>'.$mistake3[$l].'</td>
+										<td>'.$mistake4[$l].'</td>
+										<td>'.$mistake5[$l].'</td>
+										<td>'.$mistake6[$l].'</td>
+										<td>'.$mistake7[$l].'</td>
+										<td>'.$mistake8[$l].'</td>
+										</tr>';
+						     } 
+	                   $dallmistake.='</table>';
+					   echo $dallmistake; 
+					   $ae=explode(",",$emails);
+					   for($rl=0;$rl<=sizeof($ae);$rl++)
+					   {
+					      if($ae[$rl]!="")
+						  {
+							  if(isset($_GET["dep"]) && $_GET["dep"]==1 ) {
+							            $to = $ae[$rl];
+										$subject = 'Driver Mistake Report at Prestofresh';
+										$message = $dallmistake;
+										$headers = 'MIME-Version: 1.0' . "\r\n";
+                                        $headers.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                                        $headers .= 'Bcc: steve@prestofreshgrocery.com' . "\r\n";
+										mail($to, $subject, $message, $headers);
+								}
+						  }
+
+					   }
+					   ?>
+					   </div>
+					   </div>
+	<br/>
+	<br/>
+	<?php
+		 $rdate = explode("_",$adate);
+		 $opdate = $rdate[1]."-".$rdate[0]."-".$rdate[2];
+		 $bpil = 0;
+	?><br/><br/>
+    <div id="divlove">	  
+    <div id="dvContainer">
+	<?php function timeDiff($firstTime,$lastTime){
+   // convert to unix timestamps
+   $firstTime=strtotime($firstTime);
+   $lastTime=strtotime($lastTime);
+   // perform subtraction to get the difference (in seconds) between times
+   $timeDiff=$lastTime-$firstTime;
+   // return the difference
+   return $timeDiff;
+} ?>
+
+		 <?php if($kbt45==1)
+
+					  {
+
+					  ?>
+
+					  
+
+					  <div style="color:green;font-weight:bold;font-size:24px;margin-top:20px;margin-bottom:20px;"> Working Hours have been updated </div>
+
+					  
+
+					  <?php
+
+					  }
+
+					  if($kbt46==1)
+
+					  {
+
+					  ?>
+
+					  
+
+					  <div style="color:green;font-weight:bold;font-size:24px;margin-top:20px;margin-bottom:20px;"> Product Expense has been updated </div>
+
+					  <?php
+
+					  }
+
+					  if($kbt47==1)
+
+					  {
+
+					  ?>
+
+					  
+
+					  <div style="color:green;font-weight:bold;font-size:24px;margin-top:20px;margin-bottom:20px;"> Supply Expense has been updated </div>
+
+					  <?php
+
+					  }
+
+					  ?>
+
+		           <table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;" >
+
+				   <tr>
+
+				   <th >Sr.</th>
+
+				   <th >Employee</th>
+
+				   <th>Working Hours</th>
+
+				   <th>Role</th>
+
+				   <th>Schedule Start Time</th>
+
+				   <th>Schedule End Time</th>
+
+				   <th>Start Time / End Time </th>
+
+				   <th>Vehicle</th>
+
+				   <th>Gratuity</th>
+
+				   <th>Product Expense</th>
+
+				   <th>Supply Expense</th>
+
+				   <th>Driver Expense</th>
+
+				   <th>Date</th>
+
+				   </tr>
+
+		  <?php
+
+		  $tp1=0;
+
+		  $tp2=0;
+
+		  $tp3=0;
+
+		  for($i=0;$i<=$kdf;$i++){
+
+					$Date1 = $adate3;
+
+					$date = new DateTime($Date1);
+
+					$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+
+					$kbt = $date->format('d_m_Y');
+
+					$kbt2 = $date->format('m-d-Y');
+
+					if(isset($_GET["emp"]) && $_GET["emp"] > 0 )
+
+				    {
+
+				        $sql3 = "select * from mg_pickers where id = '".$_GET["emp"]."'";
+
+				    }
+
+				    else
+
+				    {
+
+				         $sql3 = "select * from mg_pickers order by name";
+
+				    }
+
+					$rows3 = $connection->fetchAll($sql3); 
+
+				    foreach ($rows3 as $value3) {
+
+					 $green = $green + 1;
+
+					 $value3["picker_id"] =  $value3["id"] ;
+
+					 $sql2gk = "SELECT name FROM mg_pickers where id='".$value3["picker_id"]."'";
+
+		             $rows2gk = $connection->fetchOne($sql2gk);
+
+					 $sql2gks = "SELECT email FROM mg_pickers where id='".$value3["picker_id"]."'";
+
+		             $rows2gks = $connection->fetchOne($sql2gks);
+
+					  $sql2gkr = "SELECT pickerst FROM pickerlog where pickerid='".$value3["picker_id"]."' and dodate LIKE '%".$kbt."'";
+
+		              $rows2gkr = $connection->fetchOne($sql2gkr);
+
+					  $sqlpicid = "SELECT id FROM pickerlog where pickerid='".$value3["picker_id"]."' and dodate LIKE '%".$kbt."'";
+
+		              $picid = $connection->fetchOne($sqlpicid);
+
+					  $warf[$rows2gk]=$rows2gkr;
+
+					  $sel_proexpence="select pickerst2 FROM expenses where semail='".$rows2gks."' and dodate2 LIKE '%".$kbt."'";
+
+					  $proexpence = $connection->fetchOne($sel_proexpence);
+
+					  if($proexpence=="")
+
+					  {
+
+					     $proexpence=0;
+
+					  }
+
+					  $sel_suexpence="select pickerst3 FROM expenses where semail='".$rows2gks."' and dodate2 LIKE '%".$kbt."'";
+
+					  $suexpence = $connection->fetchOne($sel_suexpence);
+
+					  if($suexpence=="")
+
+					  {
+
+					     $suexpence=0;
+
+					  }
+
+					  if($value3["picker_id"]!="" && $rows2gkr!="")
+
+					  {
+
+				   ?>
+
+					<tr>
+
+					<td><?php echo $green; ?></td>
+
+					<td><?php echo $rows2gk; ?></td>
+
+					<td>
+
+					<form name="frm" method="get">
+
+					<input type="text" name="picid" id="picid" value="<?php echo $rows2gkr; ?>" style="width:30px" >
+
+					<input type="hidden" name="idff" value="<?php echo $picid; ?>" >
+
+					<input type="hidden" name="from" value="<?php echo $_GET["from"]; ?>" >
+
+					<input type="hidden" name="to" value="<?php echo $_GET["to"]; ?>" >
+
+					<button style="margin-top:7px;margin-bottom:7px;" onclick="this.form.submit()" class="scalable " type="button" id="id_DQPfu4xftZ9C1OYg"><span>change</span></button>
+
+					</form>
+
+					<?php // echo $rows2gkr; ?></td>
+
+					<td>Picker / Supervisor </td>
+
+					<td></td>
+
+					<td></td>
+
+					<td></td>
+
+					<td></td>
+
+					<td></td>
+
+					<td>$
+
+					<form name="frm" method="get">
+
+					<input type="text" name="proex" id="proex" value="<?php echo $proexpence; ?>" style="width:50px" >
+
+					<input type="hidden" name="semail" value="<?php echo $rows2gks; ?>" >
+
+					<input type="hidden" name="dodate2" value="<?php echo $kbt; ?>" >
+
+					<input type="hidden" name="from" value="<?php echo $_GET["from"]; ?>" >
+
+					<input type="hidden" name="to" value="<?php echo $_GET["to"]; ?>" >
+
+					<button style="margin-top:7px;margin-bottom:7px;" onclick="this.form.submit()" class="scalable " type="button" id="id_DQPfu4xftZ9C1OYg"><span>change</span></button>
+
+					</form>
+
+					</td>
+
+					<td>$
+
+					<form name="frm" method="get">
+
+					<input type="text" name="supex" id="supex" value="<?php echo $suexpence; ?>" style="width:50px" >
+
+					<input type="hidden" name="semail" value="<?php echo $rows2gks; ?>" >
+
+					<input type="hidden" name="dodate2" value="<?php echo $kbt; ?>" >
+
+					<input type="hidden" name="from" value="<?php echo $_GET["from"]; ?>" >
+
+					<input type="hidden" name="to" value="<?php echo $_GET["to"]; ?>" >
+
+					<button style="margin-top:7px;margin-bottom:7px;" onclick="this.form.submit()" class="scalable " type="button" id="id_DQPfu4xftZ9C1OYg"><span>change</span></button>
+
+					</form></td>
+
+					<td></td>
+
+					<td><?php echo $kbt2; ?></td>
+
+					</tr>
+
+				   <?php
+
+				     $tp1 = $tp1 + $proexpence;
+
+					 $tp2 = $tp2 + $suexpence;
+
+				     }
+
+				   }
+
+				    $sel_email="select email from mg_pickers where id='".$_GET["emp"]."'";
+
+					$rs_email=$connection->fetchOne($sel_email);
+
+					if($rs_email=="")
+
+					{
+
+	                $sql = "SELECT b.* FROM `mg_shipping_delivery_window` b  where b.`window` LIKE '%".$kbt."' and b.order_number!='' and b.`driverid` > 0 group by b.`driver_email`";
+
+					}
+
+					else
+
+					{
+
+					  $sql = "SELECT b.* FROM `mg_shipping_delivery_window` b  where b.`window` LIKE '%".$kbt."' and b.`driver_email`='".$rs_email."' and b.order_number!='' and b.`driverid` > 0 group by b.`driver_email`";
+
+					}
+
+	                 $rows = $connection->fetchAll($sql); 
+
+					 foreach ($rows as $valuejjj) {
+
+					
+
+					 $sql2gk22 = "SELECT name FROM mg_pickers where email='".$valuejjj["driver_email"]."'";
+
+		             $rows2gk22 = $connection->fetchOne($sql2gk22);
+
+					 
+
+					  $sql2gk22j = "SELECT id FROM mg_pickers where email='".$valuejjj["driver_email"]."'";
+
+		              $rows2gk22j = $connection->fetchOne($sql2gk22j);
+
+					  
+
+					$sql77 = "SELECT order_number FROM `mg_shipping_delivery_window` where `window` LIKE '%".$kbt."' and `driver_email`='".$valuejjj["driver_email"]."' and order_number!='' ";
+
+	                $rows77 = $connection->fetchAll($sql77); 
+
+					$tip_total=0;
+
+					 foreach ($rows77 as $v77) {
+
+					      $sel_tip="select tip from drivlist where ordernumber='".$v77["order_number"]."'";
+
+						  $tip = $connection->fetchOne($sel_tip)."-".$valuejjj["driver_email"]."<br/>"; 
+
+						  $tip_total = $tip_total + $tip;
+
+					 }
+
+					
+
+					  $tp3 = $tp3 + $tip_total ;
+
+					  $sel_std="SELECT std FROM route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+
+					  $std = $connection->fetchOne($sel_std);
+
+					 
+
+					  $sel_std2="SELECT std2 FROM route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+
+					  $std2 = $connection->fetchOne($sel_std2);
+
+					 
+
+					 $sel_starttime="SELECT starttime FROM route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+
+					 $starttime = $connection->fetchOne($sel_starttime);
+
+					 
+
+					 $sel_exptype="select exptype from route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+
+				     $exptype=$connection->fetchOne($sel_exptype);
+
+				
+
+				     $sel_expr="select expr from route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+
+				     $expr=$connection->fetchOne($sel_expr);
+
+					 
+
+					 $sel_endtime="SELECT endtime FROM route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+
+					 $endtime = $connection->fetchOne($sel_endtime);
+
+					 
+
+					 if($starttime!="" && $endtime!="")
+
+					 {
+
+					  $time1 =  date("Y-m-d H:i:s", strtotime($starttime)); 
+
+					  $time2 =  date("Y-m-d H:i:s", strtotime($endtime)); 
+
+					 
+
+			$difference = timeDiff($time1,$time2);
+
+			$years = abs(floor($difference / 31536000));
+
+			$days = abs(floor(($difference-($years * 31536000))/86400));
+
+			$hours = abs(floor(($difference-($years * 31536000)-($days * 86400))/3600));
+
+			$mins = abs(floor(($difference-($years * 31536000)-($days * 86400)-($hours * 3600))/60));#floor($difference / 60);
+
+					
+
+					if($mins==15)
+
+					{
+
+					    $mins=25;
+
+					}
+
+					else if($mins==30)
+
+					{
+
+					    $mins=50;
+
+					}
+
+					else if($mins==45)
+
+					{
+
+					    $mins=75;
+
+					}
+
+					
+
+					$work = $hours.".".$mins;
+
+					
+
+					}
+
+					else
+
+					{
+
+					   $work = "";
+
+					}
+
+					
+
+					$update_hours="update route_driver set work_hour='".$work."',tip='".$tip_total."',dodate='".$kbt."' where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+
+					$connection->query($update_hours);
+
+					 
+
+				   ?>
+
+					<tr>
+
+					<td><?php echo $green; ?></td>
+
+					<td><?php echo $rows2gk22; ?>  </td>
+
+					<td><?php  echo $work; ?></td>
+
+					<td>Driver</td>
+
+					<td><?php echo $std; ?></td>
+
+					<td><?php echo $std2; ?></td>
+
+					<td>
+
+					<form name="frm" method="get">
+
+					<input type="text" name="starttime" id="starttime" value="<?php echo $starttime; ?>" style="width:50px" > / <input type="text" name="endtime" id="endtime" value="<?php echo $endtime; ?>" style="width:50px;" >
+
+					<input type="hidden" name="drivid" value="<?php echo $rows2gk22j ?>" >
+
+					<input type="hidden" name="route" value="<?php echo $valuejjj["route"] ?>" >
+
+					<input type="hidden" name="from" value="<?php echo $_GET["from"]; ?>" >
+
+					<input type="hidden" name="to" value="<?php echo $_GET["to"]; ?>" >
+
+					<button style="margin-top:7px;margin-bottom:7px;" onclick="this.form.submit()" class="scalable " type="button" id="id_DQPfu4xftZ9C1OYg"><span>change</span></button>
+
+					</form>
+
+					</td>
+
+					<td><?php echo $valuejjj["drivername"]; ?></td>
+
+					<td>$<?php echo $tip_total; ?></td>
+
+					<td></td>
+					<td></td>
+					<td> <?php echo $exptype; ?> <?php echo $expr; ?> </td>
+					<td><?php echo $kbt2; ?></td>
+					</tr>
+				   <?php
+				   }
+				 }
+				   ?>
+				   <tr>
+				   <td colspan="8" style="font-weight:bold;">
+				   <table style="margin:15px;" border="1"> 
+				   <tr>
+				   <th>
+				   Emp. Name
+				   </th>
+				   <th>
+				   Work Hours
+				   </th>
+				   <th>
+				   Job Type
+				   </th>
+				   <th>
+				   Tip
+				   </th>
+				   <th>
+				   Group
+				   </th>
+				   </tr> 
+
+				   <?php
+				     if(isset($_GET["emp"]) && $_GET["emp"] > 0 )
+				    {
+				        $sql3 = "select * from mg_pickers where id = '".$_GET["emp"]."'";
+				    }
+
+				    else
+				    {
+				         $sql3 = "select * from mg_pickers order by name";
+
+				    }
+					$rows3 = $connection->fetchAll($sql3); 
+				    foreach ($rows3 as $value3) {
+						 $totalb=0;
+						 $totalbc=0;
+						 $totaltip=0;
+						 for($i=0;$i<=$kdf;$i++){
+							$Date1 = $adate3;
+							$date = new DateTime($Date1);
+							$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+							$kbt = $date->format('d_m_Y');
+							$sql2gkr = "SELECT pickerst FROM pickerlog where pickerid='".$value3["id"]."' and dodate LIKE '%".$kbt."'";
+		                    $rows2gkr = $connection->fetchOne($sql2gkr);
+					        $totalb = $totalb + $rows2gkr;
+					    }
+
+						
+
+						for($i=0;$i<=$kdf;$i++){
+
+							$Date1 = $adate3;
+
+							$date = new DateTime($Date1);
+
+							$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+
+							$kbt = $date->format('d_m_Y');
+
+							
+
+							$sql2gkr = "SELECT work_hour FROM route_driver where driver_id='".$value3["id"]."' and dodate LIKE '%".$kbt."'";
+
+		                    $rows2gkr = $connection->fetchOne($sql2gkr);
+
+							$totalbc = $totalbc + $rows2gkr;
+
+							
+
+							$sql2gkrrr = "SELECT tip FROM route_driver where driver_id='".$value3["id"]."' and dodate LIKE '%".$kbt."'";
+
+		                    $rkrrr = $connection->fetchOne($sql2gkrrr);
+
+							$totaltip = $totaltip + $rkrrr ;
+
+					    }
+
+						
+
+						$sel_group_id="select group_id from mg_customer_entity where email='".$value3["email"]."'";
+
+						$group_id=$connection->fetchOne($sel_group_id);
+
+						$sel_group_name="select customer_group_code from mg_customer_group where customer_group_id='".$group_id."'";
+
+						$group_name=$connection->fetchOne($sel_group_name);
+
+						if($totalb>0)
+
+						{
+
+						?>  
+
+						<tr>
+
+						<td><?php echo $value3["name"]; ?></td>
+
+						<td><?php echo $totalb; ?></td>
+
+						<td>Picking / Packing / Supervisor</td>
+
+						<td>-</td>
+
+						<td><?php echo $group_name; ?></td>
+
+						</tr>
+
+						<?php  
+
+						}
+
+						if($totalbc>0)
+
+						{
+
+					    ?>	
+
+						<tr>
+
+						<td><?php echo $value3["name"]; ?></td>
+
+						<td><?php echo $totalbc; ?></td>
+
+						<td>Driving</td>
+
+						<td>$<?php echo $totaltip; ?></td>
+
+						<td><?php echo $group_name; ?></td>
+
+						</tr>
+
+				  <?php
+
+					}
+
+					}
+
+				   ?>
+
+				   </table>
+
+				   </td>
+
+				   <td style="font-weight:bold;" >$<?php echo $tp3; ?></td>
+
+				   <td style="font-weight:bold;" >$<?php echo $tp1; ?></td>
+
+				   <td style="font-weight:bold;" >$<?php echo $tp2; ?></td>
+
+				   <td style="font-weight:bold;" ></td>
+
+		  </table>
+
+		  </div>
+
+		  <br/>
+
+	<?php 
+
+	} ?>  
+
+	<script type="text/javascript">
+
+       	 //<![CDATA[
+
+        	var filterFormSubmit  = new varienForm('filter_form');
+
+         //]]>
+
+        </script> 
+
+		<script type="text/javascript">
+
+		function showrr(idr)
+
+		{
+
+		   jQuery('#tbl-'+idr).toggle();
+
+		}
+
+		
+
+		function showallpmis()
+
+		{
+
+		   jQuery('#allmistakepickerd').toggle();
+
+		}
+
+		
+
+		function showallpmisd()
+
+		{
+
+		   jQuery('#allmistakepickerdd').toggle();
+
+		}
+
+		</script> 
+
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script> 
+
+</body>
+
+</html>

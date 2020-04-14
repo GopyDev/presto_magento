@@ -1,0 +1,90 @@
+<div class="content-header">
+    <h3 class="icon-head head-adminhtml-import">Order Pick Report</h3>
+    <p class="form-buttons">
+    	<button style="" onclick="setLocation('<?php echo $this->getBack();?>')" class="scalable back" type="button" title="Back"><span><span><span>Back</span></span></span></button>
+        <button style="" onclick="setLocation(window.location.href)" class="scalable " type="button" title="Reset"><span><span><span>Reset</span></span></span></button>
+    </p>
+</div>
+
+
+<div class="entry-edit">
+    <form enctype="multipart/form-data" method="post" action="<?php echo $this->getPosturl()?>" id="upc_form" name="upc_form">
+    	<div>
+        	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+            <input type="hidden" name="upc_method" value="search" />
+        </div>
+        <div class="entry-edit-head">
+    		<h4 class="icon-head head-edit-form fieldset-legend">Select Range</h4>
+    		<div class="form-buttons"></div>
+		</div>
+    	<div id="base_fieldset" class="fieldset ">
+    		<div class="hor-scroll">
+            	<table cellspacing="0" class="form-list">
+            	<tbody>  <tr><td style="padding:10px"><input id="" rel="delivery_date" class="" type="radio" name="report_date" value="delivery_date" /><label for="delivery_date" style="padding-left:10px;">Report By Delivery Date</label></td></tr>
+                <tr><td style="padding:10px; padding-top:0;"><input rel="order_date" class="" type="radio" name="report_date" value="order_date" /><label for="order_date" style="padding-left:10px;">Report By Order Date</label></td></tr>
+                	<tr>
+                	<tr>
+       					<td class="label"><label for="entity">From</label></td>
+    					<td class="value">
+        					<input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="" id="sales_report_from" name="from">
+                            <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="http://www.prestofreshgrocery.com/skin/adminhtml/default/default/images/grid-cal.gif">
+            				<script type="text/javascript">
+            				//<![CDATA[
+                				Calendar.setup({
+                				    inputField: "sales_report_from",
+                    				ifFormat: "%m/%e/%Y",
+                    				showsTime: false,
+                    				button: "sales_report_from_trig",
+                    				align: "Bl",
+                    				singleClick : true
+                				});
+            					//]]>;
+            				</script>
+                        </td>
+                    </tr>
+                    <tr>
+       					<td class="label"><label for="entity">To</label></td>
+    					<td class="value">
+        					<input type="text" style="width:110px !important;" class=" required-entry input-text" title="To" value="" id="sales_report_to" name="to">
+                            <img style="" title="Select Date" id="sales_report_to_trig" class="v-middle" alt="" src="http://www.prestofreshgrocery.com/skin/adminhtml/default/default/images/grid-cal.gif">
+            				<script type="text/javascript">
+            				//<![CDATA[
+                			Calendar.setup({
+                    			inputField: "sales_report_to",
+                    			ifFormat: "%m/%e/%Y",
+                   				showsTime: false,
+                    			button: "sales_report_to_trig",
+                    			align: "Bl",
+                    			singleClick : true
+                			});
+            				//]]>
+            				</script>
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td></td>
+                        <td><br /><button class="scalable save"   type="submit" title="Import Products"><span><span><span>Search Products</span></span></span></button></td>
+                        <td></td>
+                    </tr>
+            		</tbody>
+        		</table>
+            </div>
+        </div>
+	</form>
+</div>
+<script type="text/javascript">
+    var upc_form = new varienForm('upc_form');
+</script>
+<script type="text/javascript">
+
+/*function reset_upc_form(_i, _id){
+	ids = new Array('single_upc', 'upc_codes');//, 'import_file'
+	c_id = _id;
+	$(_id).removeAttribute('disabled');
+	ids.each(function(id){
+		if(id != c_id){
+			$(id).setAttribute('disabled', 'disabled');
+		}
+	});
+}*/
+</script>

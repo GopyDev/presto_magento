@@ -1,0 +1,83 @@
+<?php
+/**
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011-2012 Sergey Storchay <r8@r8.com.ua>
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<form action="" id="checkout-agreements" onsubmit="return false;">
+    <div class="buttons-set">
+        <ul class="form-list">
+            <li>
+                <fieldset>
+                    <ul>
+                        <li class="wide">
+						
+						<div>
+                            <label for="ordercomment-comment" style="clear:both;"><?php echo Mage::helper('ordercomment')->__('Substitute Preferences') ?>  (check options all that apply): </label>
+							 <br/>
+							 <br/>
+							 <div style="float:left;width:250px;color:#000;">
+							 <input type="checkbox" name="chk-1" value="Caffeine Free"> Caffeine Free <br/>
+							 <input type="checkbox" name="chk-2"  value="Gluten Free" > Gluten Free <br/>
+							 <input type="checkbox" name="chk-3"  value="GMO Free" > GMO Free <br/>
+							 <input type="checkbox" name="chk-4" value="Kosher" > Kosher <br/>
+							 <input type="checkbox" name="chk-5" value="Lactose Free" > Lactose Free <br/>
+							 <input type="checkbox" name="chk-6" value="Low Carb" > Low Carb <br/>
+							 </div>
+							 <div style="float:left;width:250px;color:#000;">
+							 <input type="checkbox" name="chk-7"  value="Low Carb"  > Low Cholesterol <br/>
+							 <input type="checkbox" name="chk-8"> Low Fat <br/>
+							 <input type="checkbox" name="chk-9"> No Fat <br/>
+							 <input type="checkbox" name="chk-10"> No Pork <br/>
+							 <input type="checkbox" name="chk-11"> Organic <br/>
+							 <input type="checkbox" name="chk-12"> Vegan <br/>
+							 <input type="checkbox" name="chk-13"> Vegetarian
+							 </div>
+							 <div style="clear:both;"></div>
+							 <br/>
+							</div>
+							<br/>
+							
+						<div>
+                            <label for="ordercomment-comment"><?php echo Mage::helper('ordercomment')->__('Provide any requests about your ordered products here') ?></label>
+							</div>
+							<div style="clear:both;"></div>
+							<div style="color:red;font-size:12px;margin-bottom:10px;">This can include preferences regarding produce items (e.g. ripeness, etc), substitutes, etc. <span style="font-size:12px;font-weight:bold;font-family:verdana;"> Note: please do not enter delivery instructions here. Delivery instructions can be entered on the Delivery Address step of checkout or in your address book under My Account. Thank you! </span> </div>
+                            <div class="input-box">
+                                <textarea id="ordercomment-comment" class="input-text validation-passed" name="ordercomment[comment]" title="<?php echo $this->__('Order Comment') ?>" style="width:98%;border:1px solid #666;"></textarea>
+								
+								
+                            </div>
+                        </li>
+                    </ul>
+                </fieldset>
+            </li>
+        </ul>
+    </div>
+
+    <?php if ($this->getAgreements()): ?>
+        <ol class="checkout-agreements">
+            <?php foreach ($this->getAgreements() as $_a): ?>
+            <li>
+                <div class="agreement-content"<?php echo ($_a->getContentHeight() ? ' style="height:' . $_a->getContentHeight() . '"' : '')?>>
+                    <?php if ($_a->getIsHtml()):?>
+                    <?php echo $_a->getContent() ?>
+                    <?php else:?>
+                    <?php echo nl2br($this->htmlEscape($_a->getContent())) ?>
+                    <?php endif; ?>
+                </div>
+                <p class="agree">
+                    <input type="checkbox" id="agreement-<?php echo $_a->getId()?>" name="agreement[<?php echo $_a->getId()?>]" value="1" title="<?php echo $this->htmlEscape($_a->getCheckboxText()) ?>" class="checkbox" /><label for="agreement-<?php echo $_a->getId()?>"><?php echo $_a->getIsHtml() ? $_a->getCheckboxText() : $this->htmlEscape($_a->getCheckboxText()) ?></label>
+                </p>
+            </li>
+            <?php endforeach ?>
+        </ol>
+    <?php endif; ?>
+</form>

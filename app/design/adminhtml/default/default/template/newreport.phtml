@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+<?php 
+    $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+	
+	if(!empty($_REQUEST['from']) ){
+		/*====================== Start Code for Magento Orders Product =====================*/
+		//echo "<pre>";
+		$orders_row = array();
+		
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+	    
+		$rr=explode("/",$from);
+		$adate=$rr[1]."_".$rr[0]."_".$rr[2];
+		$adate3=$rr[2]."-".$rr[0]."-".$rr[1];
+		
+		$rr2=explode("/",$to);
+		$adate2=$rr2[1]."_".$rr2[0]."_".$rr2[2];
+		
+	
+		echo $to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		echo $from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+		
+		
+		$datetime1 = new DateTime($from_date);
+		$datetime2 = new DateTime($to_date);
+		$interval = $datetime1->diff($datetime2);
+		echo $kdf =  $interval->format('%R%a');
+
+	}
+?>
+<div id="anchor-content" class="middle">
+  <div id="page:main-container">
+    <div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Substitute Report");?></h3></td>
+            <td class="form-buttons"><button style="" onclick="filterFormSubmit.submit()" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Show Report</span></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <?php /*?><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><?php */?>
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Start Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $from; ?>" id="sales_report_from" name="from" />
+                      <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_from",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_from_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  
+				  <tr>
+                    <td class="label"><label for="sales_report_from">End Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $to; ?>" id="sales_report_to" name="to" />
+                      <img style="" title="Select Date" id="sales_report_to_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_to",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_to_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	<?php
+	  if(!empty($_REQUEST['from']) ){
+	?>
+	<style>
+	.page
+	{
+	   width:90%;
+	}
+	
+	td, th 
+	{
+	   padding-top:5px !important;
+	   padding-left:5px !important;
+	   padding-right:5px !important;
+	   padding-bottom:5px !important;
+	}
+	
+	table
+	{
+	   border-collapse:collapse;
+	}
+	</style>
+	<?php
+		 $rdate = explode("_",$adate);
+		 $opdate = $rdate[1]."-".$rdate[0]."-".$rdate[2];
+		 $bpil = 0;
+	?>
+		  <br/>
+		 
+		  <br/>
+		  <script type="text/javascript">
+		function divprintlove()
+		{
+            var divContents = jQuery("#divlove").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title> </title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+		  
+		  <!-- <a href="javascript:void(0);" onClick="divprintlove();"> Print All</a>  -->
+    <div id="divlove">	  
+    <div id="dvContainer">
+	
+	<?php function timeDiff($firstTime,$lastTime){
+   // convert to unix timestamps
+   $firstTime=strtotime($firstTime);
+   $lastTime=strtotime($lastTime);
+
+   // perform subtraction to get the difference (in seconds) between times
+   $timeDiff=$lastTime-$firstTime;
+
+   // return the difference
+   return $timeDiff;
+} ?>
+		 
+		  <table border=1 cellpadding="5" cellspacing="5" style="border-collapse:collapse;" >
+				   <tr>
+				   <th >Sr.</th>
+				   <th >Employee</th>
+				   <th>Working Hours</th>
+				   <th>Role</th>
+				   <th>Schedule Start Time</th>
+				   <th>Schedule End Time</th>
+				   <th>Start Time</th>
+				   <th>End Time</th>
+				   <th>Vehicle</th>
+				   <th>Gratuity</th>
+				   <th>Product Expense</th>
+				   <th>Supply Expense</th>
+				   <th>Date</th>
+				   
+				   </tr>
+		  <?php
+		  for($i=0;$i<=$kdf;$i++){
+		  
+					
+					$Date1 = $adate3;
+					$date = new DateTime($Date1);
+					$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+					$kbt = $date->format('d_m_Y');
+					
+					$kbt2 = $date->format('m-d-Y');
+					$sql3 = "select * from mg_pickers";
+					$rows3 = $connection->fetchAll($sql3); 
+				    foreach ($rows3 as $value3) {
+					 $green = $green + 1;
+					 $value3["picker_id"] =  $value3["id"] ;
+					 $sql2gk = "SELECT name FROM mg_pickers where id='".$value3["picker_id"]."'";
+		             $rows2gk = $connection->fetchOne($sql2gk);
+					 
+					 $sql2gks = "SELECT email FROM mg_pickers where id='".$value3["picker_id"]."'";
+		             $rows2gks = $connection->fetchOne($sql2gks);
+					 
+					
+					 
+					  $sql2gkr = "SELECT pickerst FROM pickerlog where pickerid='".$value3["picker_id"]."' and dodate LIKE '%".$kbt."'";
+		              $rows2gkr = $connection->fetchOne($sql2gkr);
+					  
+					  $sel_proexpence="select pickerst2 FROM expenses where semail='".$rows2gks."' and dodate2 LIKE '%".$kbt."'";
+					  $proexpence = $connection->fetchOne($sel_proexpence);
+					  
+					  if($proexpence=="")
+					  {
+					     $proexpence=0;
+					  }
+					  
+					  $sel_suexpence="select pickerst3 FROM expenses where semail='".$rows2gks."' and dodate2 LIKE '%".$kbt."'";
+					  $suexpence = $connection->fetchOne($sel_suexpence);
+					  
+					  if($suexpence=="")
+					  {
+					     $suexpence=0;
+					  }
+					  
+					  if($value3["picker_id"]!="" && $rows2gkr!="")
+					  {
+					  
+					     
+					
+				   ?>
+					<tr>
+					<td><?php echo $green; ?></td>
+					<td><?php echo $rows2gk; ?></td>
+					<td><?php echo $rows2gkr; ?></td>
+					<td>Picker / Supervisor </td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>$<?php echo $proexpence; ?></td>
+					<td>$<?php echo $suexpence; ?></td>
+					<td><?php echo $kbt2; ?></td>
+					
+					</tr>
+				   <?php
+				    }
+				   }
+	                $sql = "SELECT b.* FROM `mg_shipping_delivery_window` b  where b.`window` LIKE '%".$kbt."' and b.`driverid` > 0 group by b.`driver_email`";
+	                $rows = $connection->fetchAll($sql); 
+					
+					 foreach ($rows as $valuejjj) {
+					 $green = $green + 1;
+					 
+					 $sql2gk22 = "SELECT name FROM mg_pickers where email='".$valuejjj["driver_email"]."'";
+		             $rows2gk22 = $connection->fetchOne($sql2gk22);
+					 
+					  $sql2gk22j = "SELECT id FROM mg_pickers where email='".$valuejjj["driver_email"]."'";
+		              $rows2gk22j = $connection->fetchOne($sql2gk22j);
+					  
+					  
+					$sql77 = "SELECT order_number FROM `mg_shipping_delivery_window` where `window` LIKE '%".$kbt."' and `driver_email`='".$valuejjj["driver_email"]."'";
+	                $rows77 = $connection->fetchAll($sql77); 
+					$tip_total=0;
+					 foreach ($rows77 as $v77) {
+					      $sel_tip="select tip from drivlist where ordernumber='".$v77["order_number"]."'";
+						  $tip = $connection->fetchOne($sel_tip)."-".$valuejjj["driver_email"]."<br/>"; 
+						  $tip_total = $tip_total + $tip;
+					 }
+					
+					 $sel_std="SELECT std FROM route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+					 $std = $connection->fetchOne($sel_std);
+					 
+					$sel_std2="SELECT std2 FROM route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+					 $std2 = $connection->fetchOne($sel_std2);
+					 
+					 $sel_starttime="SELECT starttime FROM route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+					 $starttime = $connection->fetchOne($sel_starttime);
+					 
+					 $sel_endtime="SELECT endtime FROM route_driver where driver_id='".$rows2gk22j."' and route='".$valuejjj["route"]."'";
+					 $endtime = $connection->fetchOne($sel_endtime);
+					 
+					 if($starttime!="" && $endtime!="")
+					 {
+					  $time1 =  date("Y-m-d H:i:s", strtotime($starttime)); 
+					  $time2 =  date("Y-m-d H:i:s", strtotime($endtime)); 
+					 
+					 
+					$difference = timeDiff($time1,$time2);
+					$years = abs(floor($difference / 31536000));
+					$days = abs(floor(($difference-($years * 31536000))/86400));
+					$hours = abs(floor(($difference-($years * 31536000)-($days * 86400))/3600));
+					$mins = abs(floor(($difference-($years * 31536000)-($days * 86400)-($hours * 3600))/60));#floor($difference / 60);
+					$work = $hours.":".$mins;
+					
+					}
+					else
+					{
+					   $work = "";
+					}
+				   ?>
+					<tr>
+					<td><?php echo $green; ?></td>
+					<td><?php echo $rows2gk22; ?></td>
+					<td><?php  echo $work; ?></td>
+					<td>Driver</td>
+					<td><?php echo $std; ?></td>
+					<td><?php echo $std2; ?></td>
+					<td><?php echo $starttime; ?></td>
+					<td><?php echo $endtime; ?></td>
+					<td><?php echo $valuejjj["drivername"]; ?></td>
+					<td>$<?php echo $tip_total; ?></td>
+					<td></td>
+					<td></td>
+					<td><?php echo $kbt2; ?></td>
+					</tr>
+				   <?php
+				   }
+				 }
+				   ?>
+		  </table>
+		  </div>
+		  <br/>
+		
+	<?php 
+	} ?>  
+	<script type="text/javascript">
+       	 //<![CDATA[
+        	var filterFormSubmit  = new varienForm('filter_form');
+         //]]>
+        </script> 
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script> 
+</body>
+</html>

@@ -1,0 +1,203 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    Mage
+ * @package     Mage_Sales
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+
+class Mage_Sales_Model_Order_Invoice_Total_Discount extends Mage_Sales_Model_Order_Invoice_Total_Abstract
+{
+    public function collect(Mage_Sales_Model_Order_Invoice $invoice)
+    {
+        $invoice->setDiscountAmount(0);
+        $invoice->setBaseDiscountAmount(0);
+
+        $totalDiscountAmount     = 0;
+        $baseTotalDiscountAmount = 0;
+
+        /**
+         * Checking if shipping discount was added in previous invoices.
+         * So basically if we have invoice with positive discount and it
+         * was not canceled we don't add shipping discount to this one.
+         */
+        $addShippingDicount = true;
+        foreach ($invoice->getOrder()->getInvoiceCollection() as $previusInvoice) {
+            if ($previusInvoice->getDiscountAmount()) {
+                $addShippingDicount = false;
+            }
+        }
+
+        if ($addShippingDicount) {
+            $totalDiscountAmount     = $totalDiscountAmount + $invoice->getOrder()->getShippingDiscountAmount();
+            $baseTotalDiscountAmount = $baseTotalDiscountAmount + $invoice->getOrder()->getBaseShippingDiscountAmount();
+        }
+
+        /** @var $item Mage_Sales_Model_Order_Invoice_Item */
+        foreach ($invoice->getAllItems() as $item) {
+            $orderItem = $item->getOrderItem();
+            if ($orderItem->isDummy()) {
+                 continue;
+            }
+
+            $orderItemDiscount      = (float) $orderItem->getDiscountAmount();
+            $baseOrderItemDiscount  = (float) $orderItem->getBaseDiscountAmount();
+            $orderItemQty       = $orderItem->getQtyOrdered();
+
+            if ($orderItemDiscount && $orderItemQty) {
+                /**
+                 * Resolve rounding problems
+                 */
+                $discount = $orderItemDiscount - $orderItem->getDiscountInvoiced();
+                $baseDiscount = $baseOrderItemDiscount - $orderItem->getBaseDiscountInvoiced();
+                if (!$item->isLast()) {
+                    $activeQty = $orderItemQty - $orderItem->getQtyInvoiced();
+                    $discount = $invoice->roundPrice($discount / $activeQty * $item->getQty(), 'regular', true);
+                    $baseDiscount = $invoice->roundPrice($baseDiscount / $activeQty * $item->getQty(), 'base', true);
+                }
+
+                $item->setDiscountAmount($discount);
+                $item->setBaseDiscountAmount($baseDiscount);
+
+                $totalDiscountAmount += $discount;
+                $baseTotalDiscountAmount += $baseDiscount;
+            }
+        }
+//
+			
+				$entity_id = $orderItem['order_id'];
+				$con = mysql_connect('localhost','prestofr_stage','GiAZ8sc7gpJS');
+				$tables = mysql_select_db('prestofr_stage',$con) or die(mysql_error());
+				$sql = "select * from mg_sales_flat_order where entity_id='".$entity_id."'";
+				$execute = mysql_query($sql) or die(mysql_error());
+				$fetcharray = mysql_fetch_array($execute);
+				
+				$invoice->setDiscountAmount($fetcharray['base_discount_amount']);   
+				$extracharge = $invoice->setBaseDiscountAmount($fetcharray['base_discount_amount']);
+				$invoice->setBaseDiscountAmount($fetcharray['base_discount_amount']);
+				$invoice->setBaseSubtotal($fetcharray['grand_total']);
+				$invoice->setBaseSubtotalInvoiced($fetcharray['grand_total']);
+				
+				$invoice->setBaseTotalInvoiced($fetcharray['grand_total']);
+				$invoice->setBaseTotalPaid($fetcharray['grand_total']);
+				$invoice->setTotalInvoiced($fetcharray['grand_total']);
+				$invoice->setTotalPaid($fetcharray['grand_total']);
+				   
+				$invoice->setBaseAmountPaid($fetcharray['grand_total']);
+				$invoice->setAmountPaid($fetcharray['grand_total']); 
+		
+
+
+$sql1 = "select * from mg_sales_flat_order where entity_id='".$entity_id."'";
+$execute = mysql_query($sql1) or die(mysql_error());
+$increment_id = $fetcharray['increment_id'];
+
+//print_r($shipchargeval);
+
+$sql12 = "select shipcharge from mg_shipping_delivery_window where order_number='".$increment_id."'";
+				$shipcharge1 = mysql_query($sql12) or die(mysql_error());
+				$shipchargeval = mysql_fetch_array($shipcharge1);
+		
+if($invoice->getDiscountAmount() == '-2.0000'){
+	
+	   			$disval1 = -2;
+				$subtotal1 = $fetcharray['subtotal'] ;
+				$pos1 = strpos($disval1,'-');
+				if ($pos1 === false) {
+						$discountvalue1 = $disval1; 
+				}
+				else{
+						$discountvalue1 = str_replace('-','',$disval1);
+				}
+				//Shiping charge exist 
+				if($shipchargeval['shipcharge']){
+				 $grandtotal = ($fetcharray['subtotal'] + $shipchargeval['shipcharge']) - $disval1;
+			     $invoice->setGrandTotal($grandtotal);
+      			 $invoice->setBaseGrandTotal($grandtotal);
+				}else{
+					 $total_amount = $subtotal1 - $disval1;
+					 $invoice->setGrandTotal($total_amount); 
+					 $invoice->setBaseGrandTotal($total_amount);
+				}
+	   
+	     
+    
+	}else if($invoice->getDiscountAmount() == '-3.0000'){
+	
+         
+				$disocuntval1 = $fetcharray['base_discount_amount'];
+				$subtotal1 = $fetcharray['subtotal'] ;
+				$pos1 = strpos($disocuntval1,'-');
+				if ($pos1 === false) {
+						$discountvalue1 = $fetcharray['base_discount_amount']; 
+				}
+				else{
+						$discountvalue1 = str_replace('-','',$disocuntval1);
+				}
+				//Shiping charge exist 
+				if($shipchargeval['shipcharge']){
+				 $grandtotal = ($fetcharray['subtotal'] + $shipchargeval['shipcharge']) - $discountvalue1;
+			     $invoice->setGrandTotal($grandtotal);
+      			 $invoice->setBaseGrandTotal($grandtotal);
+				}else{
+					 $total_amount = $subtotal1 - $discountvalue1;
+					 $invoice->setGrandTotal($total_amount); 
+					 $invoice->setBaseGrandTotal($total_amount);
+				}
+		
+	}else{ 
+  		        $disocuntval = $fetcharray['base_discount_amount'];
+				$subtotal = $fetcharray['subtotal'] ;
+				$pos = strpos($disocuntval,'-');
+				
+				if ($pos === false) {
+						$discountvalue = $fetcharray['base_discount_amount'];
+				}
+				else{
+						$discountvalue = str_replace('-','',$disocuntval);
+				}
+
+		//Shiping charge exist 
+			if($shipchargeval['shipcharge'] != '' ){
+				
+			   	 $grandtotal = ($fetcharray['subtotal'] + $shipchargeval['shipcharge']) - $discountvalue;
+			     $invoice->setGrandTotal($grandtotal);
+      			 $invoice->setBaseGrandTotal($grandtotal);
+			
+			}else{ 
+		
+				
+				 $grandtotalval = $subtotal - $discountvalue;
+				 $invoice->setGrandTotal($grandtotalval);
+			     $invoice->setBaseGrandTotal($grandtotalval);
+//				 $invoice->setTotalDue($grandtotalval);
+				//$invoice->setGrandTotal($invoice->getGrandTotal() - $fetcharray['base_discount_amount']);
+			    //$invoice->setBaseGrandTotal($invoice->getBaseGrandTotal() - $fetcharray['base_discount_amount']);
+			}
+	}
+        
+		
+		
+		
+		return $this;
+    }
+}

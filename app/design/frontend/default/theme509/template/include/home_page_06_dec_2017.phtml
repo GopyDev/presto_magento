@@ -1,0 +1,165 @@
+<!--<script src="{{skin url='js/camera.js'}}"> </script>-->
+<!--
+<script src="<?php echo Mage::getDesign()->getSkinUrl(); ?>js/camera.js"> </script>
+<script>
+jQuery(function(){
+    jQuery('#camera_wrap').camera({
+        alignmen: 'topCenter',
+        height: '28.87%',
+        minHeight: '100px',
+        loader : false,
+        pagination: false,
+        fx: 'simpleFade',
+        navigationHover:false,
+        thumbnails: false,
+        playPause: false
+    });
+
+});
+</script>
+-->
+<!--
+<div class="fluid_container_wrap">
+    <div class="fluid_container">
+        <div class="camera_wrap camera_orange_skin" id="camera_wrap">
+            <div data-src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/camera/slides/slide1.jpg">
+                <div class="camera_caption fadeFromLeft">
+                    <div class="camera_title">Fresh Produce </div>
+                    <div class="camera_title2">Purchased </div>
+                    <div class="camara_desc2">Locally 6 Days a Week!</div>
+                    <a class="slider-link" href="<?php echo $this->getBaseUrl() ?>produce/vegetables.html">Shop now!</a>
+                </div>
+            </div>
+            <div data-src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/camera/slides/slide2.jpg">
+                <div class="camera_caption fadeFromLeft">
+                    <div class="camera_title">Always fresh</div>
+                    <div class="camera_title2">Ohio</div>
+                    <div class="camera_title3">Raised Meats!</div>
+                    <a class="slider-link" href="<?php echo $this->getBaseUrl() ?>meat-and-seafood.html">Shop now!</a>
+                </div>
+            </div>
+            <div data-src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/camera/slides/slide3.jpg">
+                <div class="camera_caption fadeFromLeft">
+                    <div class="camera_title">Fresh Seafood</div>
+                    <div class="camera_title2"> from </div>
+                    <div class="camera_title3">Both Coasts!</div>
+                    <a class="slider-link" href="<?php echo $this->getBaseUrl() ?>meat-and-seafood/chicken.html">Shop now!</a>
+                </div>
+            </div>
+            <div data-src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/camera/slides/slide4.png">
+                <div class="camera_caption fadeFromLeft">
+                    <div class="camera_title"><span style="float:left">Powered By </span><img style="width: 200px;padding: 10px;padding-right: 0;padding-left: 0;" src="<?php echo $this->getSkinUrl()?>images/Zagara.png" /></div>
+                    <!--<div class="camera_title2">Marketplace  </div>
+                    <div class="camara_desc2" style="float:left; width:627px; font-size:37px;">in Cleveland Heights!</div>
+                    <div class="camara_desc3" style="float: left;width: 569px;font-size: 20px;">
+					<!-- Ask About Our Double Money Back Guarantee!
+					ASK ABOUT OUR SATISFACTION GUARANTEE!
+					</div>
+                    <a class="slider-link" href="<?php echo $this->getBaseUrl() ?>zagaras">View now!</a>
+                   <!-- <div class="sliderimg"><img style="width: 200px;padding: 10px;padding-right: 0;padding-left: 0;" src="<?php //echo $this->getSkinUrl()?>images/Zagara.png" /></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+<div class="fluid_container_wrap">
+    <div class="fluid_container">
+		<?php  $slider_id=1;
+        $data = Mage::getModel('slidermanager/slidermanager')->getCollection()->addFieldToFilter('bannermanager_id',$slider_id);
+
+        $data->addFieldToFilter('status','1');
+        $dataOne=Mage::getModel('slidermanager/bannermanager')->getCollection()->addFieldToFilter('bannermanager_id',$slider_id);
+        $status=0;
+       $count=count($data);
+        foreach($dataOne as $rowOne)
+        {
+            $status=$rowOne->getStatus();
+        }
+		?>
+		<?php
+		if($status==1)
+		{
+		?>
+		<div class="camera_wrap camera_orange_skin" id="camera_wrap">
+		<?php
+		foreach($data as $row)
+                    {
+                    ?>
+
+
+		  <div data-src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'slidermanager/'.$row->getBackgroundImage();?>">
+                <div class="camera_caption fadeFromLeft">
+                    <div class="camera_title"><?php echo $row->getTitle();?></div>
+                    <div class="camara_desc2"><?php echo $row->getContent();?></div>
+                    <?php
+                     if($row->getLinkButton()=='1')
+                     {
+                     ?>
+						<a class="slider-link" href="<?php echo $row->getLink();?>" target="<?php echo $row->getTarget();?>"><?php echo ucwords($row->getButtonTitle());if($row->getButtonTitle()==''){echo 'Button';}?></a>
+					 <?php
+                      }
+                      ?>
+                </div>
+            </div>
+
+            <?php
+			}
+			?>
+
+        </div>
+		<?php
+		}
+		?>
+
+		 </div>
+</div>
+
+<div style="width:382px;float:left;">
+<a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>/customer/account/create/" >
+<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>/skin/frontend/default/theme509/images/media/img4.png" alt="" border="0" class="imga" /> </a>
+</div>
+
+<div style="width:368px;float:left;">
+<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>/skin/frontend/default/theme509/images/media/img5.png" alt=""  border="0" class="imgb"/>
+</div>
+
+
+<div style="width:420px;float:left;"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>/skin/frontend/default/theme509/images/media/image_7.png" alt="" class="imgc" />
+</div>
+
+
+<div style="clear:both">&nbsp;</div>
+
+<div style="width:338px;float:left;margin:20px;" class="divd" > <a href="http://click.linksynergy.com/fs-bin/click?id=XrzmaobMNRc&offerid=209195.10001637&type=4&subid=0"><IMG alt="wine.com" border="0" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>/skin/frontend/default/theme509/images/media/o1.jpg"  class="imgd" width="300" height="250"></a>
+
+<!-- <IMG border="0" width="1" height="1" src="http://ad.linksynergy.com/fs-bin/show?id=XrzmaobMNRc&bids=209195.10001637&type=4&subid=0"> -->
+</div>
+
+
+ <div style="width:316px;float:left;margin:20px;" class="divd" >
+
+ <!--<a href="http://click.linksynergy.com/fs-bin/click?id=XrzmaobMNRc&offerid=327415.10000626&subid=0&type=4&LSNSUBSITE=LSNSUBSITE"><IMG border="0" alt="GourmetGiftBaskets.com" src="http://ad.linksynergy.com/fs-bin/show?id=XrzmaobMNRc&bids=327415.10000626&subid=0&type=4&gridnum=7" class="imge" ></a>-->
+
+ <a href="http://click.linksynergy.com/fs-bin/click?id=XrzmaobMNRc&offerid=327415.10000722&subid=0&type=4&LSNSUBSITE=LSNSUBSITE"><IMG border="0"   alt="GourmetGiftBaskets.com" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>/skin/frontend/default/theme509/images/media/o2.jpg"  style="text-align: center;
+ width: 300px; height: 250px;"></a>
+
+</div>
+
+<div style="width:420px;float:left;">
+<a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>/customer/account/create/" ><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>/skin/frontend/default/theme509/images/media/image_8.png" alt="" class="imgf" /></a>
+</div>
+
+<style>
+@media only screen and (max-width: 768px)
+{
+	.promotional-block img
+	{
+		height:45px;
+	}
+}
+#sequence
+{
+	display:none;
+}
+</style>

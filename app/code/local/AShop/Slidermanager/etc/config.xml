@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * AShop Slider
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the AccessshopThemes.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.accessshopThemes.com
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @copyright 	Copyright (c) 2015 Accessshop (http://www.accessshopThemes.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Accessshop Block
+ * 
+ * @category 	AShop Slider
+ * @package 	AShop_Slidermanager
+ * @author  	AccessShop Developer
+ */
+-->
+<config>
+    <modules>
+        <AShop_Slidermanager>
+            <version>1.0.4</version>
+        </AShop_Slidermanager>
+    </modules>
+    <frontend>
+        <routers>
+            <slidermanager>
+                <use>standard</use>
+                <args>
+                    <module>AShop_Slidermanager</module>
+                    <frontName>slidermanager</frontName>
+                </args>
+            </slidermanager>
+        </routers>
+        <layout>
+            <updates>
+                <slidermanager module='slidermanager'>
+                    <file>slidermanager.xml</file>
+                </slidermanager>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<slidermanager>
+				<use>admin</use>
+				<args>
+					<module>AShop_Slidermanager</module>
+					<frontName>slidermanager</frontName>
+				</args>
+			</slidermanager>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+			<slidermanager module="slidermanager">
+				<title>Slidermanager</title>
+				<sort_order>71</sort_order>               
+				<children>
+					<items module="slidermanager">
+						<title>Manage Banners</title>
+						<sort_order>0</sort_order>
+						<action>slidermanager/adminhtml_slidermanager</action>
+					</items>
+				    <slider module="slidermanager" translate="title">
+				        <title>Manage Sliders</title>
+				        <sort_order>1</sort_order>
+				        <action>slidermanager/adminhtml_bannermanager</action>
+				    </slider>
+				</children>
+			</slidermanager>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+				    <children>
+				        <system>
+				            <children>
+				                <config>
+				                    <children>
+				                        <AShop module="slidermanager" translate="title">
+				                            <title>AShop - All</title>
+				                        </AShop>
+				                    </children>
+				                </config>
+				            </children>
+				        </system>
+				    </children>
+					<children>
+						<AShop_Slidermanager>
+							<title>Slidermanager Module</title>
+							<sort_order>10</sort_order>
+						</AShop_Slidermanager>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<slidermanager>
+					<file>slidermanager.xml</file>
+				</slidermanager>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <slidermanager>
+                <class>AShop_Slidermanager_Model</class>
+                <resourceModel>slidermanager_mysql4</resourceModel>
+            </slidermanager>
+            <slidermanager_mysql4>
+                <class>AShop_Slidermanager_Model_Mysql4</class>
+                <entities>
+                    <slidermanager>
+                        <table>slidermanager</table>
+                    </slidermanager>
+                    <bannermanager>
+                        <table>bannermanager</table>
+                    </bannermanager>
+                </entities>
+            </slidermanager_mysql4>
+        </models>
+        <resources>
+            <slidermanager_setup>
+                <setup>
+                    <module>AShop_Slidermanager</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </slidermanager_setup>
+            <slidermanager_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </slidermanager_write>
+            <slidermanager_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </slidermanager_read>
+        </resources>
+        <blocks>
+            <slidermanager>
+                <class>AShop_Slidermanager_Block</class>
+            </slidermanager>
+        </blocks>
+        <helpers>
+            <slidermanager>
+                <class>AShop_Slidermanager_Helper</class>
+            </slidermanager>
+        </helpers>
+    </global>
+</config>

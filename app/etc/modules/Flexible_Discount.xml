@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <modules>
+        <Flexible_Discount>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Flexible_Discount>
+    </modules>
+</config>

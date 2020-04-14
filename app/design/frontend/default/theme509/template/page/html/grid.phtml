@@ -1,0 +1,127 @@
+<?php
+/**
+ * aheadWorks Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This software is designed to work with Magento enterprise edition and
+ * its use on an edition other than specified is prohibited. aheadWorks does not
+ * provide extension support in case of incorrect edition use.
+ * =================================================================
+ *
+ * @category   AW
+ * @package    AW_Sarp2
+ * @version    2.0.1
+ * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
+ * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ */
+?><?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php $profileCollection = $this->getCollection(); ?>
+<div class="page-title">
+    <h1><?php echo $this->__('Presto Premier Subscription') ?></h1>
+</div>
+<?php // echo $this->getPagerHtml(); ?>
+<?php if ($profileCollection->getSize()) : ?>
+    <table class="data-table" id="my-profiles-table">
+        <col width="1" />
+        <col />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
+        <thead>
+            <tr>
+               
+                <th style="width:90px;"><span class="nobr"><?php echo $this->__('Created At'); ?></span></th>
+                <th style="width:90px;"><span class="nobr"><?php echo $this->__('Next Renewal Date'); ?></span></th>
+				 <th style="width:110px;" ><span class="nobr"><?php echo $this->__('Status'); ?></span></th>
+               <th><span class="nobr"><?php echo $this->__('Action'); ?></span></th> 
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+			$count = 1;
+			foreach ($profileCollection as $profile) : 
+			
+				/**********************
+					Update Subscription
+					Date: 26/10/2015
+				/**********************/
+				        $decodedText = html_entity_decode($jsonText);
+						$orderArray = unserialize($decodedText);
+						echo $itemID = $orderArray['subscription']['item']['subscription_type_id'];
+						
+				$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+				$query2 = "select count(*) from mg_aw_sarp2_profile where  customer_id = ".$profile->customer_id." AND status LIKE 'active' ";
+				$result2 = $connection->query($query2);
+				if($row2['count(*)'] ==2){
+					foreach($profileCollection as $profile){
+						if( $profile->amount == '89'){
+								$query3 = "Update mg_aw_sarp2_profile set status = 'suspended' where  customer_id = ".$profile->customer_id." AND status LIKE 'active' AND amount = 89 ";
+								$result2 = $connection->query($query3);
+								
+								
+						}
+					}
+				}
+				?>
+			
+			    <tr>
+              
+                    <td><span class="nobr"><?php echo $this->formatDate($profile->getCreatedAt(), Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, true); ?></span></td>
+                    <td><span class="nobr"><?php echo $this->formatDate($profile->getUpdatedAt(), Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, true); ?></span>
+					
+					
+					</td>
+					
+					 <td><?php echo $profile->getStatusLabel(); ?> Presto Premier Memeber 
+					 <br/>
+					 <?php
+						/**********************
+							Update Subscription
+							Date: 26/10/2015
+						/**********************/
+						$query2 = "select count(*) from mg_aw_sarp2_profile where  customer_id = ".$profile->customer_id." AND status LIKE 'active' ";
+						$result2 = $connection->query($query2);
+						$row2 = $result2->fetch();
+						$count = $row2['count(*)'];
+						
+						if($profile->getStatusLabel() == 'Active' && $profile->amount == '89'){
+							if($count != 2){
+							
+								echo "<a href='".$this->getProfileLink($profile)."?update=subscription' />Upgrade your subscription</a>";
+							}
+						}
+						
+					?>
+					 </td>
+					<td>
+					<div class="page-title title-buttons">
+			<?php
+			if($profile->getStatusLabel() == 'Active'){
+			?>			
+<?php if ($profile->canCancel($profile)) : ?>
+    <button type="button" title="<?php echo $this->__('Cancel') ?>" class="button" onclick="if( confirm('Are you sure you want to do this?') ) { window.location.href = 'https://www.prestofreshgrocery.com/aw_recurring/customer/cancel/id/<?php echo $profile->getEntityId();?>/'; } return false;"><span><span><?php echo $this->__('Cancel') ?></span></span></button>
+<?php endif; ?>
+	<?php
+		}
+	?>
+
+</div></td>
+                   <!--  <td><?php echo $profile->getEngineLabel(); ?></td> -->
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <script type="text/javascript">decorateTable('my-profiles-table');</script>
+<?php // echo $this->getPagerHtml(); ?>
+<?php else: ?>
+    <p><?php echo $this->__('There are no recurring profiles yet.'); ?></p>
+<?php endif ?>

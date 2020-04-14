@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Lifesotware_Cusoterreg>
+      <active>true</active>
+      <codePool>local</codePool>
+      <version>0.1.0</version>
+    </Lifesotware_Cusoterreg>
+  </modules>
+</config>

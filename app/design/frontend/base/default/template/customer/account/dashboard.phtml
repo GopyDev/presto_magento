@@ -1,0 +1,195 @@
+<?php
+   if(isset($_GET["sub"]) && $_GET["sub"]==1)
+   {
+       include "subs.php";
+	 
+   }
+   else
+   {
+?>  
+<style>
+.mainEstimated_sub{
+	border: 1px solid #000;
+    border-radius: 8px;
+    float: left;
+    margin-bottom: 12px;
+    margin-top: 12px;
+    padding: 21px;
+    width: 95%;
+}
+.estimated_heading {
+    margin-bottom: 13px;
+}
+.text {
+    float: left;
+    margin-right: 27px;
+	width:68%;
+	font-size:13px;
+}
+.estimated_fields {
+    float: left;
+	margin-top:-6px;
+    /*width: 48%;*/
+}
+.red{color:red;}
+.green{color:green}
+.subButtom {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-color: #5d8c12 !important;
+    background-image: -moz-linear-gradient(center top , #9dc31f, #649513);
+    background-origin: padding-box;
+    background-position: 0 0;
+    background-repeat: repeat;
+    background-size: auto auto;
+    border-color: #5d8c12 #5d8c12 #36520b;
+    border-image: none;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    color: #fff;
+    cursor: pointer;
+    font-family: "Open Sans",sans-serif;
+    font-size: 13px;
+    height: 30px;
+    line-height: 25px;
+    padding-left: 4px;
+	padding-right: 4px;
+	background:-webkit-gradient(linear,left top,left bottom,from(#9dc31f),to(#649513));
+}
+.subButtom:hover{
+	background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , #659614, #659614) repeat scroll 0 0;
+    border-color: #36520b #5d8c12 #5d8c12;
+    color: #fff;
+}
+#msg{float:left;}
+</style>
+		<?php
+	$customer_id = Mage::getSingleton('customer/session')->getId();
+	$resource = Mage::getSingleton('core/resource');
+	$conn = $resource->getConnection('core_read');
+	
+	if($_REQUEST['unsubscribe'] == 'Submit Change'){
+		$qry = "UPDATE mg_estimated_delivery_subscription SET subscribed = '0', updated_date = now() WHERE customer_id = '".$customer_id."' ";
+		$result = $conn->query($qry);
+		if($result){
+			$msg = "You have unsubscribed from receiving Delivery Time Notifications.";
+		}
+	}
+	if($_REQUEST['subscribe'] == 'Submit Change'){
+               $qry = "SELECT subscribed FROM mg_estimated_delivery_subscription WHERE customer_id = '".$customer_id."' ";
+			   $results = $conn->fetchAll($qry);
+			if(empty($results)){
+					$qry = "INSERT INTO mg_estimated_delivery_subscription
+							(customer_id,subscribed,created_date)
+							VALUES ('".$customer_id."',1,now() )
+							";
+					$result = $conn->query($qry);
+					if($result){
+						$msg = "You have successfully subscribed to receive Delivery Time Notifications.";
+							  // continue;		
+				  }
+					
+			}
+		else
+		{
+		     $qry = "UPDATE mg_estimated_delivery_subscription SET subscribed = '1', updated_date = now() WHERE customer_id = '".$customer_id."' ";
+		     $result = $conn->query($qry);
+				 if($result){
+					$msg = "You have successfully subscribed to receive Delivery Time Notifications.";
+				 }
+			}
+	 }
+	
+	
+	
+	$qry = "SELECT subscribed FROM mg_estimated_delivery_subscription WHERE customer_id = '".$customer_id."' ";
+	$results = $conn->fetchAll($qry);
+	
+?>
+<div class="dashboard">
+    <div class="page-title">
+        <h1><?php echo $this->__('My Dashboard') ?></h1>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <?php //echo $this->getChildHtml('hello') ?>
+	<!-- start estimated delivery subscription-->
+	<div class="mainEstimated_sub">
+		<div class="page-title"><h2>Estimated Delivery Time Email Notifications</h2></div>
+		<?php
+				if($results[0]['subscribed'] == '1'){
+		?>
+		<div class="text green">Receive Estimated Delivery Time notification on the morning of your scheduled delivery</div>
+		<div class="estimated_fields">
+		<form name="estimated_delivery" method="post" action="" />
+			Subscribed&nbsp;&nbsp;&nbsp;<input type="checkbox" class="chkbox" id="estimateUnsubscribe" name="estimateSubscribe" checked="checked">
+			&nbsp;&nbsp;<input type="submit" name="unsubscribe" value="Submit Change" class="subButtom" id="UnsubButton"/>
+		</form>
+		</div>
+		<div id="msg" class="red"><?php echo $msg;?></div>
+		<?php
+		}else{
+		?>
+		<div class="text">Receive Estimated Delivery Time email on the morning of your scheduled delivery</div>
+		<div class="estimated_fields">
+		<form name="estimated_delivery" method="post" action="" />
+			Subscribed&nbsp;&nbsp;&nbsp;<input type="checkbox" class="chkbox" id="estimateSubscribe" name="estimateSubscribe">
+			&nbsp;&nbsp;<input type="submit" name="subscribe" value="Submit Change" class="subButtom" id="subButton"/>
+		</form>
+		</div>
+		<div id="msg" class="red"><?php echo $msg;?></div>
+		<?php
+				}
+		?>
+	</div>
+<script>
+jQuery('#subButton').click(function() {
+     if(jQuery('#estimateSubscribe').attr('checked')){
+          //  alert('checked');
+		return true;
+	 }
+        else{
+           // alert('unchecked');
+			jQuery('#estimateSubscribe').css('border','1px solid #FF5151');
+			return false;
+		}
+});
+
+
+/*jQuery('#UnsubButton').click(function() {
+     if(jQuery('#estimateUnsubscribe').attr('checked')){
+          //  alert('checked');
+		return true;
+	 }
+        else{
+           // alert('unchecked');
+			jQuery('#estimateUnsubscribe').css('border','1px solid #FF5151');
+			return false;
+		}
+});*/
+
+	jQuery(document).ready(function() {
+		setTimeout(function() {
+			jQuery("#msg").fadeOut(1500);
+		},3000);
+	});
+</script>
+	<!-- end estimated delivery subscription-->
+    <?php echo $this->getChildHtml('top') ;/* ?>
+    <div class="box-account box-info">
+        <div class="box-head">
+            <h2><?php echo $this->__('Account Information') ?></h2>
+        </div>
+        
+        <?php echo $this->getChildHtml('customer.account.dashboard.extra') ?>
+        <?php echo $this->getChildHtml('info') ?>
+        <?php echo $this->getChildHtml('address') ?>
+    </div>
+    <?php echo $this->getChildHtml('info1') ?>
+    <?php echo $this->getChildHtml('info2');*/ ?>
+</div>
+<?php } ?>

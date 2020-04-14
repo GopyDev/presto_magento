@@ -1,0 +1,525 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Create account form template
+ *
+ * @see app/design/frontend/base/default/template/customer/form/register.phtml
+ */
+/** @var $this Mage_Customer_Block_Form_Register */
+?>
+<style>
+	#autocomplete_choices li {
+		background: none repeat scroll 0 0 white;
+		border-radius: 2px;
+		color: #316213;
+		cursor: pointer;
+		padding: 10px;
+		width: 70%;
+		border: 1px solid;
+	}
+	
+	.legend
+	{
+	   font-size:15px !important;
+	}
+	
+	.form-list label
+	{
+	  font-size:12px !important;
+	}
+	
+	.form-list .input-box
+	{
+	   margin-bottom:2px !important;
+	}
+		.object_ok
+{
+border: 1px solid green; 
+color: #333333; 
+}
+
+.object_error
+{
+border: 1px solid #AC3962; 
+color: #333333; 
+}
+</style>
+
+<div class="account-create">
+    <div class="page-title">
+        <h1><?php echo $this->__('Free Registration Form') ?></h1>
+    </div>
+	<div style="font-size:12px;">Please note that registration is not required to shop with us! However, registering will allow you to take advantage of several features of our site, like: Rewards Program, storing addresses for easier entry, repeating prior orders, and our PrestoPremier free delivery program.</div>
+	<br/>
+	
+    <?php echo $this->getChildHtml('form_fields_before')?>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="form-validate">
+        <div class="">
+            <input type="hidden" name="success_url" value="<?php echo $_SERVER['HTTP_REFERER'];?><?php //echo $this->getSuccessUrl() ?>" />
+            <input type="hidden" name="error_url" value="<?php echo $this->getErrorUrl() ?>" />
+            <h2 class="legend" style="padding: 2px 0 6px 0;border-bottom: 1px solid rgb(153, 153, 153);margin-bottom: 10px;"><?php echo $this->__('Personal Information') ?></h2>
+            <ul class="form-list">
+                <li class="fields">
+                    <?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getFormData())->setForceUseCustomerAttributes(true)->toHtml() ?>
+                </li>
+                <li>
+				
+				<div class="field">
+                   <label for="email_address" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+                    <div class="input-box">
+                        <input type="text" name="email" id="email_address" value="<?php echo $this->escapeHtml($this->getFormData()->getEmail()) ?>" title="<?php echo $this->__('Email Address') ?>" class="input-text validate-email required-entry" />
+                    </div>
+				</div>	
+					
+					<div class="field">
+                        <label for="telephone" class="required"><em>*</em><?php echo $this->__('Phone') ?></label>
+                        <div class="input-box">
+                            <input type="text"  name="telephone" id="telephone"  value="<?php echo $this->escapeHtml($this->getFormData()->getTelephone()) ?>" title="<?php echo $this->__('Telephone') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?>" />
+                        </div>
+                    </div>
+					
+                </li>
+                <?php /*?><?php if ($this->isNewsletterEnabled()): ?>
+                <li class="control">
+                    <div class="input-box">
+                        <input type="checkbox" name="is_subscribed" title="<?php echo $this->__('Sign Up for Newsletter') ?>" value="1" id="is_subscribed"<?php if($this->getFormData()->getIsSubscribed()): ?> checked="checked"<?php endif; ?> class="checkbox" />
+                    </div>
+                    <label for="is_subscribed"><?php echo $this->__('Sign Up for Newsletter') ?></label>
+                </li>
+                <?php endif ?><?php */?>
+            <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+            <?php if ($_dob->isEnabled()): ?>
+                <li><?php echo $_dob->setDate($this->getFormData()->getDob())->toHtml() ?></li>
+            <?php endif ?>
+            <?php $_taxvat = $this->getLayout()->createBlock('customer/widget_taxvat') ?>
+            <?php if ($_taxvat->isEnabled()): ?>
+                <li><?php echo $_taxvat->setTaxvat($this->getFormData()->getTaxvat())->toHtml() ?></li>
+            <?php endif ?>
+            <?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+            <?php if ($_gender->isEnabled()): ?>
+                <li><?php echo $_gender->setGender($this->getFormData()->getGender())->toHtml() ?></li>
+            <?php endif ?>
+            
+            </ul>
+        </div>
+    <?php //if($this->getShowAddressFields()): ?>
+        <div class="">
+            <input type="hidden" name="create_address" value="1" />
+            <?php /*?><h2 class="legend"><?php echo $this->__('Address Information') ?></h2><?php */?>
+            <ul class="form-list">
+                <li class="fields">
+                    <?php /*?><div class="field">
+                        <label for="company"><?php echo $this->__('Company') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="company" id="company" value="<?php echo $this->escapeHtml($this->getFormData()->getCompany()) ?>" title="<?php echo $this->__('Company') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('company') ?>" />
+                        </div>
+                    </div><?php */?>
+                    
+                </li>
+				
+					 <!--- ----------User Group Selction Dropdown------------->
+ <!--- ---
+                <h2 class="legend" style="padding: 2px 0 6px 0;border-bottom: 1px solid rgb(153, 153, 153);margin-bottom: 10px;"><?php //echo $this->__('Select Group') ?></h2>		
+				
+				<div class="input-box">
+<label for="group_id"><?php //echo $this->__('Group') ?><span class="">*</span></label>
+<select name="group_id" id="group_id" title="<?php //echo $this->__('Group') ?>" />
+<?php //$groups = Mage::helper('customer')->getGroups()->toOptionArray(); ?>
+<?php //foreach($groups as $group){ ?>
+<option value=""></option>
+<option value="<?php //print $group['value'] ?>"><?php //print $group['label'] ?></option>
+<?php //} ?>
+</select>
+</div>------>
+
+
+
+<div class="input-box">
+    
+		<h2 class="legend" style="padding: 2px 0 6px 0;border-bottom: 1px solid rgb(153, 153, 153);margin-bottom: 10PX;"><?php echo $this->__('Enter Group Code') ?></h2>
+		<div style="font-size:12px;">If you are an employee participating in a corporate or organization sponsored program, enter your organization name here. Otherwise, please leave this field blank.</div>
+		
+        <input type="text" name="group_code" id="group_code" value="<?php echo $this->htmlEscape($this->getFormData()) ?>" title="<?php echo $this->__('Group Code') ?>" class="input-text"/>	
+		<div id="autocomplete_choices" class="autocomplete"></div>
+
+    </div>
+ <?php /*?><div class="input-box" style="width:auto;">
+    
+		<h2 class="legend" style="padding: 2px 0 6px 0;border-bottom: 1px solid rgb(153, 153, 153);margin-bottom: 10PX;"><?php echo $this->__('Account Name') ?></h2>
+		
+		
+        <input type="text" name="group_code" id="group_code" value="<?php echo $this->htmlEscape($this->getFormData()) ?>" placeholder="Account Name" title="<?php echo $this->__('Enter Account Name') ?>" class="input-text" style="float:left;width:260px;" />	<p style="font-size:11px;float:left;margin-left:5px;margin-top:5px;"><?php echo $this->__('Leave Blank If You Do Not Have One') ?></p>
+
+    </div><?php */?>
+
+		
+<!---User Group End-->
+                <h2 class="legend" style="padding: 2px 0 6px 0;border-bottom: 1px solid rgb(153, 153, 153);margin-bottom: 10PX;"><?php echo $this->__('Login Information') ?></h2>	
+				
+				
+                <!---Start password-->
+                <li class="fields">
+                    <div class="field">
+                       <label for="password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="password" value="" autocomplete="off" id="password"  title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+                        </div>
+                    </div>
+                    <div class="field">
+                       <label for="confirmation" class="required"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="confirmation"  title="<?php echo $this->__('Confirm Password') ?>" id="confirmation" class="input-text required-entry validate-cpassword" />
+                        </div>
+                    </div>
+                </li>
+                <li class="fields" style="display:none" >
+                    <div class="field">
+                        <label for="information" class=""><?php echo $this->__('information') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="information" value="<?php //echo $this->htmlEscape($this->getFormData()->getInformation()) ?>" title="<?php echo $this->__('information') ?>" id="information" class="input-text " />
+                        </div>
+                    </div>
+                </li>
+                <!---End Password-->
+                 <h2 class="legend" style="padding: 2px 0 6px 0;border-bottom: 1px solid rgb(153, 153, 153);margin-bottom: 24PX;"><?php echo $this->__('Where do you want us to Deliver?') ?></h2>
+            <?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
+               <!-- <li>
+                    <label for="street_1" class="required"><em>*</em><?php echo $this->__('Street Address') ?></label>
+                    <div class="input-box">
+                        <input type="text" name="street[]"  value="<?php echo $this->escapeHtml($this->getFormData()->getStreet(1)) ?>" title="<?php echo $this->__('Street Address') ?>" id="street_1" class="input-text <?php echo $_streetValidationClass ?>" />
+                    </div>
+                </li> -->
+            <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+            <?php for ($_i = 2, $_n = $this->helper('customer/address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+                <li class="wide">
+                    <div class="input-box">
+                        <input type="text" name="street[]" placeholder="Street Address" value="<?php echo $this->escapeHtml($this->getFormData()->getStreet($_i)) ?>" title="<?php echo $this->__('Street Address %s', $_i) ?>" id="street_<?php echo $_i ?>" class="input-text <?php echo $_streetValidationClass ?>" />
+                    </div>
+                </li>
+            <?php endfor; ?>
+                <li class="fields">
+				
+				     <div class="field">
+				     <label for="street_1" class="required"><em>*</em><?php echo $this->__('Street Address') ?></label>
+                    <div class="input-box">
+                        <input type="text" name="street[]"  value="<?php echo $this->escapeHtml($this->getFormData()->getStreet(1)) ?>" title="<?php echo $this->__('Street Address') ?>" id="street_1" class="input-text <?php echo $_streetValidationClass ?>" />
+                    </div>
+					</div>
+					
+                    <div class="field">
+                       <label for="city" class="required"><em>*</em><?php echo $this->__('City') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="city"  value="<?php echo $this->escapeHtml($this->getFormData()->getCity()) ?>" title="<?php echo $this->__('City') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="city" />
+                        </div>
+                    </div>
+                    <div class="field" style="display:none;">
+                        <label for="country" class="required"><em>*</em><?php echo $this->__('Country') ?></label>
+                        <div class="input-box">
+                            <?php echo $this->getCountryHtmlSelect() ?>
+                        </div>
+                    </div>
+                    
+                </li>
+                <li class="fields">
+                	<div class="field">
+                    <label for="region_id" class="required"><em>*</em><?php echo $this->__('State/Province') ?></label>
+                        <div class="input-box">
+                            <select id="region_id" name="region_id" title="<?php echo $this->__('State/Province') ?>" class="validate-select">
+                                <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+                                <option value="82" selected="selected" title="&nbsp;Ohio">&nbsp;Ohio</option>
+                            </select>
+                            <script type="text/javascript">
+                            //<![CDATA[
+                               // $('region_id').setAttribute('defaultValue', "<?php echo $this->getFormData()->getRegionId() ?>");
+                            //]]>
+                            </script>
+                            <input type="text" id="region" name="region" placeholder="State/Province" value="<?php echo $this->escapeHtml($this->getRegion()) ?>" title="<?php echo $this->__('State/Province') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>" style="display:none;" />
+                        </div>
+                    </div>
+                    <div class="field" style="width:470px">
+					  <label for="zip" class="required"><em>*</em><?php echo $this->__('Zip/Postal Code') ?></label>
+					  
+					  <div class="input-box">
+							<input  type="text"   name="postcode" maxlength="5" id="zipcode"  class="input-text  validate-zip-international validate-number <?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>"  placeholder="Zipcode"  value="<?php echo $this->escapeHtml($this->getFormData()->getPostcode()) ?>"/><label style="display: inline-block;float: right;font-size: 11px;line-height: 12px;color: red;" id="validzip"></label>
+							<label id="status"></label>
+							</div>
+                    <div class="input-box">
+                    
+                    <div class="field dropdownzip">
+                  <!-- <label for="zip" class="required"><em>*</em><?php echo $this->__('Zip/Postal Code') ?></label> -->
+                        <div class="input-box">
+                        	<?php $zips = Mage::helper('simpleupc')->zipcodes();//print('<pre>');print_r($zips);print('</pre>');?>
+                           <?php /*?> <select style="visibility:hidden"  name="postcode"  id="zip" class="input-text validate-zip-international<?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>">
+                            	<option value=""><?php echo $this->__('Select Zip/Postal Code')?></option>
+                                <?php foreach($zips as $zip){?>
+                                	<option <?php echo ($this->escapeHtml($this->getFormData()->getPostcode())==$zip) ? 'selected="selected"' : ''?> value="<?php echo $zip?>"><?php echo $zip?></option>
+                                <?php }?>
+                            </select><?php */?>
+                            <?php /*?><input type="text" name="postcode" value="<?php echo $this->escapeHtml($this->getFormData()->getPostcode()) ?>" title="<?php echo $this->__('Zip/Postal Code') ?>" id="zip" class="input-text validate-zip-international <?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" /><?php */?>
+                        </div>
+                    </div>
+                    
+                </li>
+            </ul>
+            <input type="hidden" name="default_billing" value="1" />
+            <input type="hidden" name="default_shipping" value="1" />
+        </div>
+    <?php //endif; ?>
+        <div class="">
+            <?php /*?><h2 class="legend"><?php echo $this->__('Login Information') ?></h2><?php */?>
+            <ul class="form-list">
+                <!--<li class="fields">
+                    <div class="field">
+                        <label for="password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="password" id="password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="confirmation" class="required"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="confirmation" title="<?php echo $this->__('Confirm Password') ?>" id="confirmation" class="input-text required-entry validate-cpassword" />
+                        </div>
+                    </div>
+                </li>-->
+                <?php echo $this->getChildHtml('form.additional.info'); ?>
+                <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+            </ul>
+            <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+        </div>
+        <div class="">
+            <?php /*?><h2 class="legend"><?php echo $this->__('Login Information') ?></h2><?php */?>
+            <ul class="form-list">
+                <li class="fields">
+                    <div class="field2">
+                        <label for="confirmation" class="required" style="width:132px;  display:block"><?php /*?><em>*</em><?php echo $this->__('Confirm Password') ?><?php */?></label>
+                        <div class="input-box" style="position:relative">
+                            <input onclick="_message()" checked type="checkbox" <?php echo ($this->getFormData()->getAcceptSubstitutes()) ? 'checked="checked"' : ''?> name="accept_substitutes" title="<?php echo $this->__('Agree to Substitutes') ?>" id="accept_substitutes" class="" style="float:left" />
+                            <label for="accept_substitutes" style="display:inline-block; padding-bottom: 7px; float:left; font-size:13px; line-height:15px; margin-left:7px; width:237px;"><?php echo $this->__('Agree to Substitutes') ?></label>
+                        	<div id="popup_flexi" class="" style="background-color: #EAEAEA;border-radius: 7px;color: #000;display: block;float: left;padding: 11px;"><h4 style="font-size:13px;">Substitution Note</h4><p style="font-size:12px; background:#dbdbdb; padding:5px;">Due to constantly changing inventory levels and the time between when you place your order and when you receive delivery, there is a small possibility that we will be 'out of stock' of the exact item you chose. If you choose to 'accept substitutes', we will fulfill your order with a product of equal or greater quality. If you choose not to accept substitutes and this situation arises, we will not be able to fulfill this part of your order.</p><div class="popup-action"><?php /*?><button onclick="accepted_unattended()" style="float:right;" class="button" type="button"><span>Ok</span></button></div></div><?php */?>
+                        </div>
+                    </div>
+                </li>
+                <?php echo $this->getChildHtml('form.additional.info'); ?>
+                <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+            </ul>
+            <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+        </div>
+        <div class="buttons-set">
+           <?php /*?> <p class="required"><?php echo $this->__('* Required Fields') ?></p><?php */?>
+            <p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>" class="back-link"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+            <button  type="submit"  name="submit" title="<?php echo $this->__('Submit') ?>" class="button o-button"><span><span><?php echo $this->__('Submit') ?></span></span></button>
+        </div>
+        <?php if (Mage::helper('checkout')->isContextCheckout()): ?>
+            <input name="context" type="hidden" value="checkout" />
+        <?php endif; ?>
+    </form>
+    <script type="text/javascript">
+    //<![CDATA[
+        var dataForm = new VarienForm('form-validate', true);
+        <?php //if($this->getShowAddressFields()): ?>
+        new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
+        <?php //endif; ?>
+    //]]>
+    </script>
+</div>
+
+<?php ?>
+
+<script type="text/javascript">
+function validatepostcode() {
+    var a = jQuery("#zipcode").val();
+    var filter = /^[0-9-+]+$/;
+    if (filter.test(a)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+jQuery('#registerbtn').click(function(e) {  
+var zipcodevalue = jQuery("#zipcode").val();
+//alert(zipcodevalue);
+ var z =  new Array("44011","44017","44022","44023","44039","44040","44070","44077","44092","44094","44095","44101","44102","44103","44104","44105","44106","44107","44108","44109","44110","44111","44112","44113","44114","44115","44116","44117","44118","44119","44120","44121","44122","44123","44124","44125","44126","44127","44128","44129","44130","44131","44132","44133","44134","44135","44136","44137","44138","44139","44140","44141","44142","44143","44144","44145","44146","44147","44149","44181","44188","44190","44191","44192","44193","44194","44195","44197","44198","44199","44202");
+ //alert(z);
+  if(jQuery("#zip").val() == '' && jQuery("#zipcode").val() != '' ){
+   document.getElementById('validzip').innerHTML='Thank you for your interest, but we are not currently delivering to your area. Please stay tuned on our Facebook page and the FAQ page for any changes to our service area!'
+  }
+		if(zipcodevalue instanceof z){
+		alert('yes')
+		}else{ 
+			alert('sucess');
+			}
+});
+
+function validatezip(){
+var customerzip =  jQuery("#zipcode").val();//document.getElementById('zipcode').value;
+
+var zipcodevalid = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;  
+jQuery("#zip option[value='" + customerzip + "']").attr("selected","selected");
+ if (validatepostcode('customerzip')) {
+  if(jQuery("#zip").val() == ''){
+	if(jQuery("#zipcode").val() == ''){
+		//document.getElementById('validzip').innerHTML='Please Enter Zipcode'
+	} 
+		if(jQuery("#zipcode").val() == jQuery("#zip").val()){
+		}else{
+		//document.getElementById('validzip').innerHTML='Thank you for your interest, but we are not currently delivering to your area. Please stay tuned on our Facebook page and the FAQ page for any changes to our service area!'
+		}
+	/******************************** Add Ajax******************/
+	//document.getElementById('validzip').innerHTML='Thank you for your interest, but we are not currently delivering to your area. Please stay tuned on our Facebook page and the FAQ page for any changes to our service area!'
+	jQuery.ajax({
+        type: "POST", 
+        data: "submit=1&postcode="+customerzip,
+        url: "http://www.prestofreshgrocery.com/check.php<?php //echo $this->getPostActionUrl() ?>",
+        success: function(data)
+        {   
+       // jQuery('#zipcode').val("");
+		// document.getElementById('validzip').innerHTML='Thank you for your interest, but we are not currently delivering to your area. Please stay tuned on our Facebook page and the FAQ page for any changes to our service area!'
+			//alert(jQuery('#zipcode').html(data));
+           // $('#userError').html(data);  
+            // alert( "Data Saved: " + data );
+ 
+
+        }
+    });
+	
+	/***********************************************************/
+	
+	//alert('please enter valid zip');
+	}else{
+		document.getElementById('validzip').innerHTML=''
+  }
+		
+		}
+        else {
+          if( jQuery("#zipcode").val()==''){}else{
+		    //jQuery('#validzip').html('Invalid');
+           // jQuery('#validzip').css('color', 'red');
+		   }
+        }
+		
+		
+		
+	
+
+ 
+  
+  
+}
+function _message(){ 
+		jQuery('#popup_flexi').show();
+	if(jQuery('#accept_substitutes').is(":checked")){
+		jQuery('#popup_flexi').show();
+	}else{
+		jQuery('#popup_flexi').show();
+	}
+}
+new Ajax.Autocompleter("group_code", "autocomplete_choices", "/getAllGroups.php", {
+  paramName: "value", 
+  minChars: 2, 
+});
+
+function accepted_unattended(){
+	jQuery('#popup_flexi').show();
+}
+</script>
+
+<!--Checking zip code start-->
+<!-- <script type="text/javascript" src="jquery-1.2.6.min.js"></script> -->
+<SCRIPT type="text/javascript">
+<!--
+/*
+Credits: Bit Repository
+Source: http://www.bitrepository.com/web-programming/ajax/username-checker.html 
+*/
+
+//pic1 = new Image(16, 16); 
+//pic1.src = "loader.gif";
+
+jQuery(document).ready(function(){
+
+jQuery("#zipcode").change(function() { 
+
+var usr = jQuery("#zipcode").val();
+
+if(usr.length >= 4)
+{
+jQuery("#status").html('<img src="http://www.prestofreshgrocery.com/skin/frontend/default/theme509/images/loader.gif" align="absmiddle">&nbsp;Checking availability...');
+
+    jQuery.ajax({  
+    //type: "GET",  
+	 type: "GET", 
+     url: "http://www.prestofreshgrocery.com/check.php",
+    data: "postcode="+ usr,  
+	 crossDomain: true,
+     datatype: 'jsonp',
+	 // dataType : "html",
+	 headers: {
+                    'Access-Control-Allow-Origin': '*'
+                },
+    success: function(msg){  
+	
+   jQuery("#status").ajaxComplete(function(event, request, settings){ 
+	//alert(msg);
+	if(msg == 1)
+	{ 
+        jQuery("#zipcode").removeClass('object_error'); // if necessary
+		jQuery("#zipcode").addClass("object_ok");
+		jQuery("#status").html('&nbsp;<img src="http://www.prestofreshgrocery.com/skin/frontend/default/theme509/images/tick.gif" align="absmiddle" margin-top:3px;>&nbsp;<font color="green">We currently deliver to your area!</font>'); 
+	}  
+	else    
+	{   
+		jQuery("#zipcode").removeClass('object_ok'); // if necessary
+		jQuery("#zipcode").addClass("object_error");
+		jQuery(this).html(msg);
+		jQuery("#status").html('&nbsp;<img src="http://www.prestofreshgrocery.com/skin/frontend/default/theme509/images/cross.png" align="absmiddle" style="margin-top:2px;">&nbsp;<font color="red">We\'re sorry. We do not currently deliver to your area.<br/> Please check our FAQ page for our current service area map. Thank you!</font>');
+	}  
+   
+   });
+
+ } 
+   
+  }); 
+
+}
+else
+	{
+	jQuery("#status").html('<font color="red">The zipcode should have at least <strong>5</strong> characters.</font>');
+	jQuery("#zipcode").removeClass('object_ok'); // if necessary
+	jQuery("#zipcode").addClass("object_error");
+	}
+
+});
+
+});
+
+//-->
+</SCRIPT>
+<!--checking zip code end -->

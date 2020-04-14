@@ -1,0 +1,120 @@
+<?php
+/**
+ * customize by: http://istockphp.com
+ * like us on facebook: http://www.facebook.com/pages/Istockphp/235451993242578
+ * follow us on twitter: http://twitter.com/istockphp
+ */
+?>
+<style type="text/css">
+.error {
+    color: #f00 ;
+    font-weight: bold; font-size:11px;
+}
+.processing{position: fixed; text-align: center;top: 350px; width: 100%;  z-index: 99999;}
+.customer-accountpage-index .PrestoPremier label{  color: #000; font-size: 13px; font-weight: bold;}
+.div1 , .customer_prod{ border: 1px solid #bbb;  }
+.PrestoPremier {background: none repeat scroll 0 0 #fff;border: 1px solid #bbb;clear: both;min-height: 123px;padding: 10px;width: 37%;}
+.div1{float: left; padding:10px;}
+.customer_prod{ float:right;padding:10px;}
+#deliverydateedit{background: none repeat scroll 0 0 #3f7e19;border-radius: 5px;color:#beeb20;display: block;padding: 5px 8px;text-align: center; width: 10%;}
+.note { color: #df280a; border: 1px solid #f16048; font-size: 14px; padding: 10px 0; background:url(http://localhost/Demo/magento-1.8.1.0/magento/skin/frontend/default/default/images/i_msg-error.gif)scroll 6px center #faebe7 no-repeat;   padding: 10px 0 10px 30px; margin:10px 0;} 
+</style>
+<div class="page-title">
+    <h1><?php echo $this->__('PrestoPremier Membership (Free Delivery)') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php $a = Mage::getSingleton('customer/session')->isLoggedIn();
+ 	  $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+	  $customer_id = Mage::getSingleton('customer/session')->getCustomer()->getId();
+	  $productTable = 'mg_customer_subsciption';
+	  $query = "SELECT * FROM " . $productTable . " WHERE customer_id = '".$customer_id."'";
+	  $result = $connection->query($query);
+	  $row = $result->fetch();
+//echo '<pre>';print_r($row);
+ ?>	<?php if($row['active'] == 'Yes'){?>
+ 
+    <p>Thank you for your PrestoPremier membership. As a Premier member you will have access to unlimited free delivery and receive priority service from customer service. We look forward to continuing to serve you - please let us know if we can do anything to improve your experience!</p>
+	<br/>
+  
+
+	
+    <div class="PrestoPremier" style="border: 1px solid #bbb;    padding: 10px; ">
+        <div class="div1" >
+ 	        <label style="color:#1e7ec8"><u>Schedule </u></label>
+            <table cellpadding="3" cellspacing="3" width="300" style="padding:10px 0;">
+            <tr>
+                <td colspan="2"><label>Start date:</label>  </td><td><?php echo date('M , d , Y',strtotime($row['start_date']));?></td>
+            </tr>
+            <tr>
+                <td colspan="2"><label>Expire date:</label>  </td><td><?php echo date('M , d , Y',strtotime($row['expiry_date']));?></td>
+            </tr>
+            <tr>
+                <td colspan="2"><label>Duration: </label> </td><td><?php echo $row['duration'];?></td>
+            </tr>
+            <tr>
+                <td colspan="2"><label>Active:</label>	  </td><td><?php echo $row['active'];?></td>
+            </tr>
+            </table>
+        </div>
+        <div class="customer_prod" style="display:none">
+	        <label style="color:#1e7ec8"><u>Purchased Item</u></label>
+            <table cellpadding="3" cellspacing="3" width="300" style="padding:10px 0;">
+            <tr><td><label>Product Name:</label></td><td></td></tr>
+            <tr><td><label>Sku:</label></td><td></td></tr>
+            <tr><td><label>Qty:</label></td><td></td></tr>
+            
+            </table>
+        </div>
+    </div>
+    <?php } else{ 
+
+	 $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+        $customer_id = Mage::getSingleton('customer/session')->getCustomer()->getId();
+        $productTable = 'mg_customer_subsciption';
+        $query = "SELECT * FROM " . $productTable . " WHERE customer_id = '".$customer_id."'";
+        $result = $connection->query($query);
+        $row = $result->fetch();
+	$currentdate =  date('m/d/y');
+	$nextyear    = strtotime("+1 year", strtotime($currentdate));
+	$expirydate  = date("m/d/y", $nextyear);
+		
+	?>
+	<p>
+	<?php echo 'Interested in Free Delivery?! Become a PrestoPremier member! For $89 per year, you will have access to UNLIMITED free delivery on all items. Simply click the button below to get started - its as simple as that...no discount codes, etc.';?>
+    </p>
+	<?php /*?><a href="<?php echo 'https://www.prestofreshgrocery.com/newstaging/free-shipping-subscription.html';?>">Click Here</a><?php */?>
+  	<!-- <br /><a href="javascript:void(0);" onClick="dosubmit();"><span style="background: #3f7e19;color: #beeb20; padding:5px 15px; border-radius:3px;">Checkout</span></a> -->
+	
+    
+    
+
+	<div style="float:left; width:120px; cursor:pointer;">
+	<form id="myForm" method="post" name="myForm" >	
+    <select name="super_attribute[3]" style="display:none">
+    <option selected="selected" price="89" value="1">1 Year +$89.00</option>
+    </select>
+    <input type="text" value="<?php echo $currentdate; ?>" name="options[2]" class="input-text  product-custom-option" id="options_2_text"style="display:none">
+    <input type="text" value="<?php echo $expirydate; ?>" name="option[1]" class="input-text  product-custom-option" id="options_1_text"style="display:none">
+    <input type="text" name="qty" size="1" value="1" style="display:none"> 
+    <input type="hidden" name="product" value="24987">
+   <input type="submit" style="background:#3f7e19;color:#beeb20;padding:5px 15px;border:0px;border-radius:5px;margin-top:10px;font-size:15px;cursor:pointer;" name="submit" value="Checkout"></form>
+   </div>
+	
+	<div style="clear:both;">&nbsp;</div>
+	
+	<?php 	}?>
+    <?php /*if($row['active'] == 'No' && $row['active'] != ''){?>
+    <p class="note"><span>Your subscription will expire.</span> </p><?php } */?>
+
+  <p style="color:#65ae01; font-size:13px;">Please note that the subscription will automatically renew at the end of your subscription period. It can be cancelled at any time, but a refund will only be issued if no orders have been placed as a Premier member.</p>
+  <br/>
+  <p style="color:#65ae01; font-size:13px;">Please note: subscription and products cannot be purchased at the same time. Please subscribe first, and then place a product order.</p>
+  <br />
+ 
+    
+    
+     <div class="buttons-set" style="float:left; width:70px;">
+    <p class="back-link"><a href="<?php echo $this->getUrl('customer/account/') ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+</div>
+	<br/>
+    

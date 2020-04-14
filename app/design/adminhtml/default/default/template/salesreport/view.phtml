@@ -1,0 +1,740 @@
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php 
+        
+		$_product = $this->getProduct();
+		
+		if(isset($_POST["email"]))
+		{
+		        session_start();
+				include_once('cc/ConstantContact.php'); // Set path accordingly
+				$username = 'alnewhart';
+				$apiKey = '6e2bbbd8-1255-41bc-9ec0-0cc1ac55335f';
+				$password = 'janitor';
+				
+				$ConstantContact = new Constantcontact("basic", $apiKey, $username, $password);
+
+				$emailAddress = $_POST["email"];
+				
+				// Search for our new Email address
+				$search = $ConstantContact->searchContactsByEmail($emailAddress);
+				
+				// If the search did not return a contact object
+				if($search == false){
+										  $Contact = new Contact();
+						$Contact->emailAddress = $emailAddress;
+						//$Contact->firstName = $firstName;
+						//$Contact->lastName = $lastName;
+						// represents the contact list identification link(s)
+						$contactList = 'http://api.constantcontact.com/ws/customers/alnewhart/lists/1';
+						// For example, 
+						// "http://api.constantcontact.com/ws/customers/USER_NAME/lists/14"; 
+						$Contact->lists = (!is_array($contactList)) ? array($contactList) : $contactList;
+					
+					
+						$NewContact = $ConstantContact->addContact($Contact);
+						if($NewContact){
+							
+							$email_ready=1;
+					        
+						}
+				}
+				else
+				{
+				    $email_ready=1;
+				}
+
+		}
+		else
+		{
+		    $links = "";
+		    Mage::getSingleton('core/session')->setMyValue($links);
+		}
+		
+   $pid = $_product->getId();
+   $fid = 0 ;
+   
+                   $collection2 = Mage::getModel('catalog/product')->getCollection();
+	               $collection2->addAttributeToSelect('*');
+	               $collection2->addFieldToFilter('freegift', '1');
+				   $collection2 ->addAttributeToSort('created_at', 'desc');   
+				   $collection2->getSelect()->limit(1);
+				   
+				   foreach($collection2 as $item)
+					  {
+						 $fid = $item["entity_id"];
+					  } 
+					  
+				
+
+           $check = Mage::getSingleton('core/session')->getMyValue();
+    
+		   if($pid==$fid)
+		   {
+		   			   
+			   if(Mage::getSingleton('customer/session')->isLoggedIn() || $email_ready==1 )
+			   {
+			   
+				require_once 'app/Mage.php';
+				Mage::app();
+			
+				$id=5259; // get Customer Id
+				$customer = Mage::getModel('customer/customer')->load($id);
+			
+				$storeId = $customer->getStoreId();
+			
+				$quote = Mage::getModel('sales/quote')
+					->setStoreId($storeId);
+				$quote->assignCustomer($customer);
+			// add product(s)
+				$product = Mage::getModel('catalog/product')->load($fid);
+				$buyInfo = array(
+					'qty' => 1,
+					'price'=>0
+					// custom option id => value id
+					// or
+					// configurable attribute id => value id
+				);
+				$params = array();
+				$links = Mage::getModel('downloadable/product_type')->getLinks( $product );
+				$linkId = 0;
+				foreach ($links as $link) {
+					$linkId = $link->getId();
+				}
+			
+				$params['qty'] = 1;
+				$params['links'] = array($linkId);
+				$request = new Varien_Object();
+				$request->setData($params);
+			
+				$quote->addProduct($product, $request);
+			
+			 if($emailAddress=="")
+			   {	
+					if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+						$emailAddress = $customer->getEmail();
+					}
+				}	
+
+
+               if($emailAddress!="")
+			   {			
+					$addressData = array(
+						'firstname' => 'Free',
+						'lastname' => 'Download Email :- '.$emailAddress,
+						'street' => 'Demo street',
+						'city' => 'Demo',
+						'postcode' => '123456',
+						'telephone' => '123456',
+						'country_id' => 'US',
+						'region_id' => 12, // id from directory_country_region table
+					);
+				}	
+			
+			     else
+				 {
+				    $addressData = array(
+						'firstname' => 'Free',
+						'lastname' => 'Download',
+						'street' => 'Demo street',
+						'city' => 'Demo',
+						'postcode' => '123456',
+						'telephone' => '123456',
+						'country_id' => 'US',
+						'region_id' => 12, // id from directory_country_region table
+					);
+				 }
+			
+				$billingAddress = $quote->getBillingAddress()->addData($addressData);
+				$shippingAddress = $quote->getShippingAddress()->addData($addressData);
+			
+				$shippingAddress->setFreeShipping( true )
+					->setCollectShippingRates(true)->collectShippingRates()
+					->setShippingMethod('freeshipping_freeshipping')
+					->setPaymentMethod('checkmo');
+				$quote->setCouponCode('ABCD');
+				$quote->getPayment()->importData(array('method' => 'checkmo'));
+				$quote->collectTotals()->save();
+				$service = Mage::getModel('sales/service_quote', $quote);
+				$service->submitAll();
+				$order = $service->getOrder();
+			
+				$incrementId = $order->getIncrementId();
+				$linkPurchased = Mage::getModel('downloadable/link_purchased')->load($incrementId, 'order_increment_id');
+				$downloadableItems = Mage::getResourceModel('downloadable/link_purchased_item_collection')->addFieldToFilter('purchased_id', $linkPurchased->getPurchasedId());
+				foreach ($downloadableItems as $item) {
+				$links = Mage::getModel('core/url')->getUrl('downloadable/download/link', array('id' => $item->getLinkHash(), '_secure' => true));
+				
+				$resource = Mage::getSingleton('core/resource');
+                $writeConnection = $resource->getConnection('core_write');
+                $table = $resource->getTableName('downloadable_link_purchased_item');
+                
+                 $query = "UPDATE ".$table." SET is_shareable=1 WHERE item_id = ". (int)$item["item_id"];
+			     $writeConnection->query($query);
+				
+				if($links!="")
+				{
+					Mage::getSingleton('core/session')->setMyValue($links);
+					
+				}	
+				
+				}
+			   
+			   }
+		   }		   
+?>
+
+
+<?php 
+				      $categoryIds = $_product->getCategoryIds();
+
+        if(count($categoryIds) ){
+            $firstCategoryId = $categoryIds[0];
+            $_category = Mage::getModel('catalog/category')->load($firstCategoryId);
+
+            if($_category->getName()=='MP3 Downloads')
+			{
+			   $category_id=8;
+			}
+        }
+					  if($category_id==8)
+					  {
+				?>
+				       <style>
+						 .email-wishlist
+						 {
+							display:none;
+						 }
+			          </style>
+			 
+				<?php	  
+					  }
+				?>
+				
+<style>
+.alert{
+width:372px !important;
+}
+
+.alert a
+{
+background: -webkit-gradient(linear, left top, left bottom, from(#f1f1f1), to(#fdfdfd));
+background: -moz-linear-gradient(top, #f1f1f1, #fdfdfd);
+background: -o-linear-gradient(top, #f1f1f1, #fdfdfd);
+background: -ms-linear-gradient(top, #f1f1f1, #fdfdfd);
+}
+
+.link-button{
+    margin-top:15px;
+    max-width:90px;
+    background-color:#2C5884;
+    border-color:#2C5884;
+    color:#fff;
+	padding:8px;
+    display:inline-block;
+    vertical-align:middle;
+    text-align:center;
+    text-decoration:none;
+    align-items:flex-start;
+    cursor:pointer;
+    -webkit-appearence: push-button;
+}
+
+a.link-button:hover
+{
+  color:#fff !important;
+}
+
+<?php if($pid==$fid)
+		   {
+?>		   
+.add-to-cart
+{
+   display:none;
+}
+<?php } ?>
+</style>
+
+
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div class="product-view" style="padding:30px;">
+
+
+
+    <div class="product-essential">
+    
+   <?php if($pid!=$fid)
+		   {
+    ?>		   
+    <form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+    
+    <?php } ?>
+        <div class="no-display">
+        
+        <?php if($pid!=$fid)
+		   {
+    ?>	
+            <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+            <input type="hidden" name="related_product" id="related-products-field" value="" />
+            
+            <?php } ?>
+        </div>
+
+        <div class="product-shop" style="width: 350px">
+            <div class="product-name">
+                <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+				<ul>
+				
+				 <?php if(is_array($_product->getAttributeText('speaker_name'))) { ?>
+				  <li style="font-style:italic;font-weight:bold">
+				  <?php 
+			    $ol=1;
+			    $kkk = $_product->getData('speaker_name');
+				
+				 $arrt=explode(",",$kkk);
+				 
+				 
+				// print_r($arrt);
+				
+				$max = sizeof($arrt);
+				
+				if($max>=1)
+				{
+				   for($j=0;$j<$max;$j++)
+				   {
+				   
+				      // $speaker_info = "";
+				     // echo $arrt[$j];
+				     $speaker_info = Mage::getModel('speaker/speaker')->loadByAttributeId($arrt[$j]);
+					 
+				?>
+				
+				<?php 
+				
+				   echo $speaker_info->getFirstName() . ' ' . $speaker_info->getLastName(); if($j<$max-1) { echo","; } 
+				
+				?>				
+				<?php } } ?>
+</li>				 <?php }  if($ol!=1) { 
+                        $sid=$_product->getData('speaker_name');
+						 $speaker_info = Mage::getModel('speaker/speaker')->loadByAttributeId($sid);
+						?>
+				
+					<li style="font-style:italic;font-weight:bold"><?php if($_product->getAttributeText('speaker_name')!="NULL" && $_product->getAttributeText('speaker_name')!=""): echo  $speaker_info->getFirstName() . ' ' . $speaker_info->getLastName(); endif;?></li>
+					<?php } ?> 
+				</ul>	
+				<br/>			
+            </div>
+            <?php if ($_product->getShortDescription()):?>
+                <div class="short-description">
+                    <h2><?php echo $this->__('Quick Overview') ?></h2>
+                    <div class="std"><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
+                </div>
+				
+            <?php endif;?>
+			
+			<?php /* if($_product->getAttributeText('audio_sample')=='Yes') { ?>
+			
+			<?php
+				//include the S3 class              
+				if (!class_exists('S3'))require_once('S3.php');
+				 
+				//AWS access info
+				if (!defined('awsAccessKey')) define('awsAccessKey', 'AKIAIEJMJZ57P2YQWNBA');
+				if (!defined('awsSecretKey')) define('awsSecretKey', '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');
+				 
+				//instantiate the class
+				$s3 = new S3(awsAccessKey, awsSecretKey);
+				 
+				//we'll continue our script from here in step 4!
+				 
+				?>
+				
+				
+				<?php
+					// Get the contents of our bucket
+					$bucket_contents = $s3->getBucket("acm-audio-samples/Audio_Player/");
+					 $r=1;
+					foreach ($bucket_contents as $file){
+					 
+						 $fname = $file['name'];
+						//echo $_product->getSku();
+						
+						$traay=explode($_product->getSku(),$fname);
+						if($traay[1]!="")
+						{
+						    $pos = strpos($fname, ".mp3");
+							
+							if($pos==true)
+							{
+							
+							  $r=$r+1;
+							  
+							  if($r==2)
+							  {
+							  ?>
+							  
+							  <div style="color:#306191;font-size:18px;margin-top:10px;">Audio Sample(s)</div>
+							  
+							  <?php
+							  }
+							  
+							  $fname = str_replace(' ', '+', $fname);
+							  $realname=$_product->getSku()."/";
+							  $tgb=explode($realname,$file['name']);
+							  $realname = str_replace('.mp3','', $tgb[1]);
+					?>
+					
+					<div id="player" style="margin-top:15px;">
+			            <div style="font-weight:bold;"> <a href="https://s3.amazonaws.com/acm-audio-samples/<?php echo $fname; ?>" download > <?php echo $realname; ?> </a> </div>
+			
+						<audio preload="auto" controls="controls">  
+							<source src="https://s3.amazonaws.com/acm-audio-samples/<?php echo $fname; ?>" />  
+						</audio> 
+
+			       </div>
+					<?php		  
+							}
+						}
+					}
+					?>
+			
+			<script type="text/javascript">
+ 
+				function loadPlayer() {
+					var audioPlayer = new Audio();
+					audioPlayer.controls="controls";
+					audioPlayer.addEventListener('ended',nextSong,false);
+					audioPlayer.addEventListener('error',errorFallback,true);
+					document.getElementById("player").appendChild(audioPlayer);
+					nextSong();
+				}
+				function nextSong() {
+					if(urls[next]!=undefined) {
+						var audioPlayer = document.getElementsByTagName('audio')[0];
+						if(audioPlayer!=undefined) {
+							audioPlayer.src=urls[next];
+							audioPlayer.load();
+							audioPlayer.play();
+							next++;
+						} else {
+							loadPlayer();
+						}
+					} else {
+						alert('the end!');
+					}
+				}
+				function errorFallback() {
+						nextSong();
+				}
+				function playPause() {
+					var audioPlayer = document.getElementsByTagName('audio')[0];
+					if(audioPlayer!=undefined) {
+						if (audioPlayer.paused) {
+							audioPlayer.play();
+						} else {
+							audioPlayer.pause();
+						}
+					} else {
+						loadPlayer();
+					}
+				}
+				function pickSong(num) {
+					next = num;
+					nextSong();
+				}
+			 
+				var urls = new Array();
+				urls[0] = 'http://americanchristianministries.org/simple/sample1.mp3';
+				
+				var next = 0;
+			</script>
+			 
+			
+			
+			<?php } */
+				
+				if(Mage::getSingleton('core/session')->getMyValue())
+				{
+				
+				if($pid==$fid)
+		              {
+				  $href=Mage::getSingleton('core/session')->getMyValue();
+				
+				   if($email_ready==1)
+				   {
+				      // echo '<b/>Donwnload is ready , click to download<b/><br/>';
+					  $url = $href;
+                       Mage::app()->getFrontController()->getResponse()->setRedirect($url);
+				   }
+				   
+				  
+				   echo '<a href="'.$href.'" class="link-button" id="donwloadid" >Download</a>';   
+				   }
+				}
+				else
+				{
+				  
+				   if($pid==$fid)
+		              {
+			  ?>
+			  
+			            <form action="" method="post" name="login-form" id="login-form">
+        <div  style="clear:both;">
+            
+            <div class="">
+                <div class="content">
+                    <h2></h2>
+                    <p></p>
+                    <ul class="form-list">
+                        <li>
+                            <label for="email" class="required"><em>*</em>Please enter a valid email to download this free gift.</label>
+                            <div class="input-box">
+                                <input type="text" name="email" value="" id="email" class="input-text required-entry validate-email" title="Email Address">
+								
+                            </div>
+                        </li>
+                        
+                                                                    </ul>
+                    
+
+
+                    <p class="required">* Required Fields</p>	           
+                <div class="buttons-set">
+                   
+                    <button type="submit" class="button" title="Login" name="send" id="send2"><span><span>Download</span></span></button>
+            </div>
+					                    </div>
+            </div>
+        </div>
+
+ 
+    
+    </form>
+			  
+			  <?php		  
+					 } 
+				}
+				?>
+            
+      
+            <?php //echo $this->getChildHtml('alert_urls') ?>
+            <?php echo $this->getChildHtml('product_type_data') ?>
+            <?php //echo $this->getTierPriceHtml() ?>
+            <?php //echo $this->getChildHtml('extrahint') ?>
+
+            <?php /*if (!$this->hasOptions()):?>
+                <div class="add-to-box">
+                    <?php if($_product->isSaleable()): ?>
+                        <?php echo $this->getChildHtml('addtocart') ?>
+                        <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+                            <span class="or"><?php echo $this->__('OR') ?></span>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php echo $this->getChildHtml('addto') ?>
+                </div>
+                <?php echo $this->getChildHtml('extra_buttons') ?>
+            <?php endif;*/ ?>
+    
+
+            
+
+
+            <?php //echo $this->getChildHtml('other');?>
+
+            <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+            <?php endif;?>  
+			<!--<div class="row-product" style="border:none">
+			<?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
+            
+			<?php /*if ($this->canEmailToFriend()): ?>
+                <p class="email-friend"><a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a></p>
+            <?php endif;*/ ?>
+
+			</div>-->
+	<?php if($_product->getTypeId()== 'giftcards'): ?>		
+			<div style="padding:10px 0px;border-bottom:1px solid #CCC">
+				<?php $buttonTitle = $this->__('Add to Cart'); ?>
+				
+				<input style="float: none;display:none" type="text" name="qty" id="qty" maxlength="12" value="1" title="<?php echo $this->__('Qty') ?>" class="input-text qty in-block" />
+				<button style="float: none;" type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+			</div>
+			<div class="in-block" style="color:#000;padding:10px 0px;">ITEM# : <?php echo $_product->getSku(); ?></div>
+	<?php endif;?>
+		<?php if ($_product->isSaleable() && $this->hasOptions()):?>
+            <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+        <?php endif;?>
+			<br/>
+			<div class="product-collateral">
+				<?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):?>
+						<div class="box-collateral <?php echo "box-{$alias}"?>">
+							<?php if ($title = $this->getChildData($alias, 'title')):?>
+							<h2><?php echo $this->escapeHtml($title); ?></h2>
+							<?php endif;?>
+							<?php echo $html; ?>
+						</div>
+				<?php endforeach;?>
+			   
+				<?php echo $this->getChildHtml('product_additional_data') ?>
+				
+				<?php $attStuff= $_product->getData(); ?>
+				<?php if( !empty( $attStuff['videoid'] ) ): ?>        
+				<div class="video">
+					 <p><span>Video review of:</span> Lorem ipsum dolor sit amet conse ctetur adipisicing elit</p>
+					 <iframe src="<?php echo $attStuff['videoid']; ?>" frameborder="0" allowfullscreen></iframe>
+				</div>
+				<?php endif; ?>
+				 
+			</div>
+        </div>
+
+        <div class="product-img-box" style="width: 320px;">
+            <?php echo $this->getChildHtml('media') ?>
+			<div class="email-wishlist">
+				 <?php //if (!$this->hasOptions()):?>
+					<?php echo $this->getChildHtml('addto') ?>
+				<?php  //endif; ?>
+				<div class="row-product">
+				<?php if ($this->canEmailToFriend()): ?>
+					<p class="email-friend"><a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a></p>
+				<?php endif; ?>
+				</div>
+			</div>
+			<div class="share bordercolor" style="clear:both;margin: 20px 0px 14px;"><!-- AddThis Button BEGIN -->
+				<div class="addthis_toolbox addthis_default_style ">
+					<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+					<a class="addthis_button_tweet"></a>
+					<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+					<a class="addthis_counter addthis_pill_style"></a>
+				</div>
+				<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f419f410efe76d3"></script>
+			</div>
+			
+			 <?php if($_product->isSaleable()): ?>
+					<?php if($_product->getTypeId()!= 'giftcards'): ?>	
+                        <?php echo $this->getChildHtml('addtocart') ?>
+					<?php endif; ?>
+			<?php  endif;  ?>
+        </div>
+
+        <div class="clearer"></div>
+        <?php if($pid!=$fid)
+		   {
+    ?>		
+    </form>
+    <script type="text/javascript">
+    //<![CDATA[
+	
+        var productAddToCartForm = new VarienForm('product_addtocart_form');
+		
+		
+    	productAddToCartForm.submit = function(button, url) {
+		if (this.validator.validate()) {
+			var form = this.form;
+			var oldUrl = form.action;
+			if (url) {
+				form.action = url;
+			}
+			var e = null;
+			// Start of our new ajax code
+			if (!url) {
+				url = jQuery('#product_addtocart_form').attr('action');
+			}
+			url = url.replace("checkout/cart","ajax/index"); // New Code
+			var data = jQuery('#product_addtocart_form').serialize();
+			data += '&isAjax=1';
+			jQuery('#ajax_loader').show();
+			try {
+				jQuery.ajax( {
+					url : url,
+					dataType : 'json',
+					type : 'post',
+					data : data,
+					success : function(data) {
+						jQuery('#ajax_loader').hide();
+						if(data.status == 'ERROR'){
+											jQuery('body').append('<div class="alert"></div>');
+						jQuery('.alert').slideDown(400);
+								jQuery('.alert').html(data.message).append('<button></button>');
+				jQuery('button').click(function () {
+                jQuery('.alert').slideUp(400);
+                 });	
+					jQuery('.alert').slideDown('400',function(){
+									 	setTimeout(function(){
+											jQuery('.alert').slideUp('700000000000000000000000000',function(){jQuery(this).slideUp(700000000000000000000000000)});
+										},700000000000000000000000000)
+									 });
+						}else{
+													jQuery('body').append('<div class="alert" style="top:30%;"></div>');
+						jQuery('.alert').slideDown(400);
+									jQuery('.alert').html(data.message).append('<button></button>');
+				jQuery('.alert').html(data.message).wrapInner('<a href="<?php echo $this->getUrl('checkout/cart') ?>"></a>');
+				jQuery('.alert').html(data.message).append('<div style="float:left;clear:both;margin-top:20px;"><a href="javascript:void(0);" style="border-bottom: 1px solid #E5E5E5; border-radius: 2px 2px 2px 2px;color: #323232;height: 31px;line-height: 31px;padding-left: 11px;padding-right: 11px; background: -moz-linear-gradient(center top , #F1F1F1, #FDFDFD) repeat scroll 0 0 rgba(0, 0, 0, 0); padding-top:10px; padding-bottom:10px;" onClick="hidealert();">Continue Shopping </a>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <a href="<?php echo $this->getUrl('checkout/cart') ?>" style="background: -moz-linear-gradient(center top , #F1F1F1, #FDFDFD) repeat scroll 0 0 transparent;border-bottom: 1px solid #E5E5E5; border-radius: 2px 2px 2px 2px;color: #323232;height: 31px;line-height: 31px;padding-left: 11px;padding-right: 11px; padding-top:10px; padding-bottom:10px;">View Cart</a> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <a href="<?php echo $this->getUrl('checkout/onepage') ?>" style="background: -moz-linear-gradient(center top , #F1F1F1, #FDFDFD) repeat scroll 0 0 transparent;border-bottom: 1px solid #E5E5E5; border-radius: 2px 2px 2px 2px;color: #323232;height: 31px;line-height: 31px;padding-left: 11px;padding-right: 11px; padding-top:10px; padding-bottom:10px;">Checkout</a> </div>');
+				jQuery('button').click(function () {
+                jQuery('.alert').slideUp(400);
+                 });	
+					jQuery('.alert').slideDown('400',function(){
+									 	setTimeout(function(){
+											jQuery('.alert').slideUp('400',function(){jQuery(this).slideUp(400)});
+										},8500000000000000)
+									 });
+ 
+	                        if(jQuery('.block-cart')){
+	                            jQuery('.block-cart').replaceWith(data.sidebar);
+	                        }
+	                        if(jQuery('.header .links')){
+	                            jQuery('.header .links').replaceWith(data.toplink);
+	                        }
+										if(jQuery('.block-cart-header')){
+	            jQuery('.block-cart-header').replaceWith(data.sidebar_header);
+	        }
+						}
+					}
+				});
+			} catch (e) {
+			}
+			// End of our new ajax code
+			this.form.action = oldUrl;
+			if (e) {
+				throw e;
+			}
+		}
+	}.bind(productAddToCartForm);
+    productAddToCartForm.submitLight = function(button, url){
+            if(this.validator) {
+                var nv = Validation.methods;
+                delete Validation.methods['required-entry'];
+                delete Validation.methods['validate-one-required'];
+                delete Validation.methods['validate-one-required-by-name'];
+                if (this.validator.validate()) {
+                    if (url) {
+                        this.form.action = url;
+                    }
+                    this.form.submit();
+                }
+                Object.extend(Validation.methods, nv);
+            }
+        }.bind(productAddToCartForm);
+    //]]>
+	
+	
+	function hidealert()
+	{
+	jQuery('.alert').hide();	
+	}	
+	
+
+
+    </script>
+    <?php } else { ?>
+	 <script type="text/javascript">
+    //<![CDATA[
+        var dataForm = new VarienForm('login-form', true);
+    //]]>
+    </script>
+	<?php } ?>
+    </div>
+</div><?php echo $this->getChildHtml('upsell_products') ?>

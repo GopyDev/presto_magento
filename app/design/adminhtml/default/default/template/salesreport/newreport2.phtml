@@ -1,0 +1,619 @@
+<?php
+     $kbt45=0;
+     $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+<?php 
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+	
+	if(!empty($_REQUEST['from']) ){
+		$orders_row = array();
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+		$rr=explode("/",$from);
+		$adate=$rr[1]."_".$rr[0]."_".$rr[2];
+		$adate3=$rr[2]."-".$rr[0]."-".$rr[1];
+		$rr2=explode("/",$to);
+		$adate2=$rr2[1]."_".$rr2[0]."_".$rr2[2];
+		$to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		$from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+		$datetime1 = new DateTime($from_date);
+		$datetime2 = new DateTime($to_date);
+		$interval = $datetime1->diff($datetime2);
+		$kdf =  $interval->format('%R%a');
+	}
+?>
+<div id="anchor-content" class="middle">
+ 
+
+  <div id="page:main-container">
+    <div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Sales Detail Report");?></h3></td>
+            <td class="form-buttons"><button style="" onclick="filterFormSubmit.submit()" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Show Report</span></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Start Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $from; ?>" id="sales_report_from" name="from" />
+                      <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_from",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_from_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  <tr>
+                    <td class="label"><label for="sales_report_from">End Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $to; ?>" id="sales_report_to" name="to" />
+                      <img style="" title="Select Date" id="sales_report_to_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_to",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_to_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  
+				   <tr>
+                    <td class="label"><label for="sales_report_from">End Date<span class="required">*</span></label></td>
+                    <td class="value"><select name="type">
+					<option value="1">Sales By Zipcode</option>
+					<option value="2" <?php if($_GET["type"]==2){ ?> selected <?php } ?> >Sales By Customer Group</option>
+					</select></td>
+					</tr>
+					
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	
+	<div>
+	
+	
+	<style>
+body>.wrapper
+{
+   background:none;
+   font-weight:bold;
+   color:#000;
+   overflow:hidden;
+}
+.page
+{
+   width:90%;
+}
+td, th 
+{
+   padding:5px !important;
+   font-size:12px;
+   color:#000;
+}
+table
+{
+   border-color:#000;
+}
+th 
+{
+   color:#000;
+}
+</style>
+  <?php if(isset($_GET["type"]) && $_GET["type"]==1) { ?>
+    <div style="margin-top:10px;margin-bottom:10px;">
+
+<script type="text/javascript">
+	  function goto(id) {
+				jQuery('html, body').animate({
+					scrollTop: jQuery('#tr-'+id).offset().top
+				}, 2000);
+	}
+</script>
+	
+<?php
+$Zip[0]=44012;
+$Zip[1]=44017;
+$Zip[2]=44022;
+$Zip[3]=44023;
+$Zip[4]=44039;
+$Zip[5]=44040;
+$Zip[6]=44056;
+$Zip[7]=44060;
+$Zip[8]=44067;
+$Zip[9]=44070;
+$Zip[10]=44077;
+$Zip[11]=44087;
+$Zip[12]=44092;
+$Zip[13]=44094;
+$Zip[14]=44095;
+$Zip[15]=44101;
+$Zip[16]=44102;
+$Zip[17]=44103;
+$Zip[18]=44104;
+$Zip[19]=44105;
+$Zip[20]=44106;
+$Zip[21]=44107;
+$Zip[22]=44108;
+$Zip[23]=44109;
+$Zip[24]=44110;
+$Zip[25]=44111;
+$Zip[26]=44112;
+$Zip[27]=44113;
+$Zip[28]=44114;
+$Zip[29]=44115;
+$Zip[30]=44116;
+$Zip[31]=44117;
+$Zip[32]=44118;
+$Zip[33]=44119;
+$Zip[34]=44120;
+$Zip[35]=44121;
+$Zip[36]=44122;
+$Zip[37]=44123;
+$Zip[38]=44124;
+$Zip[39]=44125;
+$Zip[40]=44126;
+$Zip[41]=44127;
+$Zip[42]=44128;
+$Zip[43]=44129;
+$Zip[44]=44130;
+$Zip[45]=44131;
+$Zip[46]=44132;
+$Zip[47]=44133;
+$Zip[48]=44134;
+$Zip[49]=44135;
+$Zip[50]=44136;
+$Zip[51]=44137;
+$Zip[52]=44138;
+$Zip[53]=44139;
+$Zip[54]=44140;
+$Zip[55]=44141;
+$Zip[56]=44142;
+$Zip[57]=44143;
+$Zip[58]=44144;
+$Zip[59]=44145;
+$Zip[60]=44146;
+$Zip[61]=44147;
+$Zip[62]=44149;
+$Zip[63]=44181;
+$Zip[64]=44188;
+$Zip[65]=44190;
+$Zip[66]=44191;
+$Zip[67]=44192;
+$Zip[68]=44193;
+$Zip[69]=44194;
+$Zip[70]=44195;
+$Zip[71]=44197;
+$Zip[72]=44198;
+$Zip[73]=44199;
+$Zip[74]=44202;
+$b9=0;
+for($k=0;$k<=74;$k++)
+	{
+	    $total_order=0;
+		$total_sales=0;
+		
+		for($i=0;$i<=$kdf;$i++){
+				 
+				            $Date1 = $adate3;
+							$date = new DateTime($Date1);
+							$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+							$kbt3 = $date->format('d_m_Y');
+							$kbt4 = $date->format('m/d/Y');
+							
+				$sql3 = "SELECT m.order_number,msf.base_grand_total from `mg_shipping_delivery_window` m  
+	            left join mg_sales_flat_order msf on msf.increment_id = m.order_number
+				left join mg_sales_flat_order_address msa on msa.parent_id = msf.entity_id 
+				where m.`window` LIKE '%".$kbt3."' and msa.postcode='".$Zip[$k]."' and msf.status!='canceled' and msa.address_type='shipping' group by m.order_number";
+				// echo "<br/>";
+				
+				$OrderNu = $connection->fetchAll($sql3);
+				$rr=0;
+				foreach ($OrderNu as $value) {
+				
+					if($value["order_number"]!="")
+					{
+					   $total_order = $total_order + 1;
+					   $total_sales = $total_sales + $value["base_grand_total"];
+					}
+				
+				}
+				
+				
+       }
+	   
+	   if($total_order>=1)
+	   {
+	      $summary[$Zip[$k]]=$total_order;
+		  $summary2[$Zip[$k]]=$total_sales;
+		  $b9 = $b9 + 1;
+	   }
+	}
+	arsort($summary);
+	?>
+	
+	<div style="font-size:17px;font-weight:bold;margin-bottom:10px;color:green">Sales By Zipcodes :</div>
+	
+	<?php
+	foreach ($summary as $key => $val) {
+	?>
+	
+	<div style="float:left;width:170px;margin-left:5px;">
+    <a href="javascript:void(0);" onClick="goto(<?php echo $key; ?>)" style="margin-left:5px;color:#eb5e00"><?php echo "$key : $val"; ?><span style="color:#000;"><?php echo " : $".$summary2[$key]; ?></span></a> 
+	</div>
+	
+    <?php
+    }
+?>
+
+
+   <div style="clear:both;height:10px">&nbsp;</div>
+
+	<table border=1 style="border-collapse:collapse;font-size:11px;clear:both;margin-top:15px;" width="100%" >
+	
+	<tr>
+	<th style="text-align:left;width:90px;"><b>Zip Code</b></th>
+	<th><b>No of Orders</b></th>
+	<th><b>Total Sales</b></th>
+	<th style="width:720px"><b>Orders</b></th>
+	</tr>
+	<?php
+    for($k=0;$k<=74;$k++)
+	{
+	
+	    $total_order=0;
+		$total_sales=0;
+		$orders="";
+		$customers="";
+		$address="";
+		$totals="";
+		$odates="";
+	    for($i=0;$i<=$kdf;$i++){
+				 
+				 
+				 $OrderNumber = []; 
+				 
+				 
+				            $Date1 = $adate3;
+							$date = new DateTime($Date1);
+							$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+							$kbt3 = $date->format('d_m_Y');
+							$kbt4 = $date->format('m/d/Y');
+							
+				$sql3 = "SELECT m.order_number,msf.base_grand_total,msa.firstname,msa.lastname,msa.street,msa.city,msa.postcode from `mg_shipping_delivery_window` m  
+	            left join mg_sales_flat_order msf on msf.increment_id = m.order_number
+				left join mg_sales_flat_order_address msa on msa.parent_id = msf.entity_id 
+				where m.`window` LIKE '%".$kbt3."' and msa.postcode='".$Zip[$k]."' and msf.status!='canceled' and msa.address_type='shipping' group by m.order_number";
+				// echo "<br/>";
+				
+				$OrderNu = $connection->fetchAll($sql3);
+				$rr=0;
+				foreach ($OrderNu as $value) {
+				
+					if($value["order_number"]!="")
+					{
+					   $orders.=$value["order_number"].",";
+					   $customers.=$value["firstname"]." ".$value["lastname"].",";
+					   $address.=$value["street"]." ".$value["city"]." ".",";
+					   $totals.=$value["base_grand_total"].",";
+					   $odates.=$kbt4.",";
+					   $total_order = $total_order + 1;
+					   $total_sales = $total_sales + $value["base_grand_total"];
+					}
+				
+				}
+				
+				
+       }
+?>
+
+<?php if($total_order>=1) { ?>
+<tr id="tr-<?php echo $Zip[$k]; ?>">
+<td><?php echo $Zip[$k]; ?></td>
+<td><?php echo $total_order; ?></td>
+<td>$<?php echo $total_sales; ?></td>
+<td><?php 
+
+$tmporders=explode(",",$orders); 
+$tmpcustomers=explode(",",$customers);
+$tmpaddress=explode(",",$address);
+$tmptotals=explode(",",$totals);
+$tmpodates=explode(",",$odates);
+
+$size=sizeof($tmporders);
+?>
+
+<table width="100%">
+
+<tr style="background:green;color:#fff;">
+<td>Number</td>
+<td>Customer</td>
+<td>Address</td>
+<td>Total</td>
+</tr>
+
+<?php
+for($w=0;$w<=$size-2;$w++)
+{
+?>
+
+<tr>
+<td style="width:80px"><?php echo $tmporders[$w]; ?></td>
+<td style="width:100px"><?php echo $tmpcustomers[$w]; ?></td>
+<td style="width:470px"><?php echo $tmpaddress[$w]; ?> <span style="color:green"> ( <?php echo $tmpodates[$w]; ?> ) </span></td>
+<td style="width:70px">$<?php echo round($tmptotals[$w],2); ?></td>
+</tr>
+
+<?php
+}
+?>
+</table>
+
+</td>
+</tr>
+<?php } ?>
+
+
+<?php	   
+	}
+?>
+	
+    </table>
+  <?php } ?>	
+  <?php if(isset($_GET["type"]) && $_GET["type"]==2) { ?>
+    <div style="margin-top:10px;margin-bottom:10px;">
+
+<script type="text/javascript">
+	  function goto(id) {
+				jQuery('html, body').animate({
+					scrollTop: jQuery('#tr-'+id).offset().top
+				}, 2000);
+	}
+</script>
+	
+<?php
+
+$b9=0;
+for($k=0;$k<=96;$k++)
+	{
+	    $total_order=0;
+		$total_sales=0;
+		
+		for($i=0;$i<=$kdf;$i++){
+				 
+				            $Date1 = $adate3;
+							$date = new DateTime($Date1);
+							$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+							$kbt3 = $date->format('d_m_Y');
+							$kbt4 = $date->format('m/d/Y');
+							
+				$sql3 = "SELECT m.order_number,msf.base_grand_total from `mg_shipping_delivery_window` m  
+	            left join mg_sales_flat_order msf on msf.increment_id = m.order_number
+				left join mg_sales_flat_order_address msa on msa.parent_id = msf.entity_id  and msa.address_type='shipping'
+				where m.`window` LIKE '%".$kbt3."' and msf.customer_group_id='".$k."' and msf.status!='canceled' group by m.order_number";
+				// echo "<br/>";
+				
+				$OrderNu = $connection->fetchAll($sql3);
+				$rr=0;
+				foreach ($OrderNu as $value) {
+				
+					if($value["order_number"]!="")
+					{
+					   $total_order = $total_order + 1;
+					   $total_sales = $total_sales + $value["base_grand_total"];
+					}
+				
+				}
+				
+				
+       }
+	   
+	   if($total_order>=1)
+	   {
+	      $summary[$k]=$total_order;
+		  $summary2[$k]=$total_sales;
+		  $b9 = $b9 + 1;
+	   }
+	}
+	
+	?>
+	
+	<div style="font-size:17px;font-weight:bold;margin-bottom:10px;color:green">Sales By Customer Group :</div>
+	
+	<?php
+	arsort($summary);
+	foreach ($summary as $key => $val) {
+	
+	  $sel_cust_grop="select customer_group_code from mg_customer_group where customer_group_id='".$key."'";
+	  $cust_grop=$connection->fetchOne($sel_cust_grop);
+	
+	?>
+	
+    <div style="display:inline-block;margin-left:5px;">
+    <a href="javascript:void(0);" onClick="goto(<?php echo $key; ?>)" style="margin-left:5px;color:#eb5e00"><?php echo "$cust_grop : $val"; ?><span style="color:#000;"><?php echo " : $".$summary2[$key]; ?></span></a> 
+	</div>
+	
+    <?php
+    }
+?>
+
+</div>
+
+ <div style="clear:both;height:10px">&nbsp;</div>
+ 
+	<table border=1 style="border-collapse:collapse;font-size:11px;" width="100%" >
+	
+	<tr>
+	<th style="text-align:left;width:90px;"><b>Customer Group Id</b></th>
+	<th><b>No of Orders</b></th>
+	<th><b>Total Sales</b></th>
+	<th style="width:720px"><b>Orders</b></th>
+	</tr>
+	<?php
+    for($k=0;$k<=74;$k++)
+	{
+	
+	    $total_order=0;
+		$total_sales=0;
+		$orders="";
+		$customers="";
+		$address="";
+		$totals="";
+		$odates="";
+	    for($i=0;$i<=$kdf;$i++){
+				 
+				 
+				 $OrderNumber = []; 
+				 
+				 
+				            $Date1 = $adate3;
+							$date = new DateTime($Date1);
+							$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+							$kbt3 = $date->format('d_m_Y');
+							$kbt4 = $date->format('m/d/Y');
+							
+				$sql3 = "SELECT m.order_number,msf.base_grand_total,msa.firstname,msa.lastname,msa.street,msa.city,msa.postcode from `mg_shipping_delivery_window` m  
+	            left join mg_sales_flat_order msf on msf.increment_id = m.order_number
+				left join mg_sales_flat_order_address msa on msa.parent_id = msf.entity_id  and msa.address_type='shipping'
+				where m.`window` LIKE '%".$kbt3."' and msf.customer_group_id='".$k."' and msf.status!='canceled' group by m.order_number";
+				// echo "<br/>";
+				
+				$OrderNu = $connection->fetchAll($sql3);
+				$rr=0;
+				foreach ($OrderNu as $value) {
+				
+					if($value["order_number"]!="")
+					{
+					   $orders.=$value["order_number"].",";
+					   $customers.=$value["firstname"]." ".$value["lastname"].",";
+					   $address.=$value["street"]." ".$value["city"]." ".",";
+					   $totals.=$value["base_grand_total"].",";
+					   $odates.=$kbt4.",";
+					   $total_order = $total_order + 1;
+					   $total_sales = $total_sales + $value["base_grand_total"];
+					}
+				
+				}
+				
+				
+       }
+?>
+
+<?php if($total_order>=1) { 
+
+$sel_cust_grop="select customer_group_code from mg_customer_group where customer_group_id='".$k."'";
+	  $cust_grop=$connection->fetchOne($sel_cust_grop);
+	  
+?>
+<tr id="tr-<?php echo $k; ?>">
+<td><?php echo $cust_grop; ?></td>
+<td><?php echo $total_order; ?></td>
+<td>$<?php echo $total_sales; ?></td>
+<td><?php 
+
+$tmporders=explode(",",$orders); 
+$tmpcustomers=explode(",",$customers);
+$tmpaddress=explode(",",$address);
+$tmptotals=explode(",",$totals);
+$tmpodates=explode(",",$odates);
+
+$size=sizeof($tmporders);
+?>
+
+<table width="100%">
+
+<tr style="background:green;color:#fff;">
+<td>Number</td>
+<td>Customer</td>
+<td>Address</td>
+<td>Total</td>
+</tr>
+
+<?php
+for($w=0;$w<=$size-2;$w++)
+{
+?>
+
+<tr>
+<td style="width:80px"><?php echo $tmporders[$w]; ?></td>
+<td style="width:100px"><?php echo $tmpcustomers[$w]; ?></td>
+<td style="width:470px"><?php echo $tmpaddress[$w]; ?> <span style="color:green"> ( <?php echo $tmpodates[$w]; ?> ) </span></td>
+<td style="width:70px">$<?php echo round($tmptotals[$w],2); ?></td>
+</tr>
+
+<?php
+}
+?>
+</table>
+
+</td>
+</tr>
+<?php } ?>
+
+
+<?php	   
+	}
+?>
+	
+    </table>
+  <?php } ?>	
+	</div>
+    </div>
+    </div>
+	<script type="text/javascript">
+       	 //<![CDATA[
+        	var filterFormSubmit  = new varienForm('filter_form');
+         //]]>
+        </script> 
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script> 
+</body>
+</html>

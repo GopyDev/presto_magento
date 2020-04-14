@@ -1,0 +1,359 @@
+<?php 
+	$baseApiURL = "http://vrp.viamente.com/api/vrp/v2";
+    $key = '3320e017-0d1b-4c67-a8e6-40d0767cc55e';
+	
+	
+	function json_encode_ex($data) {
+  return json_encode($data, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
+}
+
+function json_indent($json) {
+  $result      = '';
+  $pos         = 0;
+  $strLen      = strlen($json);
+  $indentStr   = '  ';
+  $newLine     = "\n";
+  $prevChar    = '';
+  $outOfQuotes = true;
+
+  for ($i=0; $i<=$strLen; $i++) {
+    // Grab the next character in the string.
+    $char = substr($json, $i, 1);
+
+    // Are we inside a quoted string?
+    if ($char == '"' && $prevChar != '\\') {
+      $outOfQuotes = !$outOfQuotes;
+
+    // If this character is the end of an element,
+    // output a new line and indent the next line.
+    } else if(($char == '}' || $char == ']') && $outOfQuotes) {
+      $result .= $newLine;
+      $pos --;
+      for ($j=0; $j<$pos; $j++) {
+        $result .= $indentStr;
+      }
+    }
+
+    // Add the character to the result string.
+    $result .= $char;
+
+    // If the last character was the beginning of an element,
+    // output a new line and indent the next line.
+    if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
+      $result .= $newLine;
+      if ($char == '{' || $char == '[') {
+        $pos ++;
+      }
+
+      for ($j = 0; $j < $pos; $j++) {
+        $result .= $indentStr;
+      }
+    }
+
+    $prevChar = $char;
+  }
+  return $result;
+}
+	
+	function executeRest($url, $method, $key, $data = "") {
+  $headers = array(
+    'Accept: application/json',
+    'Content-Type: application/json'
+  );
+
+  $url .= '?key='.$key;
+
+  $handle = curl_init();
+  curl_setopt($handle, CURLOPT_URL, $url);
+  curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 10);
+  curl_setopt($handle, CURLOPT_TIMEOUT, 360);
+
+  switch($method)
+  {
+    case 'GET':
+    break;
+
+    case 'POST':
+    curl_setopt($handle, CURLOPT_POST, true);
+    curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
+    break;
+
+    case 'PUT':
+    curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
+    break;
+
+    case 'DELETE':
+    curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'DELETE');
+    break;
+  }
+
+  $response = curl_exec($handle);
+  $status = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+ /* echo "<br>Response status: ".$status."\n";
+  echo "<br>Response body: \n";
+  echo "<br><pre>".json_indent($response)."</pre>\n";
+  echo "<br><br>\n"; */
+
+  if(php_sapi_name() != "cli") {
+    flush();
+    ob_flush();
+  }
+
+  return json_indent($response); }
+  
+	echo "<h1>List saved routeplans</h1>\n";
+   
+	
+	if(isset($_GET["idr"]))
+	{
+	    $b = executeRest($baseApiURL."/routeplans/".$_GET["idr"], 'GET', $key);
+        $barr =  json_decode($b, true);
+	
+		
+		
+	
+	
+		
+		foreach ($barr["drivers"] as $row) {
+ 
+         //  print_r($row);
+		   
+		   echo"<br/>";
+      
+ 
+ }
+ 
+ 
+  print_r($barr["orders"]);
+ 
+ 
+ $address = array();
+ $jk = 0;
+ foreach ($barr["orders"] as $row) {
+ 
+     $address[$jk] = $row["location"]["address"];
+	 
+	// echo $row["timeWindows"]["startMin"] ;
+	 
+	// echo  $row["timeWindows"]["stopMin"] ;
+	
+	  $name[$jk] =  $row["name"];
+	  
+	foreach ($row["timeWindows"] as $window) {
+	
+	
+	     if($window["startMin"]=='780' && $window["stopMin"]=='900')
+		 {
+		    $oor[$jk] = '1:00pm - 3:00pm';
+		 }
+		 
+		 else if($window["startMin"]=='900' && $window["stopMin"]=='1020')
+		 {
+		    $oor[$jk] = '3:00pm - 5:00pm';
+		 }
+		 
+		 else if($window["startMin"]=='1020' && $window["stopMin"]=='1140')
+		 {
+		    $oor[$jk] = '5:00pm - 7:00pm';
+		 }
+		 
+		 else if($window["startMin"]=='1140' && $window["stopMin"]=='1260')
+		 {
+		    $oor[$jk] = '7:00pm - 9:00pm';
+		 }
+		 
+		 else if($window["startMin"]=='780' && $window["stopMin"]=='1260')
+		 {
+		    $oor[$jk] = '1:00pm - 9:00pm';
+		 }
+		 
+		 else 
+		 { 
+		   // echo $window["startMin"] / 60;
+			// echo $window["stopMin"] / 60;
+			
+			$minutes = $window["startMin"];
+            $zero    = new DateTime('@0');
+            $offset  = new DateTime('@' . $minutes * 60);
+            $diff    = $zero->diff($offset);
+            $timea = $diff->format('%h:%i:00');
+			
+			
+			$minutes = $window["stopMin"];
+            $zero    = new DateTime('@0');
+            $offset  = new DateTime('@' . $minutes * 60);
+            $diff    = $zero->diff($offset);
+            $timeb = $diff->format('%h:%i:00');
+			
+			 $sk = date("g:i a", strtotime($timea));
+			 $sk2 = date("g:i a", strtotime($timeb));
+			 
+			 $oor[$jk] = $sk." - ".$sk2;
+
+		 }
+		 
+		
+	      $starttime[$jk] = $window["startMin"] / 60 ;
+		  $endtime[$jk] = $window["stopMin"] / 60 ;
+		 
+	}
+	 
+	// print_r($row["timeWindows"]);
+	 
+	 $jk = $jk + 1;
+	 
+ } 
+ 
+ 
+print_r($barr["drivers"]);
+ 
+ foreach ($barr["drivers"] as $row) {
+ 
+ echo '
+ 
+ <br/>
+  <br/>
+
+  
+  <table></table>
+ 
+ <table border="1" style="border-collapse:collapse" >
+ 
+ <tr>
+ <td style="padding:5px;width:100px;">Row Labels</td>
+ <td style="padding:5px;width:150px;">Delivery Customer Name</td>
+  <td style="padding:5px;width:200px;">Delivery Address</td>
+ <td style="padding:5px;width:100px;">Delivery City,State</td>
+  <td style="padding:5px;width:100px;">Contact No.</td>
+ <td style="padding:5px;width:50px;">Unattend?</td>
+ <td style="padding:5px;width:50px;">D</td>
+ <td style="padding:5px;width:50px;">C/F</td>
+ <td style="padding:5px;width:50px;">Bag</td>
+ <td style="padding:5px;width:50px;">Loose</td>
+  <td style="padding:5px;width:80px;">Instructions</td>
+ </tr>';
+ 
+ foreach ($barr["routes"] as $driver) {
+ 
+      	   foreach ($driver["stops"] as $driver2) {
+	   
+	       if($address[$driver2["orderIdx"]]!="")
+		   {
+		   
+		      if($row["id"]==$driver["driverID"])
+			  {
+			  
+			   $oid = explode(".",$name[$driver2["orderIdx"]]);
+			  // echo $oid[0];
+			  $order22 = Mage::getModel('sales/order')->load($oid[0], 'increment_id');
+			  // $address = $order22->getShippingAddress();
+			 
+			  $shipping_info = $order22->getShippingAddress()->getData();
+			  
+			  // print_r($shipping_info);
+			  
+			
+			  
+			   echo '<tr>';
+			   
+			   echo '<td style="padding:5px;width:100px;">';
+			   echo $oor[$driver2["orderIdx"]];
+			   echo '</td>';
+			   
+			   echo '<td style="padding:5px;width:150px;">';
+			    echo $order22->getCustomerName();
+			   echo '</td>';
+			   
+			    echo '<td style="padding:5px;width:200px;">';
+			   echo $address[$driver2["orderIdx"]]."</td>";
+			   
+			   echo '<td style="padding:5px;width:100px;">';
+			   echo $shipping_info["city"];
+			   echo '</td>';
+			   
+			    echo '<td style="padding:5px;width:100px;">';
+			   echo $shipping_info["telephone"];
+			   echo '</td>';
+			   
+			   echo '<td style="padding:5px;width:50px;">';
+			   echo '</td>';
+			   
+			   echo '<td style="padding:5px;width:50px;">';
+			   echo '</td>';
+			   
+			  echo '<td style="padding:5px;width:50px;">';
+			   echo '</td>';
+			   
+			   echo '<td style="padding:5px;width:50px;">';
+			   echo '</td>';
+			   
+			  echo '<td style="padding:5px;width:50px;">';
+			   echo '</td>';	
+			   
+			 
+			   echo '<td style="padding:5px;width:80px;">';
+			   if($shipping_info["information"]=="")
+			   {
+			      echo "N";
+			   }
+			   else
+			   {
+			      echo "Y";
+			   }
+			   echo '</td>';  
+			   
+			   echo '</tr>';
+			   
+			   }
+		   }   
+	   }
+ 
+ }
+ 
+ echo "</table>";
+ 
+    }
+ 
+   }
+	
+	
+	 $kkk = executeRest($baseApiURL."/routeplans", 'GET', $key);
+	$barr =  json_decode($kkk, true);
+	// print_r($barr);
+	//echo sizeof($barr["routeplans"]);
+	
+?>
+
+<br/>
+<br/>
+
+<table border="1" style="border-collapse:collapse; " >
+   <tr>
+   <th style="padding:5px;width:500px;">Route Plan</th>
+   <th style="padding:5px;">Created At</th>
+   <th style="padding:5px;">Drivers</th>
+   <th style="padding:5px;">Orders</th>
+   <th style="padding:5px;">View</th>
+   
+   </tr>
+<?php	
+	foreach ($barr["routeplans"] as $row) {
+?>
+    
+	<tr><td style="padding:5px;width:500px;"><?php echo $row["name"]; ?></td>
+	<td style="padding:5px;width:150px;"><?php echo $row["createDate"]; ?></td>
+	<td style="padding:5px;width:100px;"><?php echo $row["drivers"]; ?></td>
+	<td style="padding:5px;width:100px;"><?php echo $row["orders"]; ?></td>
+	<td style="padding:5px;width:100px;"><a href="?idr=<?php echo $row["id"]; ?>">View</a></td>
+	</tr>
+
+<?php	
+	   // echo $row["name"]."<br/>";
+	}
+?>
+</table>

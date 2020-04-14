@@ -1,0 +1,715 @@
+
+<?php
+     $kbt45=0;
+     $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+   <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta�tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+<?php 
+	$to="";
+	$from="";
+	$show_order_statuses = 0;
+	$orserstatus = "";
+	$result_order = 0;
+	
+	if(!empty($_REQUEST['from']) ){
+		$orders_row = array();
+		$to=$_REQUEST['to'];
+		$from=$_REQUEST['from'];
+		$rr=explode("/",$from);
+		$adate=$rr[1]."_".$rr[0]."_".$rr[2];
+		$adate3=$rr[2]."-".$rr[0]."-".$rr[1];
+		$rr2=explode("/",$to);
+		$adate2=$rr2[1]."_".$rr2[0]."_".$rr2[2];
+		$to_date = date('Y-m-d' . ' 00:00:00', strtotime($to));
+		$from_date = date('Y-m-d' . ' 00:00:00', strtotime($from));
+		$datetime1 = new DateTime($from_date);
+		$datetime2 = new DateTime($to_date);
+		$interval = $datetime1->diff($datetime2);
+		$kdf =  $interval->format('%R%a');
+	}
+?>
+<div id="anchor-content" class="middle">
+  <div id="page:main-container">
+    <div class="content-header">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+        <td style="width:50%;"><h3 class="icon-head head-report-sales-sales"><?php echo $this->__("Sales Detail Report");?></h3></td>
+            <td class="form-buttons"><button style="" onclick="filterFormSubmit.submit()" class="scalable " type="button" id="id_<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"><span>Show Report</span></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="entry-edit">
+        <form method="get" action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" id="filter_form">
+          <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Filter</h4>
+            <div class="form-buttons"></div>
+          </div>
+          <div id="sales_report_base_fieldset" class="fieldset">
+            <div class="hor-scroll">
+              <table cellspacing="0" class="form-list">
+                <tbody>
+                  <tr>
+                    <td class="label"><label for="sales_report_from">Start Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $from; ?>" id="sales_report_from" name="from" />
+                      <img style="" title="Select Date" id="sales_report_from_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_from",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_from_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				  <tr>
+                    <td class="label"><label for="sales_report_from">End Date<span class="required">*</span></label></td>
+                    <td class="value"><input type="text" style="width:110px !important;" class=" required-entry input-text" title="From" value="<?php echo $to; ?>" id="sales_report_to" name="to" />
+                      <img style="" title="Select Date" id="sales_report_to_trig" class="v-middle" alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>skin/adminhtml/default/default/images/grid-cal.gif"> 
+                      <script type="text/javascript">
+            //<![CDATA[
+                Calendar.setup({
+                    inputField: "sales_report_to",
+                    ifFormat: "%m/%e/%Y",
+                    showsTime: false,
+                    button: "sales_report_to_trig",
+                    align: "Bl",
+                    singleClick : true
+                });
+            //]]>
+            </script></td>
+                  </tr>
+				   <tr>
+                    <td class="label">Category</td>
+                    <td class="value">
+					<?php
+					     function getCategoriesDropdown() {
+						$categoriesArray = Mage::getModel('catalog/category')
+								->getCollection()
+								->addAttributeToSelect('name')
+								->addAttributeToSort('path', 'asc')
+								->addFieldToFilter('is_active', array('eq'=>'1'))
+								->load()
+								->toArray();
+					
+						foreach ($categoriesArray as $categoryId => $category) {
+							if (isset($category['name'])) {
+								$categories[] = array(
+									'label' => $category['name'],
+									'level'  =>$category['level'],
+									'value' => $categoryId
+								);
+							}
+						}
+						return $categories;
+					}
+					?>
+					<select id="categoryid" name="categoryid" style="width:150px;">
+					<option value="">--Select Categories--</option>
+					<?php
+					 $_CategoryHelper = getCategoriesDropdown(); 
+					 $catg=0;
+					 foreach($_CategoryHelper as $value){  
+					  foreach($value as $key => $val){
+					  
+					   if($key=='label'){
+						$catNameIs = $val;
+					   }
+					   if($key=='value'){
+						$catIdIs = $val;
+					   }
+					   if($key=='level'){
+						$catLevelIs = $val;
+						$b ='';
+						 for($i=1;$i<$catLevelIs;$i++){
+						  $b = $b."-";
+						 }
+					   }
+					  }
+					  if($catIdIs<=1090 && $catLevelIs<=3 && $catNameIs!="Default Category" )
+					  {
+						   $catga[$catg]=$catIdIs;
+						   $catg++;
+					  ?>
+					  <option value="<?php echo $catIdIs; ?>" <?php if($_GET["categoryid"]==$catIdIs) { ?> selected <?php } ?> ><?php if($catLevelIs==3) { echo $b; }  ?><?php echo $catNameIs ?> - <?php echo $catIdIs; ?>
+					  </option>
+					  <?php
+					  }
+					 } 
+					?>
+					</select>
+					</td>
+					</tr>
+					
+					<tr>
+                    <td class="label"><label for="sales_report_from">Report Type</label></td>
+                    <td class="value">
+					<select name="rtype" id="rtype">
+					<option value="2">Order Date</option>
+					<option value="1" <?php if($_GET["rtype"]==1) { echo "selected"; } ?> >Delivery Date</option>
+					</select>
+					</td>
+                  </tr>
+					
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+<div>
+<style>
+body>.wrapper
+{
+   background:none;
+   font-weight:bold;
+   color:#000;
+   overflow:hidden;
+}
+.page
+{
+   width:90%;
+}
+td, th 
+{
+   padding:5px !important;
+   font-size:12px;
+   color:#000;
+}
+table
+{
+   border-color:#000;
+}
+th 
+{
+   color:#000;
+}
+</style>
+<div style="margin-top:10px;margin-bottom:10px;">
+ <div style="clear:both;height:10px">&nbsp;</div>
+	<?php
+	$top='<table border=1 style="border-collapse:collapse;font-size:11px;" width="100%" ><tr><th>Date</th><th>Items</th><th>TotalSales</th>';
+	$tc='<table border=1 style="border-collapse:collapse;font-size:11px;" width="100%" >
+	<tr>
+	<th style="text-align:left;width:300px;"><b>Item</b></th>
+	<th>Qty</th>
+	<th>Price</th>
+	<th><b>Total</b></th>
+	<th><b>Tax</b></th>
+	<th><b>Order Number</b></th>
+	<th><b>Category</b></th>
+	</tr>';
+	    $mnoo=0;
+		$msales=0;
+		if(isset($_GET["from"]))
+		{
+		
+		$jt=0;
+		$Date1 = $adate3;
+		$date = new DateTime($Date1);
+		$date2 = new DateTime($Date1);
+		$sdate = $date->add(new DateInterval('P'.$jt.'D'));
+		$skbt3 = $date->format('Y-m-d');
+		$skbt33= $datetime2->format('Y-m-d');
+		
+		
+		if($skbt3==$skbt33)
+		{
+		$sql38 = "SELECT SUM(base_tax_amount) from mg_sales_flat_order where created_at LIKE '%".$skbt3."%'";
+		$total_tax=$connection->fetchOne($sql38);
+		
+        $sql389 = "SELECT SUM(base_shipping_amount) from mg_sales_flat_order where created_at LIKE '%".$skbt3."%'";
+		$total_shipping_amount=$connection->fetchOne($sql389);
+		}
+		
+		else
+		{
+		$sql38 = "SELECT SUM(base_tax_amount) from mg_sales_flat_order where created_at BETWEEN '".$skbt3."' and '".$skbt33."' ";
+		$total_tax=$connection->fetchOne($sql38);
+		
+        $sql389 = "SELECT SUM(base_shipping_amount) from mg_sales_flat_order where created_at BETWEEN '".$skbt3."' and '".$skbt33."'";
+		$total_shipping_amount=$connection->fetchOne($sql389);
+		}
+		
+		
+		}
+		
+		$rtgs=0;
+		$gc=0;
+		$tip5="";
+	    for($i=0;$i<=$kdf;$i++){
+		$noo=0;
+		$sales=0;
+				            $Date1 = $adate3;
+							$date = new DateTime($Date1);
+							$date->add(new DateInterval('P'.$i.'D')); // P1D means a period of 1 day
+							
+							if(isset($_GET["rtype"]) && $_GET["rtype"]==2)
+							{
+							  $kbt3 = $date->format('Y-m-d');
+							  $kbt4 = $date->format('m/d/Y');
+			    $sql3 = "SELECT oi.name,oi.sku,oi.qty_ordered,oi.price,oi.product_id,oi.row_total,oi.order_id as order_number,oi.tax_amount from mg_sales_flat_order_item oi
+				left join mg_sales_flat_order msf on msf.entity_id = oi.order_id 
+				where oi.`created_at` LIKE '%".$kbt3."%' and msf.status!='canceled' order by oi.name";
+				             }
+						   else
+						   {
+						      $kbt3 = $date->format('d_m_Y');
+							  $kbt4 = $date->format('m/d/Y');
+							  $sql3 = "SELECT oi.name,oi.sku,oi.qty_ordered,oi.price,oi.product_id,oi.row_total,m.order_number,oi.tax_amount from mg_sales_flat_order_item oi 
+							  left join mg_sales_flat_order msf on msf.entity_id = oi.order_id 
+							  left join mg_shipping_delivery_window m on m.order_number = msf.increment_id 
+							  where m.`window` LIKE '%".$kbt3."' and msf.status!='canceled' order by oi.name";
+						   }
+						   
+					$kbt99 = $date->format('d_m_Y');	   
+					$sql3r = "SELECT order_number,driver_email from mg_shipping_delivery_window where `window` LIKE '%".$kbt99."'";
+					$panrg = $connection->fetchAll($sql3r);
+					
+					foreach ($panrg as $dilg7) {
+								$sqlstatusrtf  = "SELECT tip FROM drivlist  where ordernumber='".$dilg7["order_number"]."'";
+					            $tip = $connection->fetchOne($sqlstatusrtf);
+								$rtgs = $rtgs + $tip ;
+								$driveremail[$gc] = $dilg7["driver_email"];
+								if($dilg7["order_number"]!="")
+								{
+								$tip5.=$dilg7["order_number"].",";
+								}
+								$gc++;
+					}	
+					
+			    $tc.='<tr id="d'.$i.'"><td colspan="6" style="background:#d3d3d3;color:#000;">Date:-'.$kbt4.' </td></tr>';
+				$OrderNu = $connection->fetchAll($sql3);
+				foreach ($OrderNu as $value) {
+				        $catname="";
+				        $sel_main_cats='SELECT cc.entity_id 
+						FROM mg_catalog_category_entity cc
+						JOIN mg_catalog_category_product cp ON cc.entity_id = cp.category_id
+						WHERE cp.product_id =  '.$value["product_id"].' ';
+						$main_cats=$connection->fetchAll($sel_main_cats);
+						$o=0;
+						
+					foreach ($main_cats as $category_id) {
+					$sel_cname="select value from mg_catalog_category_entity_varchar where entity_id='".$category_id["entity_id"]."' and attribute_id=41 ";
+					$cname=$connection->fetchOne($sel_cname);
+					$catname.=$cname.",";
+					$mong[$o]=$category_id["entity_id"];
+					$o++;
+					}
+					
+					for($ll=0;$ll<=sizeof($catga);$ll++)
+					{
+					   if (in_array($catga[$ll],$mong))
+					   {
+					    $itemsa[$catga[$ll]]= $itemsa[$catga[$ll]]+1;
+					    $itemsaa[$catga[$ll]]= $itemsaa[$catga[$ll]]+$value["row_total"];
+						$titemsaa[$catga[$ll]]= $titemsaa[$catga[$ll]]+$value["tax_amount"];
+					   }
+					}
+					  
+					if(isset($_GET["categoryid"]) && $_GET["categoryid"]!="")
+					{
+					if (in_array($_GET["categoryid"],$mong))
+					{
+					   	$noo=$noo+1;
+						$tc.='<tr>
+						<td>'.$value["name"].'</td>
+						<td>'.round($value["qty_ordered"],0).'</td>
+						<td>$'.sprintf("%.2f",round($value["price"],2)).'</td>
+						<td>$'.sprintf("%.2f",round($value["row_total"],2)).'</td>
+						<td>$'.sprintf("%.2f",round($value["tax_amount"],2)).'</td>
+						<td>'.$value["order_number"].'</td>
+						<td>'.$catname.'</td>
+						</tr>';
+						$sales=$sales+$value["row_total"];
+				    }
+				}
+				    else
+				    {
+				$noo=$noo+1;
+				$tc.='<tr>
+				<td>'.$value["name"].'</td>
+				<td>'.round($value["qty_ordered"],0).'</td>
+				<td>$'.sprintf("%.2f",round($value["price"],2)).'</td>
+				<td>$'.sprintf("%.2f",round($value["row_total"],2)).'</td>
+				<td>$'.sprintf("%.2f",round($value["tax_amount"],2)).'</td>
+				<td>'.$value["order_number"].'</td>
+				<td>'.$catname.'</td>
+				</tr>';
+				$sales=$sales+$value["row_total"];
+				}
+            }   
+			
+			
+			
+			
+					  $top.='<tr><td onClick="obccheck('.$i.')" style="text-decoration:underline;">'.$kbt4.'</td> <td>'.$noo.'</td> <td>$'.sprintf("%.2f",round($sales,2)).'</td></tr>';
+					  $tc.='<tr><td colspan="6" style="background:green;color:white;">Date:-'.$kbt4.' Total Items:-'.$noo.' Total Sales:- $'.sprintf("%.2f",round($sales,2)).'</td></tr>';
+				 $mnoo=$mnoo+$noo;
+				 $msales=$msales+$sales;
+	}
+	
+	
+	        // echo $tip5;
+		     //  $resultk = array_unique($driveremail);
+            // print_r($resultk);
+			
+			// echo $select="select tip from drivlist where ordernumber in ($tip5)";
+			
+			
+			
+	
+	$cat3 = $itemsa[10] + $itemsa[11] + $itemsa[12] + $itemsa[13] + $itemsa[257] + $itemsa[8] + $itemsa[4] + $itemsa[5] + $itemsa[6] + $itemsa[7] + $itemsa[9];
+	$cat3s = round($itemsaa[10] + $itemsaa[11] + $itemsaa[12] + $itemsaa[13] + $itemsaa[257] + $itemsaa[8] + $itemsaa[4] + $itemsaa[5] + $itemsaa[6] + $itemsaa[7] + $itemsaa[9],2);
+	
+	$cat37 = $itemsa[38] + $itemsa[40];
+	$cat37s = $itemsaa[38] + $itemsaa[40];
+	
+	$cat171 = $itemsa[172] + $itemsa[173] + $itemsa[174] + $itemsa[175] + $itemsa[176] + $itemsa[177] + $itemsa[179] + $itemsa[180] + $itemsa[181] + $itemsa[182] + $itemsa[183] + $itemsa[245];
+	$cat171s = $itemsaa[172] + $itemsaa[173] + $itemsaa[174] + $itemsaa[175] + $itemsaa[176] + $itemsaa[177] + $itemsaa[179] + $itemsaa[180] + $itemsaa[181] + $itemsaa[182] + $itemsaa[183] + $itemsaa[245];
+	
+	$cat184 = $itemsa[100] + $itemsa[114] + $itemsa[123] + $itemsa[137] + $itemsa[161] + $itemsa[42]  + $itemsa[70] + $itemsa[82];
+	$cat184s = $itemsaa[100] + $itemsaa[114] + $itemsaa[123] + $itemsaa[137] + $itemsaa[161] + $itemsaa[42]  + $itemsaa[70] + $itemsaa[82];
+	
+	$cat185 = $itemsa[142] + $itemsa[152] + $itemsa[159] + $itemsa[160];
+	$cat185s = $itemsaa[142] + $itemsaa[152] + $itemsaa[159] + $itemsaa[160];
+	
+	$cat27 = $itemsa[29] + $itemsa[30] + $itemsa[32] + $itemsa[34];
+	$cat27s = $itemsaa[29] + $itemsaa[30] + $itemsaa[32] + $itemsaa[34];
+	
+	$cat60 = $itemsa[61] + $itemsa[62] + $itemsa[63] + $itemsa[66] + $itemsa[67] + $itemsa[68] + $itemsa[69];
+	$cat60s = $itemsaa[61] + $itemsaa[62] + $itemsaa[63] + $itemsaa[66] + $itemsaa[67] + $itemsaa[68] + $itemsaa[69];
+	
+	$cat51 =  $itemsa[52] + $itemsa[53] + $itemsa[54] + $itemsa[55] + $itemsa[56] + $itemsa[57] + $itemsa[58] + $itemsa[59];
+	$cat51s = $itemsaa[52] + $itemsaa[53] + $itemsaa[54] + $itemsaa[55] + $itemsaa[56] + $itemsaa[57] + $itemsaa[58] + $itemsaa[59];
+	
+	
+	$cat3st = round($titemsaa[10] + $titemsaa[11] + $titemsaa[12] + $titemsaa[13] + $titemsaa[257] + $titemsaa[8] + $titemsaa[4] + $titemsaa[5] + $titemsaa[6] + $titemsaa[7] + $titemsaa[9],2);
+	
+	$cat37st = $titemsaa[38] + $titemsaa[40];
+	
+	$cat171st = $titemsaa[172] + $titemsaa[173] + $titemsaa[174] + $titemsaa[175] + $titemsaa[176] + $titemsaa[177] + $titemsaa[179] + $titemsaa[180] + $titemsaa[181] + $titemsaa[182] + $titemsaa[183] + $titemsaa[245];
+
+	$cat184st = $titemsaa[100] + $titemsaa[114] + $titemsaa[123] + $titemsaa[137] + $titemsaa[161] + $titemsaa[42]  + $titemsaa[70] + $titemsaa[82];
+
+	$cat185st = $titemsaa[142] + $titemsaa[152] + $titemsaa[159] + $titemsaa[160];
+	
+	$cat27st = $titemsaa[29] + $titemsaa[30] + $titemsaa[32] + $titemsaa[34];
+	
+	$cat60st = $titemsaa[61] + $titemsaa[62] + $titemsaa[63] + $titemsaa[66] + $titemsaa[67] + $titemsaa[68] + $titemsaa[69];
+
+	$cat51st = $titemsaa[52] + $titemsaa[53] + $titemsaa[54] + $titemsaa[55] + $titemsaa[56] + $titemsaa[57] + $titemsaa[58] + $titemsaa[59];
+	
+?>
+ <?php $topmain2='<table border=1 style="border-collapse:collapse;font-size:11px;" width="100%">
+ <tr>
+ <th style="background:#999;"> Category </th>
+ <th style="background:#999;"> Item </th>
+ <th style="background:#999;"> Sales </th> 
+ <th style="background:#999;"> Tax </th> 
+ </tr>
+ <tr>
+ <td style="text-decoration:underline;" onClick="dshow(3);"> Dairy </td>
+ <td>'.$cat3.'</td>
+ <td>$'.sprintf("%.2f",round($cat3s,2)).'</td> 
+ <td>$'.sprintf("%.2f",round($cat3st,2)).'</td> 
+ </tr>
+ <tr id="div3" style="display:none;" ><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Doughs </td><td> '.$itemsa[10].' </td><td>$'.sprintf("%.2f",round($itemsaa[10],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[10],2)).'</td></tr><tr>
+ <td> Sour Cream </td><td> '.$itemsa[11].' </td><td>$'.sprintf("%.2f",round($itemsaa[11],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[11],2)).'</td></tr><tr>
+ <td> Whipped Toppings </td><td> '.$itemsa[12].' </td><td>$'.sprintf("%.2f",round($itemsaa[12],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[12],2)).'</td></tr><tr>
+ <td> Yogurt </td><td> '.$itemsa[13].' </td><td>$'.sprintf("%.2f",round($itemsaa[13],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[13],2)).'</td></tr><tr>
+ <td> Creamers & Cream </td><td> '.$itemsa[257].' </td><td>$'.sprintf("%.2f",round($itemsaa[257],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[257],2)).'</td></tr><tr>
+  <td> Milk </td><td> '.$itemsa[8].' </td><td>$'.sprintf("%.2f",round($itemsaa[8],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[8],2)).'</td></tr>
+ <tr>
+ <td> Butter and Margarine </td><td> '.$itemsa[4].' </td><td>$'.sprintf("%.2f",round($itemsaa[4],2)).'</td> <td>$'.sprintf("%.2f",round($titemsaa[4],2)).'</td></tr><tr>
+ <td> Cottage Cheese </td><td> '.$itemsa[5].' </td><td>$'.sprintf("%.2f",round($itemsaa[5],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[5],2)).'</td></tr><tr>
+ <td> Cream Cheese </td><td> '.$itemsa[6].' </td><td>$'.sprintf("%.2f",round($itemsaa[6],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[6],2)).'</td></tr><tr>
+ <td> Eggs and Egg Substitutes </td><td> '.$itemsa[7].' </td><td>$'.sprintf("%.2f",round($itemsaa[7],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[7],2)).'</td></tr><tr>
+ <td> Packaged Cheese </td><td> '.$itemsa[9].' </td><td>$'.sprintf("%.2f",round($itemsaa[9],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[9],2)).'</td></tr>
+ </table>
+ </td></tr>
+ <tr  onClick="dshow(37);" > <td style="text-decoration:underline;" > Produce </td><td> '.$cat37.' </td><td>$'.sprintf("%.2f",round($cat37s,2)).' </td><td>$'.sprintf("%.2f",round($cat37st,2)).' </td></tr>
+ <tr id="div37" style="display:none;" ><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Fruit </td><td> '.$itemsa[38].' </td><td>$'.sprintf("%.2f",round($itemsaa[38],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[38],2)).'</td></tr><tr>
+ <td> Vegetables </td><td> '.$itemsa[40].' </td><td>$'.sprintf("%.2f",round($itemsaa[40],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[40],2)).'</td></tr>
+ </table>
+ </td></tr>
+ <tr> <td style="text-decoration:underline;" onClick="dshow(171);" > Meat & Seafood </td><td> '.$cat171.' </td><td>$'.sprintf("%.2f",round($cat171s,2)).' </td><td>$'.sprintf("%.2f",round($cat171st,2)).' </td> </tr>
+ <tr id="div171" style="display:none;" ><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Bacon </td><td> '.$itemsa[172].' </td><td>$'.sprintf("%.2f",round($itemsaa[172],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[172],2)).'</td></tr><tr>
+ <td> Beef </td><td> '.$itemsa[173].' </td><td>$'.sprintf("%.2f",round($itemsaa[173],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[173],2)).'</td></tr><tr>
+ <td> Chicken </td><td> '.$itemsa[174].' </td><td>$'.sprintf("%.2f",round($itemsaa[174],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[174],2)).'</td></tr><tr>
+ <td> Game Birds </td><td> '.$itemsa[175].' </td><td>$'.sprintf("%.2f",round($itemsaa[175],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[175],2)).'</td></tr><tr>
+ <td> Hot Dogs & Sausages </td><td> '.$itemsa[176].' </td><td>$'.sprintf("%.2f",round($itemsaa[176],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[176],2)).'</td></tr><tr>
+ <td> Jerky and Meat Snacks </td><td> '.$itemsa[177].' </td><td>$'.sprintf("%.2f",round($itemsaa[177],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[177],2)).'</td></tr>
+ <tr>
+ <td> Meat Alternatives </td><td> '.$itemsa[179].' </td><td>$'.sprintf("%.2f",round($itemsaa[179],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[179],2)).'</td></tr><tr>
+ <td> Pork </td><td> '.$itemsa[180].' </td><td>$'.sprintf("%.2f",round($itemsaa[180],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[180],2)).'</td></tr><tr>
+ <td> Seafood </td><td> '.$itemsa[181].' </td><td>$'.sprintf("%.2f",round($itemsaa[181],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[181],2)).'</td></tr><tr>
+ <td> Turkey </td><td> '.$itemsa[182].' </td><td>$'.sprintf("%.2f",round($itemsaa[182],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[182],2)).'</td></tr><tr>
+ <td> Veal & Lamb </td><td> '.$itemsa[183].' </td><td>$'.sprintf("%.2f",round($itemsaa[183],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[183],2)).'</td></tr><tr>
+  <td> Meatballs </td><td> '.$itemsa[245].' </td><td>$'.sprintf("%.2f",round($itemsaa[245],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[245],2)).'</td></tr>
+ </table>
+ </td></tr>
+ <tr> <td style="text-decoration:underline;" onClick="dshow(184);" > Grocery </td><td> '.$cat184.' </td><td>$'.sprintf("%.2f",round($cat184s,2)).' </td><td>$'.sprintf("%.2f",round($cat184st,2)).' </td> </tr>
+ <tr id="div184" style="display:none;" ><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Condiments </td><td> '.$itemsa[100].' </td><td>$'.sprintf("%.2f",round($itemsaa[100],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[100],2)).'</td></tr><tr>
+ <td> Canned Goods </td><td> '.$itemsa[114].' </td><td>$'.sprintf("%.2f",round($itemsaa[114],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[114],2)).'</td></tr><tr>
+ <td> Snacks </td><td> '.$itemsa[123].' </td><td>$'.sprintf("%.2f",round($itemsaa[123],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[123],2)).'</td></tr><tr>
+ <td> Breakfast </td><td> '.$itemsa[137].' </td><td>$'.sprintf("%.2f",round($itemsaa[137],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[137],2)).'</td></tr><tr>
+ <td> Pet </td><td> '.$itemsa[161].' </td><td>$'.sprintf("%.2f",round($itemsaa[161],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[161],2)).'</td></tr><tr>
+ <td> Beverages </td><td> '.$itemsa[42].' </td><td>$'.sprintf("%.2f",round($itemsaa[42],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[42],2)).'</td></tr>
+ <tr>
+ <td> Grains Pasta Beans </td><td> '.$itemsa[70].' </td><td>$'.sprintf("%.2f",round($itemsaa[70],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[70],2)).'</td></tr><tr>
+ <td> Cooking Needs </td><td> '.$itemsa[82].' </td><td>$'.sprintf("%.2f",round($itemsaa[82],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[82],2)).'</td></tr>
+ </table>
+ </td></tr>
+ <tr> <td style="text-decoration:underline;" onClick="dshow(185);" > Health Home & Baby </td><td> '.$cat185.' </td><td>$'.sprintf("%.2f",round($cat185s,2)).' </td><td>$'.sprintf("%.2f",round($cat185st,2)).' </td> </tr>
+ <tr id="div185" style="display:none;" ><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Laundry & Cleaning </td><td> '.$itemsa[142].' </td><td>$'.sprintf("%.2f",round($itemsaa[142],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[142],2)).'</td></tr><tr>
+ <td> Office & Home </td><td> '.$itemsa[152].' </td><td>$'.sprintf("%.2f",round($itemsaa[152],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[152],2)).'</td></tr><tr>
+ <td> Health & Beauty </td><td> '.$itemsa[159].' </td><td>$'.sprintf("%.2f",round($itemsaa[159],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[159],2)).'</td></tr><tr>
+ <td> Baby & Childcare </td><td> '.$itemsa[160].' </td><td>$'.sprintf("%.2f",round($itemsaa[160],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[160],2)).'</td></tr>
+ </table>
+ </td></tr>
+ <tr> <td style="text-decoration:underline;" onClick="dshow(27);" > Deli </td><td> '.$cat27.' </td><td>$'.sprintf("%.2f",round($cat27s,2)).' </td> <td>$'.sprintf("%.2f",round($cat27st,2)).' </td></tr>
+ <tr id="div27" style="display:none;" ><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Deli Sliced Cheese </td><td> '.$itemsa[29].' </td><td>$'.sprintf("%.2f",round($itemsaa[29],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[29],2)).'</td></tr><tr>
+ <td> Deli Sliced Meat </td><td> '.$itemsa[30].' </td><td>$'.sprintf("%.2f",round($itemsaa[30],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[30],2)).'</td></tr><tr>
+ <td> Pre-packaged Meat </td><td> '.$itemsa[32].' </td><td>$'.sprintf("%.2f",round($itemsaa[32],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[32],2)).'</td></tr><tr>
+ <td> Meals & Sides Etc </td><td> '.$itemsa[34].' </td><td>$'.sprintf("%.2f",round($itemsaa[34],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[34],2)).'</td></tr>
+ </table>
+ </td></tr>
+ 
+ 
+ <tr> <td style="text-decoration:underline;" onClick="dshow(60);"> Frozen </td><td> '.$cat60.' </td><td>$'.sprintf("%.2f",round($cat60s,2)).' </td><td>$'.sprintf("%.2f",round($cat60st,2)).' </td></tr>
+ <tr id="div60" style="display:none;"><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Appetizers & Snacks </td><td> '.$itemsa[61].' </td><td>$'.sprintf("%.2f",round($itemsaa[61],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[61],2)).'</td></tr><tr>
+ <td> Frozen Fruit & Concentrate </td><td> '.$itemsa[62].' </td><td>$'.sprintf("%.2f",round($itemsaa[62],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[62],2)).'</td></tr><tr>
+ <td> Breakfast Foods </td><td> '.$itemsa[63].' </td><td>$'.sprintf("%.2f",round($itemsaa[63],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[63],2)).'</td></tr><tr>
+ <td> Meals & Entrees </td><td> '.$itemsa[66].' </td><td>$'.sprintf("%.2f",round($itemsaa[66],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[66],2)).'</td></tr>
+ <tr>
+ <td> Pizza </td><td> '.$itemsa[67].' </td><td>$'.sprintf("%.2f",round($itemsaa[67],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[67],2)).'</td></tr><tr>
+ <td> Frozen Vegetables </td><td> '.$itemsa[68].' </td><td>$'.sprintf("%.2f",round($itemsaa[68],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[68],2)).'</td></tr><tr>
+  <td> Frozen Desserts </td><td> '.$itemsa[69].' </td><td>$'.sprintf("%.2f",round($itemsaa[69],2)).'</td><td>$'.sprintf("%.2f",round($titemsaa[69],2)).'</td></tr>
+ </table>
+ </td></tr>
+ <tr><td style="text-decoration:underline;" onClick="dshow(51);"> Bakery </td><td> '.$cat51.' </td>
+ <td>$'.sprintf("%.2f",round($cat51s,2)).' </td> <td>$'.sprintf("%.2f",round($cat51st,2)).' </td> </tr>
+ <tr id="div51" style="display:none;"><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Bagels </td><td> '.$itemsa[52].' </td><td>$'.sprintf("%.2f",round($itemsaa[52],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[52],2)).'</td>
+ </tr>
+ <tr>
+ <td> Desserts </td><td> '.$itemsa[53].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[53],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[53],2)).'</td></tr>
+ <tr>
+ <td> English Muffins </td><td> '.$itemsa[54].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[54],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[54],2)).'</td></tr>
+ <tr>
+ <td> Bread (Bakery or Packaged) </td>
+ <td> '.$itemsa[55].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[55],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[55],2)).'</td></tr>
+ <tr>
+ <td> Pizza Crust </td>
+ <td> '.$itemsa[56].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[56],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[56],2)).'</td></tr>
+ <tr>
+ <td> Doughnuts, Pastries, Muffins </td>
+ <td> '.$itemsa[57].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[57],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[57],2)).'</td>
+ </tr>
+ <tr>
+ <td> Pitas & Tortillas & Wraps </td>
+ <td> '.$itemsa[58].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[58],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[58],2)).'</td>
+ </tr>
+ <tr>
+ <td> Rolls and Buns </td><td> '.$itemsa[59].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[59],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[59],2)).'</td>
+ </tr>
+ </table>
+ </td></tr>
+ <tr><td style="text-decoration:underline;" onClick="dshow(141);"> Orgainic & Natural </td>
+ <td> '.$itemsa[141].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[141],2)).'</td> 
+ <td>$'.sprintf("%.2f",round($titemsaa[141],2)).'</td>
+ </tr>
+ <tr id="div141" style="display:none;" ><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Home &amp; Baby </td>
+ <td> '.$itemsa[1042].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[1042],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[1042],2)).'</td>
+ </tr>
+ <tr>
+ <td> Dairy </td>
+ <td> '.$itemsa[201].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[201],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[201],2)).'</td>
+ </tr>
+ <tr>
+ <td> Produce </td><td> '.$itemsa[202].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[202],2)).'</td>
+  <td>$'.sprintf("%.2f",round($titemsaa[202],2)).'</td>
+ </tr>
+ <tr>
+ <td> Meat & Deli </td><td> '.$itemsa[203].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[203],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[203],2)).'</td>
+ </tr>
+ <tr>
+ <td> Grocery </td><td> '.$itemsa[204].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[204],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[204],2)).'</td>
+ </tr>
+ <tr>
+ <td> Frozen </td>
+ <td> '.$itemsa[205].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[205],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[205],2)).'</td>
+ </tr>
+ <tr>
+ <td> Bread </td><td> '.$itemsa[207].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[207],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[207],2)).'</td>
+ </tr>
+ <tr>
+ <td> Granola, Grains, Nuts </td>
+ <td> '.$itemsa[208].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[208],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[208],2)).'</td>
+ </tr>
+ </table>
+ </td></tr>
+ <tr> 
+ <td style="text-decoration:underline;" onClick="dshow(199);"> Local & Speciality </td>
+ <td> '.$itemsa[199].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[199],2)).' </td>
+ <td>$'.sprintf("%.2f",round($titemsaa[199],2)).' </td>
+ </tr>
+ <tr id="div199" style="display:none;" ><td style="padding:25px;" colspan="4">
+ <table border=1 style="border-collapse:collapse;font-size:11px;background:#d3d3d3;" width="100%">
+ <tr>
+ <td> Ethnic </td>
+ <td> '.$itemsa[1030].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[1030],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[1030],2)).'</td>
+ </tr>
+ <tr>
+ <td> Dietary </td>
+ <td> '.$itemsa[1035].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[1035],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[1035],2)).'</td>
+ </tr>
+ <tr>
+ <td> Local Products </td>
+ <td> '.$itemsa[168].' </td>
+ <td>$'.sprintf("%.2f",round($itemsaa[168],2)).'</td>
+ <td>$'.sprintf("%.2f",round($titemsaa[168],2)).'</td>
+ </tr>
+ </table>
+ </td></tr> 
+ <tr style="background:green;color:#fff;">
+ <td> Total( Excluding Local & Speciality & Orgainic & Natural ) </td>
+ <td> '.($cat3+$cat37+$cat171+$cat184+$cat185+$cat27+$cat60+$cat51).'</td>
+ <td> $'.sprintf("%.2f",round($cat3s+$cat37s+$cat171s+$cat184s+$cat185s+$cat27s+$cat60s+$cat51s,2)).'</td>
+ <td> $'.sprintf("%.2f",round($cat3st+$cat37st+$cat171st+$cat184st+$cat185st+$cat27st+$cat60st+$cat51st,2)).'</td>
+ </tr>
+ </table>'; 
+ ?>
+	<script type="text/javascript">
+	function dshow(id)
+	{
+	    jQuery('#div'+id).toggle();
+	}
+	</script>
+	
+	
+	<script type="text/javascript">
+	  function obccheck(vab) {
+				 jQuery('html, body').animate({
+					scrollTop: jQuery('#d'+vab).offset().top
+				}, 2000);
+	}
+	</script>
+	
+  <?php $topmain='<table border=1 style="border-collapse:collapse;font-size:11px;background:green;color:white;" width="100%">
+    <tr>
+	<td style="color:#fff;"> Dates:- '.$_GET["from"].'-'.$_GET["to"].'</td>
+    <td style="color:#fff;"> Items:-'.$mnoo.' </td> <td style="color:#fff;" > Product Sales:- $'.$msales.'</td>
+	<td style="color:#fff;"> Tax:- $'.round($total_tax,2).'</td>
+	<td style="color:#fff;"> Delivery Fee:- $'.round($total_shipping_amount,2).'</td>
+	<td style="color:#fff;"> Gratuity:- $'.round($rtgs,2).'</td>
+	</tr>
+	</table>'; ?>
+   <?php $tc.='</table>'; ?>
+   <?php $top.='</table>'; ?>
+   <?php if(isset($_GET["from"])) { ?>
+   <?php echo $topmain; ?>
+   <br/>
+   <?php echo $topmain2; ?>
+   <br/>
+   <?php echo $top; ?>
+   <br/>
+   <?php echo $tc; ?>
+   <?php } ?>
+	</div>
+    </div>
+    </div>
+	<script type="text/javascript">
+       	 //<![CDATA[
+        	var filterFormSubmit  = new varienForm('filter_form');
+         //]]>
+        </script> 
+      <script type="text/javascript"> new FormElementDependenceController({"sales_report_order_statuses":{"sales_report_show_order_statuses":"1"}}); </script> 
+</body>
+</html>

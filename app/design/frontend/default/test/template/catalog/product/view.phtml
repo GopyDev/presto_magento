@@ -1,0 +1,214 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+<style type="text/css">
+	
+.controls {
+    display: inline-block;
+    float: left;
+    margin-left: 5px;
+    margin-top: 1px;
+}
+</style>
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery("#show-details").click(function(){
+  			jQuery(this).addClass('active-tab');
+			jQuery("#show-nutrition").removeClass('active-tab');
+			jQuery("#details").show();
+			jQuery("#nutrition").hide();
+		});
+
+		jQuery("#show-nutrition").click(function(){
+  			jQuery(this).addClass('active-tab');
+			jQuery("#show-details").removeClass('active-tab');
+			jQuery("#nutrition").show();
+			//jQuery("#details").hide();
+		});
+	});
+</script>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+<div class="product-shop">
+	<div class="product-name">
+    	<h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+    </div>
+    <div class="product-img-box">
+    	<?php echo $this->getChildHtml('media') ?>
+    </div>
+	
+    <div class="product-info">
+    	<div class="prod-tab">
+			<span class="details active-tab" id="show-details">Details</span>
+        	<?php if($_product->getTypeID() != 'ugiftcert'){?>
+            	|
+        		<span class="nutri" id="show-nutrition">Nutrition</span>
+    		<?php }?>
+        </div>
+		
+        <div class="details-box" id="details">
+    		<?php
+        	$description = '';
+        	if($_product->getShortDescription()){
+				$description = $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description');
+			}else{
+				$description = $_helper->productAttribute($_product, nl2br($_product->getDescription()), 'description');
+			}
+			?>
+			<div class="prod-details"><?php echo $description ?></div>
+        		<div class="prod-avail">
+         		<?php /*?><ul>
+            		<li class="stock-1"></li>
+                	<li class="stock-2"></li>
+                	<li class="stock-3"></li>
+                	<li class="stock-4"></li>
+                	<li class="stock-5"></li>
+                	<li class="stock-6"></li>
+           		</ul><?php */?>
+         	</div>
+         	<?php /*?> <?php echo $this->getReviewsSummaryHtml($_product, false, true)?><?php */?>
+         	<?php echo $this->getChildHtml('alert_urls') ?>
+         	<?php echo $this->getChildHtml('product_type_data') ?>
+         	<?php echo $this->getTierPriceHtml() ?>
+         	<?php echo $this->getChildHtml('extrahint') ?>
+	        
+            <div class="p-units">
+            	<?php $price = (float)$_product->getPrice()?>
+                <?php $p_o = number_format(($price / $_product->getSize()), 2)?>
+                <?php $currency = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol() ?>
+            	<?php if($_product->getUnits() && $_product->getSize()){?>
+					<?php echo $_product->getSize()?>&nbsp;<?php echo $_product->getUnits()?>&nbsp;|&nbsp;<?php echo $currency . $p_o.'/'.$_product->getUnits()?>
+				<?php }?>
+            </div>
+			<?php if (!$this->hasOptions()):?>
+            	<div class="add-to-box">
+                	<?php if($_product->isSaleable()): ?>
+                	    <?php echo $this->getChildHtml('addtocart') ?>
+                    	<?php /*?> <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+                       	<span class="or"><?php echo $this->__('OR') ?></span>
+                       	<?php endif; ?><?php */?>
+                    <?php endif; ?>
+                    <?php echo $this->getChildHtml('addto') ?>
+                </div>
+                <?php echo $this->getChildHtml('extra_buttons') ?>
+            <?php elseif (!$_product->isSaleable()): ?>
+                <div class="add-to-box">
+                    <?php echo $this->getChildHtml('addto') ?>
+                </div>
+            <?php endif; ?>
+		</div>
+        
+    	<div class="nutrition" id="nutrition" style="display:none">
+    		<h5>Nutrition Information</h5>
+    	    <p class="note">* Percent daily value are based on a 2,000 calorie
+diet. Your daily values may be higher or lower
+depending on your calorie needs:</p>
+			
+            <div class="product-collateral">
+				<?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):?>
+        			<?php if($alias != 'description'){?>
+                    	<div class="box-collateral <?php echo "box-{$alias}"?>">
+            				<?php echo $html; ?>
+        				</div>
+					<?php }?>
+				<?php endforeach;?>
+		    </div>
+            
+			<div class="ingredients">
+        		<h5>Ingredients</h5>
+        	    <div class="ingredients-text"><?php echo $_product->getIngredients()?></div>
+        	</div>
+    	</div>
+    </div>
+    
+    <div class="sidebar-right">
+    	<?php echo $this->getLayout()->getBlock("cart_sidebar")->toHtml()?>
+	</div>
+</div>
+</form>
+<script type="text/javascript">
+    //<![CDATA[
+        var productAddToCartForm = new VarienForm('product_addtocart_form');
+        productAddToCartForm.submit = function(button, url) {
+            if (this.validator.validate()) {
+                var form = this.form;
+                var oldUrl = form.action;
+
+                if (url) {
+                   form.action = url;
+                }
+                var e = null;
+                try {
+                    this.form.submit();
+                } catch (e) {
+                }
+                this.form.action = oldUrl;
+                if (e) {
+                    throw e;
+                }
+
+                if (button && button != 'undefined') {
+                    button.disabled = true;
+                }
+            }
+        }.bind(productAddToCartForm);
+
+        productAddToCartForm.submitLight = function(button, url){
+            if(this.validator) {
+                var nv = Validation.methods;
+                delete Validation.methods['required-entry'];
+                delete Validation.methods['validate-one-required'];
+                delete Validation.methods['validate-one-required-by-name'];
+                // Remove custom datetime validators
+                for (var methodName in Validation.methods) {
+                    if (methodName.match(/^validate-datetime-.*/i)) {
+                        delete Validation.methods[methodName];
+                    }
+                }
+
+                if (this.validator.validate()) {
+                    if (url) {
+                        this.form.action = url;
+                    }
+                    this.form.submit();
+                }
+                Object.extend(Validation.methods, nv);
+            }
+        }.bind(productAddToCartForm);
+    //]]>
+    </script>

@@ -1,0 +1,50 @@
+<?php
+/**
+* zeonsolutions inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.zeonsolutions.com/shop/license-community.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * This package designed for Magento Community edition
+ * =================================================================
+ * zeonsolutions does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * zeonsolutions does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   design
+ * @package    base_default
+ * @version    0.0.1
+ * @copyright  @copyright Copyright (c) 2013 zeonsolutions.Inc. (http://www.zeonsolutions.com)
+ * @license    http://www.zeonsolutions.com/shop/license-community.txt
+ */
+?>
+<div id="message-popup-window-mask" style="display:none;"></div>
+<div id="message-popup-window" class="message-popup" style="display:none;">
+    <div class="message-popup-head">
+        <a href="javascript:void(0);" onclick="ajaxCart.closeMessagePopup(); return false;" title="<?php echo $this->__('close'); ?>"><span><?php echo $this->__('close'); ?></span></a>
+        <h2><?php echo $this->getHeaderText(); ?></h2>
+    </div>
+    <div class="message-popup-content">
+        <div class="message">
+            <div class="message-text" id="message-content"></div>
+            <div class="error-text" id="error-content"></div>
+            <p class="additional-text" id="additional-content"></p>
+            <p class="button">
+                <button id="btn-wishlist" onclick="setLocation('<?php echo $this->getUrl('wishlist') ?>')" class="button right" type="button" style="display:none;"><span><span><?php echo $this->__('Go to My Wishlist'); ?></span></span></button>
+                <button id="btn-view-compare" onclick="popWin('<?php echo $this->helper('catalog/product_compare')->getListUrl() ?>','compare','top:0,left:0,width=820,height=600,resizable=yes,scrollbars=yes')" class="button right" type="button" style="display:none;"><span><span><?php echo $this->__('Compare') ?></span></span></button>
+                <button id="btn-cart-checkout" onclick="setLocation('<?php echo $this->getUrl('checkout/cart') ?>')" class="button right" type="button" style="display:none;"><span><span><?php echo $this->__('View Cart & Checkout'); ?></span></span></button>
+                <button id="btn-register" onclick="setLocation('<?php echo $this->getUrl('customer/account/create') ?>')" class="button right" type="button" style="display:none;"><span><span><?php echo $this->__('Register'); ?></span></span></button>
+                <button id="btn-continue-shopping" onclick="ajaxCart.closeMessagePopup(); return false;" class="button left" type="button" style="display:none;"><span><span><?php echo $this->__('Continue Shopping'); ?></span></span></button>
+                <button id="btn-login" onclick="setLocation('<?php echo $this->getUrl('customer/account/login') ?>')" class="button left" type="button" style="display:none;"><span><span><?php echo $this->__('Login'); ?></span></span></button>
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <shippingrestriction_adminhtml_shippingzip_index>
+	<reference name="content">
+	  <block type="shippingrestriction/adminhtml_shippingzip" name="shippingzip" />
+	</reference>
+  </shippingrestriction_adminhtml_shippingzip_index>
+</layout>

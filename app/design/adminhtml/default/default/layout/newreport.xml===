@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<newreport_adminhtml_newreport_index>
+		<reference name="content">
+			<block type="newreport/adminhtml_newreport" name="newreport" />
+		</reference>
+	</newreport_adminhtml_newreport_index>
+</layout>

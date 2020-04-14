@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @category   MQS
+ * @package    MQS_Newreport
+ * @author     Rakesh Kumar Jakhar(Magento Developer)
+ */
+ -->
+<config>
+    <modules>
+        <MQS_Newreport>
+            <version>0.1.0</version>
+        </MQS_Newreport>
+    </modules>
+    <admin>
+        <routers>
+            <newreport>
+                <use>admin</use>
+                <args>
+                    <module>MQS_Newreport</module>
+                    <frontName>newreport</frontName>
+                </args>
+            </newreport>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <report>
+                <children>
+                    <newreport translate="title" module="newreport">
+                        <title>Specialty Department Report</title>
+                        <action>salesreport/adminhtml_sales/reportimanage</action>
+						<sort_order>7</sort_order>
+                    </newreport>
+					
+					<newreport2 translate="title" module="newreport">
+                        <title>Employee Report</title>
+                        <action>salesreport/adminhtml_sales/reportimanager</action>
+						<sort_order>3</sort_order>
+                    </newreport2>
+					
+					<newreport3 translate="title" module="newreport">
+                        <title>Substitute Report</title>
+                        <action>salesreport/adminhtml_sales/newreport</action>
+						<sort_order>8</sort_order>
+                    </newreport3>
+					
+					<newreport4 translate="title" module="newreport">
+                        <title>Request Product Change</title>
+                        <action>salesreport/adminhtml_sales/proreport</action>
+						<sort_order>5</sort_order>
+                    </newreport4>
+					
+					<newreport5 translate="title" module="newreport">
+                        <title>Order Support Report</title>
+                        <action>salesreport/adminhtml_sales/ordrshreport</action>
+						<sort_order>4</sort_order>
+                    </newreport5>
+					
+					<newreport6 translate="title" module="newreport">
+                        <title>Dashboard Report</title>
+                        <action>salesreport/adminhtml_sales/dashreport</action>
+						<sort_order>1</sort_order>
+                    </newreport6>
+					
+					
+					<!--<newreport7 translate="title" module="newreport">
+                        <title>Sales by Customer </title>
+                        <action>salesreport/adminhtml_sales/newreport2</action>
+						<sort_order>9</sort_order>
+                    </newreport7>
+					-->
+					
+					<salesreport translate="title" module="salesreport">
+					<title>Delivery Calendar</title>
+					<sort_order>2</sort_order>
+					<action>salesreport/adminhtml_sales/reportmanage</action>
+				</salesreport>
+				
+					
+                </children>
+            </report>
+        </menu>
+		<acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <report>
+                            <children>
+							
+							
+							<newreport7 translate="title" module="newreport">
+                        <title>Substitute Report</title>
+                        <action>salesreport/adminhtml_sales/newreport7</action>
+                    </newreport7>
+					
+							
+                                <newreport translate="title" module="newreport">
+                        <title>Specialty Department Report</title>
+                        <action>salesreport/adminhtml_sales/reportimanage</action>
+                    </newreport>
+					
+					<newreport2 translate="title" module="newreport">
+                        <title>Employee Report</title>
+                        <action>salesreport/adminhtml_sales/reportimanager</action>
+                    </newreport2>
+					
+					<newreport3 translate="title" module="newreport">
+                        <title>Substitute Report</title>
+                        <action>salesreport/adminhtml_sales/newreport</action>
+                    </newreport3>
+					
+					<newreport4 translate="title" module="newreport">
+                        <title>Request Product Change</title>
+                        <action>salesreport/adminhtml_sales/proreport</action>
+                    </newreport4>
+					
+					<newreport5 translate="title" module="newreport">
+                        <title>Order Support Report</title>
+                        <action>salesreport/adminhtml_sales/ordrshreport</action>
+                    </newreport5>
+					
+					<newreport6 translate="title" module="newreport">
+                        <title>Dashboard Report</title>
+                        <action>salesreport/adminhtml_sales/dashreport</action>
+                    </newreport6>
+					
+					
+					<!-- <newreport7 translate="title" module="newreport">
+                        <title>Sales by Customer</title>
+                        <action>salesreport/adminhtml_sales/newreport2</action>
+						<sort_order>9</sort_order>
+                    </newreport7>
+					-->
+					
+                            </children>
+                        </report>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <newreport>
+                    <file>newreport.xml</file>
+                </newreport>
+            </updates>
+        </layout>
+    </adminhtml>
+    <global>
+        <models>
+            <newreport>
+                <class>MQS_Newreport_Model</class>
+                <resourceModel>newreport</resourceModel>
+            </newreport>
+        </models>
+        <resources>
+            <newreport_setup>
+                <setup>
+                    <module>MQS_Newreport</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </newreport_setup>
+            <newreport_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </newreport_write>
+            <newreport_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </newreport_read>
+        </resources>
+        <blocks>
+            <newreport>
+                <class>MQS_Newreport_Block</class>
+            </newreport>
+        </blocks>
+        <helpers>
+            <newreport>
+                <class>MQS_Newreport_Helper</class>
+            </newreport>
+        </helpers>
+    </global>
+</config>

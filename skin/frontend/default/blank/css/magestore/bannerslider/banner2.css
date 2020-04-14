@@ -1,0 +1,10 @@
+.slide-container {width:70%;float:left;text-align:left;margin-bottom:20px;}
+#gallery {position:relative;}
+#gallery a {float:left;position:absolute;}
+#gallery a img {border:none;  border-radius: 5px 5px 5px 5px;}
+#gallery a.show {z-index:500}
+#gallery .caption {z-index:600; background-color:#000; color:#ffffff;height:100px; width:100%; position:absolute;bottom:0; border-radius: 0 0 5px 5px; opacity: 0.87 !important;} 
+#gallery .caption .content {margin:5px; color:#fff;}
+#gallery .caption .content h3 {color: #FFE581;font-size: 23px;font-weight: normal;margin: 0;padding: 0;}
+/* Clear */
+.clear{width:100%;height:0px;font-size:0px;line-height:0px;}

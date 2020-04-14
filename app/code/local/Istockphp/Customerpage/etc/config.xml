@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Istockphp_Customerpage>
+		  <version>0.1.0</version>
+		</Istockphp_Customerpage>
+	</modules>
+	
+	<global>
+		<blocks> <!--Block folder-->
+			<istockphp>
+				<class>Istockphp_Customerpage_Block</class>
+			</istockphp>
+		</blocks>
+	</global>
+	
+	<frontend>
+		<routers>
+			<istockphp>
+				<use>standard</use>
+				<args>
+					<module>Istockphp_Customerpage</module>
+					<frontName>custompage</frontName>
+				</args>
+			</istockphp>
+	  
+			<customer>
+				<args>
+					<modules>
+						<!--name / before: change existing -->
+						<istockphp before="Mage_Customer">Istockphp_Customerpage</istockphp>
+					</modules>
+				</args>
+			</customer>
+		</routers>
+	
+		<layout>
+		  <updates>
+			<istockphp>
+                          <!--app\design\frontend\default\default\layout\customer\custompage.xml-->
+			  <file>customer/custompage.xml</file>
+			</istockphp>
+		  </updates>
+		</layout>
+		
+	</frontend>
+  
+  
+</config> 

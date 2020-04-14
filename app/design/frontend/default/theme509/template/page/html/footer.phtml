@@ -1,0 +1,697 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<div class="footer-container">
+	<?php echo $this->getChildHtml('left.newsletter'); ?>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<div class="footer">
+					  <p id="back-top"><a href="#top"><span></span></a> </p>
+					  <div class="footer-cols-wrapper">
+						<div class="footer-col">
+							<!-- <h4><?php echo $this->__('Information') ?></h4> -->
+							<div class="footer-col-content">
+								<?php echo $this->getChildHtml('cms_footer_links') ?>
+
+								<?php // echo $this->getChildHtml('footer_links') ?>
+                                <ul class="links">
+
+								<li><a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>about-us">About Us</a></li>
+								<li><a title="Orders and Returns" href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);  ?>order-and-returns">Orders and Returns</a>
+                                </li>
+								<li><a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>privacy-policy">Privacy Policy</a></li>
+								<li><a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>terms-of-service">Terms of Service</a></li>
+
+                                 <!--   <li><a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>faq">FAQ/Help</a></li>
+								<li><a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>partnership">Retailer Partnership</a>
+								<!-- <li>
+                                    	<a title="Organization Solutions" href="<?php echo $this->getUrl()?>organization-solutions">Organization Solutions</a>
+                                    </li>
+                                    <li>
+                                    	<a title="How It Works" href="<?php echo $this->getUrl()?>work">How We Work</a>
+                                    </li> -->
+                                </ul>
+							</div>
+
+						</div>
+
+						<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('footer_second_block')->toHtml() ?>
+						<div class="footer-col">
+
+                        </div>
+
+                          <!-- (c) 2005, 2014. Authorize.Net is a registered trademark of CyberSource Corporation -->
+
+						<?php echo $this->getChildHtml('footer_list') ?>
+						<div class="footer-col" style="float:left: !important;">
+							<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('footer_info')->toHtml() ?>
+
+							<div class="clear"></div>
+							<?php //echo $this->getChildHtml('paypal.partner.right.logo'); ?>
+							<?php //echo $this->getLayout()->createBlock('cms/block')->setBlockId('paypal_logo')->toHtml() ?>
+							<address style="font-size:12px;display:none;">&copy; 2015 PrestoFresh. All Rights Reserved.</address>
+							<div class="clear"></div>
+						</div>
+
+						<div class="right-footer-last">
+						 <div class="AuthorizeNetSeal">
+							   <script type="text/javascript" language="javascript">var ANS_customer_id="c74f1633-d61d-4e47-9776-205e601c2fa6";</script>
+                              <script type="text/javascript" language="javascript" src="//verify.authorize.net/anetseal/seal.js" ></script>
+                              <a style="color:#fff" href="http://www.authorize.net/" id="AuthorizeNetText" target="_blank">Credit Card Merchant Services</a>
+
+                          </div>
+						 <div id="siteseal" style="margin-left: 45px;margin-top:20px;">
+                          <span id=""></span><img style="cursor:pointer;cursor:hand" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>skin/frontend/default/theme509/images/siteseal.gif"  alt="SSL site seal - click to verify" width="131" height="32">
+						   <address style="font-size:12px;margin-top:18px;">&copy; 2016 PrestoFresh. All Rights Reserved.</address>
+						  </div>
+						</div>
+ 						<!-- -->
+
+
+					  </div>
+
+					<?php echo $this->getChildHtml('store_switcher') ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+//echo "Call footer file..";
+
+	 if(!Mage::getSingleton('customer/session')->isLoggedIn()){
+?>
+
+<script>
+/*
+jQuery(document).ready(function ()
+{
+	<?php
+	if(!Mage::getSingleton('customer/session')->isLoggedIn())
+	{
+	?>
+		jQuery('#custommenu > div,.banner-block,#search_autocomplete,#search').live('click',function(e)
+		{
+			/*if (document.cookie.indexOf('visited=true') == -1)
+			{
+				var fifteenDays = 1000*60*60*24*15;
+				var expires = new Date((new Date()).valueOf() + fifteenDays);
+				document.cookie = "visited=true;expires=" + expires.toUTCString();
+				jQuery.fancybox({
+					'href': '#homepage_popup',
+					'maxWidth': 580
+				});
+				e.preventDefault();
+				e.stopPropagation();
+			}*/
+		/*	if(jQuery.cookie('display_test') == undefined)
+			{
+				jQuery.fancybox({
+					'href': '#homepage_popup',
+					'maxWidth': 580
+				});
+				jQuery.cookie('display_test', '1');
+				e.preventDefault();
+				e.stopPropagation();
+			}
+		});
+	<?php } ?>
+});
+*/
+</script>
+<!--
+<div style='display:none'>
+<div id='homepage_popup' style='padding:10px;text-align: justify;'>
+Hi! We noticed that you are not logged in. You may check out as a 'guest' if you choose, but we highly recommend that you check our service area map on our FAQ page before shopping, to ensure that you are located in our delivery area! Thank you!
+</div>
+</div>
+-->
+	<?php
+	 }
+	?>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+jQuery(".col-right #cart_sidebar").remove();
+
+jQuery(".col-left #cart_sidebar").remove();
+/*
+jQuery(".main .headercartblock").remove();
+jQuery(".checkout-onepage-index .fixed").remove();
+jQuery(".checkout-onepage-index .fixedheader").remove();
+jQuery(".checkout-onepage-index .fixedheadernav").remove();*/
+   // jQuery("#blockcart .qty_grid .sidebarqty").remove();
+	//  jQuery('.products-grid-sidebar .headerqty').remove();
+
+	  // jQuery("#blockcart .sidebarcart").remove();
+	     // jQuery(".products-grid-sidebar .headercart").remove();
+   //jQuery("#blockcart .sidebarcart").remove();
+ //jQuery(".block-cart .headcart").remove();
+
+
+
+//jQuery(".headerqty").val() = 	jQuery(".sidebarqty").val();
+});
+</script>
+<script type="text/javascript">
+__url = window.location.protocol+"//www.prestofreshgrocery.com/";
+function incr(i, id){
+
+	qty_box = jQuery('#'+id);
+
+	qty = parseInt(jQuery(qty_box).val());
+	if(i == 'i'){
+	jQuery(qty_box).val((qty+1));
+
+	}
+	if(i == 'd'){
+		if(qty > 1){
+			jQuery(qty_box).val((qty-1));
+		}
+	}
+
+}
+function _set_location(url, id){
+	qty = jQuery('#'+id+'_qty').val();
+	setLocation(url+'/qty/'+qty);
+}
+</script>
+<script type="text/javascript">
+var cart_running = false;
+
+function addtocart(product_id, qty, i){
+//alert("add");
+
+	if(qty == 0 || qty == '') return false;
+	if(!cart_running){
+		cart_running = true;
+
+		jQuery(i).before("<span class='cart_loader' id='cart_loader'><span class='spinner'></span>Please Wait</span>");
+		if(jQuery('#cart_sidebar').length){
+			jQuery('#cart_sidebar').append('<div id="cart_hidden_container"></div>');
+		}
+
+		jQuery.ajax({
+			url: __url+'simpleupc/cart/add',
+			data: 'product='+product_id+'&qty='+qty,
+			dataType: "json",
+			success: function(s){
+				cart_running = false;
+				if(s.items){
+					//alert(jQuery('.top-cart').html('<span>'+s.items+'</span>'));
+					jQuery('.top-cart').html('<span>'+s.items+'</span>');
+				}
+				jQuery('#cart_loader').html("<span class='cart_loader' id='cart_loader'><span class='cart_success'>Added in cart</span></span>");
+				window.setTimeout(function(){jQuery('#cart_loader').remove();}, 2000);
+				if(jQuery('#cart_sidebar').length){
+					var __top = jQuery('#cart_sidebar').offset().top - parseFloat(jQuery('#cart_sidebar').css('marginTop').replace(/auto/, 0));
+					jQuery('#cart_sidebar').before('<div id="temp_c"></div>');
+					jQuery('#cart_sidebar').remove();
+					jQuery('#temp_c').before(s.cart_sidebar);
+					jQuery('#temp_c').remove();
+					  jQuery('.products-grid-sidebar .headerqty').remove();
+					if(floating_fix){
+						var y = jQuery(window).scrollTop();
+						if (y >= __top) {
+    						jQuery('#cart_sidebar').addClass('cart_fixed');
+    					}else{
+				    	  	jQuery('#cart_sidebar').removeClass('cart_fixed');
+    					}
+					}
+				}
+				//jQuery('#cart_loader').remove();
+			},
+			error: function(){
+				cart_running = false;
+				jQuery('#cart_loader').remove();
+				jQuery('#cart_hidden_container').remove();
+			}
+		});
+	}
+}
+var price = 0;
+function updatecart(item_id, qty,price, i ){
+//alert("update");
+
+  //   jQuery('#cart_sidebar').removeClass( "block" );
+	//  jQuery('#cart_sidebar').addClass( "block-cart-header" );
+
+	//document.getElementById('carttems').innerHTML = qty +' items';
+	//document.getElementById('carttems').value = qty +' items';
+	//if(qty != 0 || qty != ''){
+
+	//jQuery('#blockcart .headerqty').val(qty);
+	//}
+	//document.getElementById('toptotal').innerHTML = <?php //echo Mage::helper('checkout')->formatPrice($this->getSubtotal())?>;
+	if(qty == 0 || qty == '') return false;
+	if(!cart_running){
+		cart_running = true;
+
+		jQuery(i).before("<span class='cart_loader' id='cart_loader'><span class='spinner'></span>Please Wait</span>");
+		if(jQuery('#cart_sidebar').length){
+			jQuery('#cart_sidebar').append('<div id="cart_hidden_container"></div>');
+		}
+
+		jQuery.ajax({
+			url: __url+'simpleupc/cart/updateCart',
+			data: 'item_id='+item_id+'&qty='+qty,
+			dataType: "json",
+			success: function(s){
+				cart_running = false;
+
+				if(s.items){
+					jQuery('.top-cart').html('<span>'+s.items+'</span>');
+				}
+				jQuery('#cart_loader').html("<span class='cart_loader' id='cart_loader'><span class='cart_success'>Added in cart</span></span>");
+				window.setTimeout(function(){jQuery('#cart_loader').remove();}, 2000);
+				if(jQuery('#cart_sidebar').length){
+					var __top = jQuery('#cart_sidebar').offset().top - parseFloat(jQuery('#cart_sidebar').css('marginTop').replace(/auto/, 0));
+					jQuery('#cart_sidebar').before('<div id="temp_c"></div>');
+					jQuery('#cart_sidebar').remove();
+					jQuery('#temp_c').before(s.cart_sidebar);
+					jQuery('#temp_c').remove();
+
+					if(floating_fix){
+						var y = jQuery(window).scrollTop();
+  						if (y >= __top) {
+    						jQuery('#cart_sidebar').addClass('cart_fixed');
+    					}else{
+				    	  	jQuery('#cart_sidebar').removeClass('cart_fixed');
+    					}
+
+
+					}
+				}
+
+				//jQuery('#cart_loader').remove();
+			},
+
+			error: function(){
+				cart_running = false;
+				jQuery('#cart_loader').remove();
+				jQuery('#cart_hidden_container').remove();
+			}
+		});
+	}
+}
+
+function removecartitem(item_id){
+	if(!cart_running){
+		cart_running = true;
+
+		if(jQuery('#cart_sidebar').length){
+			jQuery('#cart_sidebar').append('<div id="cart_hidden_container"></div>');
+		}
+
+		jQuery.ajax({
+			url: __url+'simpleupc/cart/delete',
+			data: 'id='+item_id,
+			dataType: "json",
+			success: function(s){
+				cart_running = false;
+				if(s.items){
+					jQuery('.top-cart').html('<span>'+s.items+'</span>');
+				}
+				if(jQuery('#cart_sidebar').length){
+					var __top = jQuery('#cart_sidebar').offset().top - parseFloat(jQuery('#cart_sidebar').css('marginTop').replace(/auto/, 0));
+					jQuery('#cart_sidebar').before('<div id="temp_c"></div>');
+					jQuery('#cart_sidebar').remove();
+					jQuery('#temp_c').before(s.cart_sidebar);
+					jQuery('#temp_c').remove();
+					 jQuery('.products-grid-sidebar .headerqty').remove();
+					if(floating_fix){
+						var y = jQuery(window).scrollTop();
+  						if (y >= __top) {
+    						jQuery('#cart_sidebar').addClass('cart_fixed');
+    					}else{
+				    	  	jQuery('#cart_sidebar').removeClass('cart_fixed');
+    					}
+					}
+				}
+				//jQuery('#cart_loader').remove();
+			},
+			error: function(){
+				cart_running = false;
+				jQuery('#cart_loader').remove();
+				jQuery('#cart_hidden_container').remove();
+			}
+		});
+	}
+}
+/* New onchange */
+function updatecartonchange(item_id, qty,price, i ){alert("22");
+
+  jQuery('.products-grid-sidebar .headerqty').remove();
+//document.getElementById('carttems').innerHTML = qty +' items';
+	//document.getElementById('carttems').value = qty +' items';
+	if(qty == 0 || qty == '') return false;
+	if(!cart_running){
+		cart_running = true;
+
+		jQuery(i).before("<span class='cart_loader' id='cart_loader'><span class='spinner'></span>Please Wait</span>");
+		if(jQuery('#cart_sidebar').length){
+			jQuery('#cart_sidebar').append('<div id="cart_hidden_container"></div>');
+		}
+
+
+		jQuery.ajax({
+			url: __url+'simpleupc/cart/updateCart',
+			data: 'item_id='+item_id+'&qty='+qty,
+			dataType: "json",
+			success: function(s){
+				cart_running = false;
+
+				if(s.items){
+					jQuery('.top-cart').html('<span>'+s.items+'</span>');
+				}
+				jQuery('#cart_loader').html("<span class='cart_loader' id='cart_loader'><span class='cart_success'>Added in cart</span></span>");
+				window.setTimeout(function(){jQuery('#cart_loader').remove();}, 2000);
+				if(jQuery('#cart_sidebar').length){
+					var __top = jQuery('#cart_sidebar').offset().top - parseFloat(jQuery('#cart_sidebar').css('marginTop').replace(/auto/, 0));
+					jQuery('#cart_sidebar').before('<div id="temp_c"></div>');
+					jQuery('#cart_sidebar').remove();
+					jQuery('#temp_c').before(s.cart_sidebar);
+					jQuery('#temp_c').remove();
+					 jQuery('.products-grid-sidebar .headerqty').remove();
+					if(floating_fix){
+						var y = jQuery(window).scrollTop();
+  						if (y >= __top) {
+    						jQuery('#cart_sidebar').addClass('cart_fixed');
+    					}else{
+				    	  	jQuery('#cart_sidebar').removeClass('cart_fixed');
+    					}
+					}
+				}
+
+				//jQuery('#cart_loader').remove();
+			},
+
+			error: function(){
+				cart_running = false;
+				jQuery('#cart_loader').remove();
+				jQuery('#cart_hidden_container').remove();
+			}
+		});
+	}
+}
+//exit
+function updatecartheader(item_id, qty,price, i ){ alert("dddd");
+//alert(qty);
+var qty = jQuery(".headerqty").val();
+
+
+//document.getElementById('carttems').innerHTML = qty +' items';
+	//document.getElementById('carttems').value = qty +' items';
+	if(qty == 0 || qty == '') return false;
+	if(!cart_running){
+		cart_running = true;
+
+		jQuery(i).before("<span class='cart_loader' id='cart_loader'><span class='spinner'></span>Please Wait</span>");
+		if(jQuery('#cart_sidebar').length){
+			jQuery('#cart_sidebar').append('<div id="cart_hidden_container"></div>');
+		}
+
+
+		jQuery.ajax({
+			url: __url+'simpleupc/cart/updateCart',
+			data: 'item_id='+item_id+'&qty='+qty,
+			dataType: "json",
+			success: function(s){
+				cart_running = false;
+
+				if(s.items){
+					jQuery('.top-cart').html('<span>'+s.items+'</span>');
+				}
+				jQuery('#cart_loader').html("<span class='cart_loader' id='cart_loader'><span class='cart_success'>Added in cart</span></span>");
+				window.setTimeout(function(){jQuery('#cart_loader').remove();}, 2000);
+				if(jQuery('#cart_sidebar').length){
+					var __top = jQuery('#cart_sidebar').offset().top - parseFloat(jQuery('#cart_sidebar').css('marginTop').replace(/auto/, 0));
+					jQuery('#cart_sidebar').before('<div id="temp_c"></div>');
+					jQuery('#cart_sidebar').remove();
+					jQuery('#temp_c').before(s.cart_sidebar);
+					jQuery('#temp_c').remove();
+
+					if(floating_fix){
+						var y = jQuery(window).scrollTop();
+  						if (y >= __top) {
+    						jQuery('#cart_sidebar').addClass('cart_fixed');
+    					}else{
+				    	  	jQuery('#cart_sidebar').removeClass('cart_fixed');
+    					}
+					}
+				}
+
+				//jQuery('#cart_loader').remove();
+			},
+
+
+			error: function(){
+				cart_running = false;
+				jQuery('#cart_loader').remove();
+				jQuery('#cart_hidden_container').remove();
+			}
+		});
+	}
+}
+
+<!-- set height and width for images-->
+jQuery(document).ready(function() {
+	jQuery('.AuthorizeNetSeal >a > img').attr("width","90");
+	jQuery('.AuthorizeNetSeal >a > img').attr("height","72");
+
+	jQuery('#siteseal > img').attr("width","131");
+	jQuery('#siteseal > img').attr("height","32");
+
+	jQuery('.v-middle').attr("width","16");
+	jQuery('.v-middle').attr("height","16");
+
+	jQuery('#ajaxcartpro-progress > img').attr("width","220");
+	jQuery('#ajaxcartpro-progress > img').attr("height","19");
+});
+<!--end set height and width for images -->
+</script>
+<style>
+@media only screen and (max-width:980px)
+{
+	.right-footer-last #siteseal
+	{
+		float:none !important;
+		text-align: center;
+
+	}
+}
+
+</style>
+
+
+
+
+<?php
+if(Mage::getSingleton('customer/session')->isLoggedIn())
+{
+
+	?>
+<script type="text/javascript">
+
+var idleTime = 0;
+jQuery(document).ready(function () {
+    //Increment the idle time counter every minute.
+    var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+
+    //Zero the idle timer on mouse movement.
+    jQuery(this).mousemove(function (e) {
+        idleTime = 0;
+    });
+	// Zero the idel timer on key press
+    jQuery(this).keypress(function (e) {
+        idleTime = 0;
+    });
+});
+
+function timerIncrement() {
+    idleTime = idleTime + 1;
+    if (idleTime >= 20)
+	{ // 20 minutes
+		//alert(idleTime);
+		jQuery.ajax({
+			url: "<?php echo Mage::getUrl('customer/account/logout'); ?>",
+			type: "POST",
+			success: function(data)
+			{
+				//overlay.show();
+				//overlay.appendTo(document.body);
+				//jQuery('.log-popup').show();
+				//return false;
+				//alert("sucess");
+				 //alert(data);
+				//alert(idleTime);
+
+				ShowDialog(false);
+                e.preventDefault();
+			}
+		});
+
+    }
+}
+</script>
+	<?php
+}
+?>
+
+<!-- for notifier at the time of auto logout -->
+    <style type="text/css">
+        .web_dialog_overlay
+        {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: #000000;
+            opacity: .15;
+            filter: alpha(opacity=15);
+            -moz-opacity: .15;
+            z-index: 101;
+            display: none;
+        }
+        .web_dialog
+        {
+            display: none;
+            position: fixed;
+            width: 380px;
+            height: 135px;
+            top: 50%;
+            left: 50%;
+            margin-left: -190px;
+            margin-top: -100px;
+            background-color: #ffffff;
+            border: 1px solid #2B2B2B;
+            padding: 0px;
+            z-index: 102;
+            font-family: Verdana;
+            font-size: 10pt;
+			border-radius:5px;
+        }
+        .web_dialog_title
+        {
+            border-bottom: solid 2px #2B2B2B;
+            background-color: #2B2B2B;
+            padding: 4px;
+            color: White;
+            font-weight:bold;
+        }
+        .web_dialog_title a
+        {
+            color: White;
+            text-decoration: none;
+        }
+        .align_right
+        {
+            text-align: right;
+        }
+    </style>
+    <script type="text/javascript">
+
+        jQuery(document).ready(function ()
+        {
+            jQuery("#btnShowSimple").click(function (e)
+            {
+                ShowDialog(false);
+                e.preventDefault();
+            });
+			jQuery("#btnClose").click(function (e)
+            {
+                HideDialog();
+                e.preventDefault();
+				 location.reload();
+            });
+			jQuery("#btnSubmit").click(function (e)
+            {
+                HideDialog();
+                e.preventDefault();
+				var href_data = jQuery(this).attr('href');
+				window.location.href = href_data;
+
+            });
+        });
+
+        function ShowDialog(modal)
+        {
+            jQuery("#overlay").show();
+            jQuery("#dialog").fadeIn(300);
+
+            if (modal)
+            {
+                jQuery("#overlay").unbind("click");
+            }
+            else
+            {
+                jQuery("#overlay").click(function (e)
+                {
+                    HideDialog();
+                });
+            }
+        }
+
+        function HideDialog()
+        {
+            jQuery("#overlay").hide();
+            jQuery("#dialog").fadeOut(300);
+        }
+
+    </script>
+	<form id="form1" runat="server">
+   <!-- <h3>JQuery Popup Dialogs</h3>
+    <input type="button" id="btnShowSimple" value="Simple Dialog" />
+   <br /><br />-->
+    <div id="output"></div>
+    <div id="overlay" class="web_dialog_overlay"></div>
+    <div id="dialog" class="web_dialog">
+        <table style="width: 100%; border: 0px;" cellpadding="3" cellspacing="0">
+            <tr>
+                <td class="web_dialog_title"></td>
+                <td class="web_dialog_title align_right">
+                    <a href="#" id="btnClose">Close</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspna="2" style="padding: 13px 10px 0 25px;">You have been logged out due to inactivity. Please log in to continue shopping from where you left off!</td>
+
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;padding:0px;">
+        			<a id="btnSubmit" href="<?php echo Mage::getUrl('customer/account/login'); ?>">Click Here to login</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    </form>

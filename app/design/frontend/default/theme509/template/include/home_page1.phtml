@@ -1,0 +1,136 @@
+<!--<script src="{{skin url='js/camera.js'}}"> </script>-->
+
+<script src="<?php echo Mage::getDesign()->getSkinUrl(); ?>js/camera.js"> </script> 
+<script>
+jQuery(function(){
+    jQuery('#camera_wrap').camera({
+        alignmen: 'topCenter',
+        height: '34.87%',
+        minHeight: '100px',
+        loader : false,
+        pagination: false,
+        fx: 'simpleFade',
+        navigationHover:false,       
+        thumbnails: false,
+        playPause: false
+    });
+});
+</script>
+
+<div class="fluid_container_wrap">
+    <div class="fluid_container">
+        <div class="camera_wrap camera_orange_skin" id="camera_wrap">
+            <div data-src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/camera/slides/slide1.png">
+                <div class="camera_caption fadeFromLeft">
+                    <div class="camera_title">Fresh Produce </div>
+                    <div class="camera_title2">Purchased Locally</div>
+                    <div class="camara_desc2">6 Days a Week! vegetables</div>
+                    <a class="slider-link" href="<?php echo $this->getBaseUrl() ?>produce/vegetables.html">Shop now!</a>
+                </div>
+            </div>
+            <div data-src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/camera/slides/slide2.png">
+                <div class="camera_caption fadeFromLeft">
+                    <div class="camera_title">Always fresh</div>
+                    <div class="camera_title2">Ohio</div>
+                    <div class="camera_title3">Raised Meats!</div>
+                    <a class="slider-link" href="<?php echo $this->getBaseUrl() ?>meat-and-seafood.html">Shop now!</a>
+                </div>
+            </div>
+            <div data-src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/camera/slides/slide3.png">
+                <div class="camera_caption fadeFromLeft">
+                    <div class="camera_title">Fresh Seafood</div>
+                    <div class="camera_title2"> from </div>
+                    <div class="camera_title3">Both Coasts!</div>
+                    <a class="slider-link" href="<?php echo $this->getBaseUrl() ?>meat-and-seafood/chicken.html">Shop now!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="banner-block row">
+ <?php $categories = Mage::getModel('catalog/category')->getCollection()
+    ->addAttributeToSelect('*')
+    ->addAttributeToFilter('level', 2);
+    /*->addAttributeToFilter('is_active', 1);*/
+    foreach ($categories as $_category){ ?>
+        
+		<?php $catname = $_category->getName();
+		       $phrase = str_word_count($catname);
+		       
+              $lastword = substr($catname, strrpos($catname, ' ') + 1); 
+              $spanword = preg_replace('/\W\w+\s*(\W*)$/', '$1', $catname);
+          ?>
+		<li class="span4">
+			<a href="<?php echo $_category->getUrl(); ?>">
+				<img src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/media/banners-6.png" alt=""  />
+				<div class="banner-block-cont">
+					<?php if($phrase != 1){ ?>
+					<h3><?php echo $spanword; ?><span><?php echo $lastword; ?></span></h3>
+					<?php }else{ ?>
+					<h3><?php echo $catname; ?></h3>	
+					<?php } ?>
+					<p>Lorem ipsum dolor sit amet conse ctetur adipisicing.</p>
+				</div>
+			</a>
+		</li>
+		
+	<?php } ?>
+	</ul>
+<?php /* ?><ul class="banner-block row">
+    <li class="span4">
+        <a href="{{store url='grocery-frozen.html'}}">
+            <img src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/media/banners-1.png" alt=""  />
+            <div class="banner-block-cont">
+                <h3>Bread & <span>Bakery</span></h3>
+                <p>Lorem ipsum dolor sit amet conse ctetur adipisicing.</p>
+            </div>
+        </a>
+    </li>
+   <li class="span4">
+        <a href="{{store url='bread-bakery.html'}}">
+            <img src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/media/banners-2.png" alt=""  />
+            <div class="banner-block-cont">
+                <h3>Fresh <span>Meats</span></h3>
+                <p>Lorem ipsum dolor sit amet conse ctetur adipisicing.</p>
+            </div>
+        </a>
+    </li>
+    <li class="span4">
+        <a href="{{store url='fresh-fish.html'}}">
+            <img src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/media/banners-3.png" alt=""  />
+            <div class="banner-block-cont">
+                <h3>Fresh <span>Fish</span></h3>
+                <p>Lorem ipsum dolor sit amet conse ctetur adipisicing.</p>
+            </div>
+        </a>
+    </li>
+</ul>
+<ul class="banner-block row">
+    <li class="span4">
+        <a href="{{store url='drinks.html'}}">
+            <img src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/media/banners-4.png" alt=""  />
+            <div class="banner-block-cont">
+                <h3>Fruits & <span>Vegetables</span></span></h3>
+                <p>Lorem ipsum dolor sit amet conse ctetur adipisicing.</p>
+            </div>
+        </a>
+    </li>
+   <li class="span4">
+        <a href="{{store url='grocery-frozen.html'}}">
+            <img src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/media/banners-5.png" alt=""  />
+            <div class="banner-block-cont">
+                <h3>Drinks</h3>
+                <p>Lorem ipsum dolor sit amet conse ctetur adipisicing.</p>
+            </div>
+        </a>
+    </li>
+    <li class="span4">
+        <a href="{{store url='drinks.html'}}">
+            <img src="<?php echo Mage::getDesign()->getSkinUrl(); ?>images/media/banners-6.png" alt=""  />
+            <div class="banner-block-cont">
+                <h3>Grocery & <span>Frozen</span></h3>
+                <p>Lorem ipsum dolor sit amet conse ctetur adipisicing.</p>
+            </div>
+        </a>
+    </li>
+</ul><?php */ ?>

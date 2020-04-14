@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <subscription_adminhtml_subscriptionbackend_index>
+	<reference name="content">
+	  <block type="subscription/adminhtml_subscriptionbackend" name="subscriptionbackend" template="subscription/subscriptionbackend.phtml"/>
+	</reference>
+  </subscription_adminhtml_subscriptionbackend_index>
+  <subscription_adminhtml_free_index>
+	<reference name="content">
+	  <block type="subscription/adminhtml_free" name="free" />
+	</reference>
+  </subscription_adminhtml_free_index>
+</layout>
